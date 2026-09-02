@@ -1,0 +1,773 @@
+<title>The Showreel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" />
+
+<style>
+  :root{
+    --stage:#000000;
+    --panel:#0b0a08;
+    --panel-2:#141210;
+    --screen:#f4efe4;
+    --ash:#948c7c;
+    --ash-dim:#5c564a;
+    --amber:#d9a441;
+    --teal:#4fb6a6;
+    --coral:#e4735c;
+    --violet:#9c82e3;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--stage);
+    color:var(--screen);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  section{scroll-margin-top:3.25rem;}
+
+  h1,h2,h3,.font-display{font-family:'Fraunces', ui-serif, Georgia, serif; text-wrap:balance;}
+  .font-mono{font-family:'Courier Prime', ui-monospace, SFMono-Regular, monospace;}
+  .tabular{font-variant-numeric: tabular-nums;}
+
+  p, .body-copy{max-width:62ch;}
+
+  #stage3d{position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;}
+
+  .grain{
+    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .vignette{
+    position:fixed; inset:0; z-index:2; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.65) 100%);
+  }
+
+  .reveal{opacity:1; transform:translateY(0); transition:opacity .7s ease, transform .7s ease;}
+  .js-ready .reveal{opacity:0; transform:translateY(22px);}
+  .js-ready .reveal.is-visible{opacity:1; transform:translateY(0);}
+
+  .safe-pill{bottom:calc(1rem + env(safe-area-inset-bottom));}
+  @media (min-width:640px){ .safe-pill{bottom:calc(1.5rem + env(safe-area-inset-bottom));} }
+  .safe-chapters{padding-bottom:env(safe-area-inset-bottom);}
+
+  .segment-fill{transition:width .2s linear;}
+
+  .navdot{transition:background-color .25s ease;}
+  .is-active .navdot{background-color:var(--amber);}
+  .navdot-label{opacity:0; transform:translateX(-6px); transition:opacity .2s ease, transform .2s ease;}
+  .navlink:hover .navdot-label, .is-active .navdot-label{opacity:1; transform:translateX(0);}
+  .is-active .navdot-label{color:var(--amber);}
+
+  .chip{
+    border:1px solid rgba(244,239,228,.14);
+    background:rgba(20,18,16,.36);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(244,239,228,.07), 0 8px 20px rgba(0,0,0,.3);
+  }
+
+  .glass-panel{
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    box-shadow: inset 0 1px 0 rgba(244,239,228,.06), 0 20px 60px rgba(0,0,0,.45);
+  }
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:3px;
+  }
+
+  ::selection{background:var(--amber); color:#0b0a08;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+    .js-ready .reveal{opacity:1; transform:none;}
+  }
+</style>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          stage: '#000000',
+          panel: '#0b0a08',
+          screen: '#f4efe4',
+          ash: '#948c7c',
+          amber: '#d9a441',
+          teal: '#4fb6a6',
+          coral: '#e4735c',
+          violet: '#9c82e3',
+        },
+        fontFamily: {
+          display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+          body: ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          mono: ['"Courier Prime"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        },
+      }
+    }
+  }
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<canvas id="stage3d" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- CHROME: top timecode / slug bar -->
+<header class="fixed inset-x-0 top-0 z-40 h-11 sm:h-12 flex items-center justify-between gap-3 border-b border-ash/20 bg-panel/65 backdrop-blur-md px-3 sm:px-6 font-mono text-[10px] sm:text-xs tracking-widest text-ash">
+  <div class="flex items-center gap-2 shrink-0">
+    <span class="hidden sm:inline text-screen/70">DW&ndash;001</span>
+    <span class="text-screen">DREW WILSON</span>
+  </div>
+  <div id="slugline" class="hidden md:block truncate text-amber flex-1 text-center">FADE IN: INT. OPENING TITLES &mdash; CONTINUOUS</div>
+  <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+    <span class="hidden sm:flex items-center gap-1 text-red-400"><span class="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></span><span>REC</span></span>
+    <span id="reelcount">REEL 1/6</span>
+    <span id="timecode" class="tabular text-screen">00:00</span>
+  </div>
+</header>
+
+<!-- CHROME: side reel index -->
+<nav aria-label="Reel navigation" class="fixed left-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-5">
+  <a href="#hero" data-reel-link="hero" class="navlink group relative flex items-center is-active">
+    <span class="navdot h-2 w-2 rounded-full bg-ash/50"></span>
+    <span class="navdot-label pointer-events-none absolute left-5 whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-ash">01 &mdash; Opening Titles</span>
+  </a>
+  <a href="#about" data-reel-link="about" class="navlink group relative flex items-center">
+    <span class="navdot h-2 w-2 rounded-full bg-ash/50"></span>
+    <span class="navdot-label pointer-events-none absolute left-5 whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-ash">02 &mdash; The Designer</span>
+  </a>
+  <a href="#toolkit" data-reel-link="toolkit" class="navlink group relative flex items-center">
+    <span class="navdot h-2 w-2 rounded-full bg-ash/50"></span>
+    <span class="navdot-label pointer-events-none absolute left-5 whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-ash">03 &mdash; The Toolkit</span>
+  </a>
+  <a href="#cases" data-reel-link="cases" class="navlink group relative flex items-center">
+    <span class="navdot h-2 w-2 rounded-full bg-ash/50"></span>
+    <span class="navdot-label pointer-events-none absolute left-5 whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-ash">04 &mdash; The Case Files</span>
+  </a>
+  <a href="#method" data-reel-link="method" class="navlink group relative flex items-center">
+    <span class="navdot h-2 w-2 rounded-full bg-ash/50"></span>
+    <span class="navdot-label pointer-events-none absolute left-5 whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-ash">05 &mdash; The Method</span>
+  </a>
+  <a href="#contact" data-reel-link="contact" class="navlink group relative flex items-center">
+    <span class="navdot h-2 w-2 rounded-full bg-ash/50"></span>
+    <span class="navdot-label pointer-events-none absolute left-5 whitespace-nowrap font-mono text-[10px] uppercase tracking-widest text-ash">06 &mdash; End Credits</span>
+  </a>
+</nav>
+
+<!-- persistent contact pill -->
+<a href="#contact" class="safe-pill fixed right-4 sm:right-6 z-40 chip rounded-full px-4 py-2 sm:px-5 sm:py-2.5 font-mono text-[10px] sm:text-xs tracking-widest text-screen hover:border-amber hover:text-amber active:border-amber active:text-amber transition-colors">
+  GET IN TOUCH &rarr;
+</a>
+
+<!-- bottom filmstrip: tappable chapter scrubber (mobile/tablet) -->
+<nav aria-label="Chapter navigation" class="safe-chapters fixed bottom-0 inset-x-0 z-40 flex lg:hidden bg-panel/65 backdrop-blur-md border-t border-ash/20 px-1">
+  <a href="#hero" data-segment="hero" class="flex-1 h-6 flex items-center px-[2px]" aria-label="Reel 1, Opening Titles">
+    <span class="block h-[3px] w-full rounded-full bg-ash/25 overflow-hidden"><span class="segment-fill block h-full bg-amber" data-fill="hero" style="width:0%"></span></span>
+  </a>
+  <a href="#about" data-segment="about" class="flex-1 h-6 flex items-center px-[2px]" aria-label="Reel 2, The Designer">
+    <span class="block h-[3px] w-full rounded-full bg-ash/25 overflow-hidden"><span class="segment-fill block h-full bg-amber" data-fill="about" style="width:0%"></span></span>
+  </a>
+  <a href="#toolkit" data-segment="toolkit" class="flex-1 h-6 flex items-center px-[2px]" aria-label="Reel 3, The Toolkit">
+    <span class="block h-[3px] w-full rounded-full bg-ash/25 overflow-hidden"><span class="segment-fill block h-full bg-amber" data-fill="toolkit" style="width:0%"></span></span>
+  </a>
+  <a href="#cases" data-segment="cases" class="flex-1 h-6 flex items-center px-[2px]" aria-label="Reel 4, The Case Files">
+    <span class="block h-[3px] w-full rounded-full bg-ash/25 overflow-hidden"><span class="segment-fill block h-full bg-amber" data-fill="cases" style="width:0%"></span></span>
+  </a>
+  <a href="#method" data-segment="method" class="flex-1 h-6 flex items-center px-[2px]" aria-label="Reel 5, The Method">
+    <span class="block h-[3px] w-full rounded-full bg-ash/25 overflow-hidden"><span class="segment-fill block h-full bg-amber" data-fill="method" style="width:0%"></span></span>
+  </a>
+  <a href="#contact" data-segment="contact" class="flex-1 h-6 flex items-center px-[2px]" aria-label="Reel 6, End Credits">
+    <span class="block h-[3px] w-full rounded-full bg-ash/25 overflow-hidden"><span class="segment-fill block h-full bg-amber" data-fill="contact" style="width:0%"></span></span>
+  </a>
+</nav>
+
+<!-- bottom filmstrip: thin continuous progress line (desktop, where side dot-nav is already the chapter nav) -->
+<div class="fixed bottom-0 inset-x-0 z-40 h-[3px] bg-panel hidden lg:block">
+  <div id="progress-fill" class="h-full bg-amber" style="width:0%"></div>
+</div>
+
+<main class="relative z-10">
+
+  <!-- ================= REEL 1 — HERO ================= -->
+  <section id="hero" class="min-h-screen flex items-center px-5 sm:px-10 lg:px-24 pt-16 pb-20">
+    <div class="max-w-4xl">
+      <p class="font-mono text-amber text-xs sm:text-sm tracking-[0.25em] mb-5">FADE IN:</p>
+      <p class="font-mono text-ash text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-6">Int. A Career In Progress &mdash; Continuous</p>
+      <h1 class="font-display font-medium leading-[0.95] text-5xl sm:text-7xl md:text-8xl lg:text-[6.5rem] mb-6">DREW<br class="sm:hidden" /> WILSON</h1>
+      <p class="font-display text-xl sm:text-2xl md:text-3xl text-screen/90 mb-6">UI/UX Engineer &middot; Product Designer</p>
+      <p class="body-copy text-ash text-base sm:text-lg leading-relaxed mb-8">
+        Five years of turning ambiguous requirements into interfaces people trust without thinking about it.
+        This is the reel &mdash; six scenes, three case files, one question that repeats:
+        <span class="text-screen">what does the user actually need here?</span>
+      </p>
+
+      <div class="flex flex-wrap gap-2 sm:gap-3 mb-10 font-mono text-[10px] sm:text-xs tracking-widest">
+        <span class="chip rounded-full px-3 py-1.5 sm:px-4 sm:py-2">5+ YRS</span>
+        <span class="chip rounded-full px-3 py-1.5 sm:px-4 sm:py-2">3 CASE FILES</span>
+        <span class="chip rounded-full px-3 py-1.5 sm:px-4 sm:py-2">B.A. GRAPHIC DESIGN</span>
+        <span class="chip rounded-full px-3 py-1.5 sm:px-4 sm:py-2">COLUMBUS, OH</span>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="#about" class="rounded-full bg-amber text-panel font-mono text-xs sm:text-sm tracking-widest px-6 py-3 hover:bg-screen active:bg-screen transition-colors">ROLL CAMERA &darr;</a>
+        <a href="mailto:wilson.cihs@gmail.com" class="font-mono text-xs sm:text-sm tracking-widest text-screen underline decoration-ash/50 underline-offset-4 hover:text-amber hover:decoration-amber active:text-amber active:decoration-amber transition-colors">Email Drew &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REEL 2 — ABOUT ================= -->
+  <section id="about" class="min-h-screen flex items-center px-5 sm:px-10 lg:px-24 py-24">
+    <div class="max-w-3xl">
+      <p class="reveal font-mono text-ash text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-3">Int. The Studio &mdash; Day</p>
+      <p class="reveal font-mono text-amber text-xs sm:text-sm tracking-[0.25em] mb-6">REEL 02 / THE DESIGNER</p>
+      <h2 class="reveal font-display font-medium text-3xl sm:text-4xl md:text-5xl leading-tight mb-8">
+        Before the interface, there's an argument nobody's won yet.
+      </h2>
+
+      <p class="reveal body-copy text-screen/90 text-base sm:text-lg leading-relaxed mb-5">
+        I trained as a graphic designer before UX had its own department. Five years later I still start
+        every project the same way &mdash; not with a screen, but with a question: what is this business
+        actually asking the user to believe, and does the interface make that easy, or a lie?
+      </p>
+      <p class="reveal body-copy text-ash text-base sm:text-lg leading-relaxed mb-10">
+        My work lives in the space between research and code: discovery, user flows, wireframes, prototypes,
+        and the design-system plumbing that lets a team ship the fifth screen as fast as the first. I don't
+        hand off and disappear &mdash; I stay for the build, the QA pass, and the version that comes after
+        the users tell us the truth.
+      </p>
+
+      <div class="reveal chip rounded-xl px-5 py-4 sm:px-6 sm:py-5 mb-8">
+        <p class="font-mono text-[10px] sm:text-xs tracking-[0.25em] text-amber mb-2">STARRING</p>
+        <p class="font-display text-lg sm:text-xl text-screen">
+          Drew Wilson <span class="text-ash font-body text-sm sm:text-base">as</span> The Researcher, The Systems Thinker
+          <span class="text-ash font-body text-sm sm:text-base">and, when the schedule demands it,</span> The Front-End Translator.
+        </p>
+      </div>
+
+      <div class="reveal flex flex-wrap gap-2 mb-6 font-mono text-[10px] sm:text-xs tracking-widest text-ash">
+        <span class="chip rounded-full px-3 py-1.5">PRODUCT DESIGNER</span>
+        <span class="chip rounded-full px-3 py-1.5">UX/UI DESIGNER</span>
+        <span class="chip rounded-full px-3 py-1.5">INTERACTION DESIGNER</span>
+        <span class="chip rounded-full px-3 py-1.5">UX ENGINEER &middot; DESIGN TECHNOLOGIST</span>
+      </div>
+
+      <p class="reveal font-mono text-[11px] sm:text-xs tracking-widest text-ash-dim">
+        B.A., GRAPHIC DESIGN &mdash; OHIO DOMINICAN UNIVERSITY, COLUMBUS OH<br class="sm:hidden" />
+        &nbsp;&middot; VISUAL COMMUNICATION &amp; USER-CENTERED DESIGN
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= REEL 3 — TOOLKIT ================= -->
+  <section id="toolkit" class="min-h-screen flex items-center px-5 sm:px-10 lg:px-24 py-24">
+    <div class="max-w-6xl w-full">
+      <p class="reveal font-mono text-ash text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-3">Int. The Toolkit &mdash; Continuous</p>
+      <p class="reveal font-mono text-amber text-xs sm:text-sm tracking-[0.25em] mb-6">REEL 03 / THE TOOLKIT</p>
+      <h2 class="reveal font-display font-medium text-3xl sm:text-4xl md:text-5xl leading-tight mb-5 max-w-2xl">
+        Every scene needs the right instrument.
+      </h2>
+      <p class="reveal body-copy text-ash text-base sm:text-lg leading-relaxed mb-12">
+        Three kits, one workflow &mdash; research finds the problem, systems solve it at scale, engineering
+        makes sure it survives contact with a sprint.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 mb-12">
+        <div class="reveal chip rounded-xl p-6 sm:p-7">
+          <p class="font-mono text-amber text-[10px] sm:text-xs tracking-[0.25em] mb-4">RESEARCH &amp; STRATEGY</p>
+          <ul class="space-y-2.5 text-sm sm:text-base text-screen/90">
+            <li>User Research &amp; Usability Testing</li>
+            <li>Persona Development &amp; Journey Mapping</li>
+            <li>Information Architecture</li>
+            <li>Discovery &amp; Requirements Elicitation</li>
+          </ul>
+        </div>
+        <div class="reveal chip rounded-xl p-6 sm:p-7">
+          <p class="font-mono text-amber text-[10px] sm:text-xs tracking-[0.25em] mb-4">DESIGN &amp; SYSTEMS</p>
+          <ul class="space-y-2.5 text-sm sm:text-base text-screen/90">
+            <li>Wireframing &amp; Prototyping</li>
+            <li>Interaction &amp; Visual Design</li>
+            <li>Design Systems, Tokens &amp; Component Libraries</li>
+            <li>Responsive &amp; Accessible UI</li>
+          </ul>
+        </div>
+        <div class="reveal chip rounded-xl p-6 sm:p-7">
+          <p class="font-mono text-amber text-[10px] sm:text-xs tracking-[0.25em] mb-4">ENGINEERING BRIDGE</p>
+          <ul class="space-y-2.5 text-sm sm:text-base text-screen/90">
+            <li>HTML &amp; CSS Fundamentals</li>
+            <li>Front-End Collaboration &amp; Design QA</li>
+            <li>Developer Handoff &amp; Specifications</li>
+            <li>AI-Assisted Design Workflows</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="reveal flex flex-wrap gap-2 sm:gap-3 font-mono text-[10px] sm:text-xs tracking-widest text-ash">
+        <span class="chip rounded-full px-3 py-1.5">FIGMA</span>
+        <span class="chip rounded-full px-3 py-1.5">ADOBE XD</span>
+        <span class="chip rounded-full px-3 py-1.5">PHOTOSHOP</span>
+        <span class="chip rounded-full px-3 py-1.5">ILLUSTRATOR</span>
+        <span class="chip rounded-full px-3 py-1.5">INDESIGN</span>
+        <span class="chip rounded-full px-3 py-1.5">COREL DRAW</span>
+        <span class="chip rounded-full px-3 py-1.5">HTML</span>
+        <span class="chip rounded-full px-3 py-1.5">CSS</span>
+        <span class="chip rounded-full px-3 py-1.5">MICROSOFT OFFICE</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REEL 4 — CASE FILES ================= -->
+  <section id="cases" class="px-5 sm:px-10 lg:px-24 py-24">
+    <div class="max-w-3xl mb-16">
+      <p class="reveal font-mono text-ash text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-3">Ext. Three Cities &mdash; Various</p>
+      <p class="reveal font-mono text-amber text-xs sm:text-sm tracking-[0.25em] mb-6">REEL 04 / THE CASE FILES</p>
+      <h2 class="reveal font-display font-medium text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">
+        Three problems. Three systems built to solve them.
+      </h2>
+      <p class="reveal body-copy text-ash text-base sm:text-lg leading-relaxed">
+        Each file below ran the same production schedule &mdash; discovery, architecture, prototype, usability
+        test, visual system, handoff &mdash; graded differently because the people inside them wanted
+        different things.
+      </p>
+    </div>
+
+    <!-- CASE 01 — FLOW -->
+    <div id="case-flow" class="reveal glass-panel max-w-6xl mx-auto rounded-2xl border border-teal/25 bg-gradient-to-b from-teal/10 to-transparent p-6 sm:p-10 lg:p-14 mb-10">
+      <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
+        <p class="font-mono text-teal text-[10px] sm:text-xs tracking-[0.25em]">CASE FILE &mdash; 01 / FINTECH</p>
+        <p class="font-mono text-ash text-[10px] sm:text-xs tracking-[0.25em]">5-WEEK PRODUCTION</p>
+      </div>
+      <h3 class="font-display font-medium text-3xl sm:text-4xl mb-2">Flow</h3>
+      <p class="text-teal text-sm sm:text-base mb-6">AI-assisted personal budgeting, for people the banking apps forgot.</p>
+      <p class="body-copy text-screen/90 text-base sm:text-lg leading-relaxed mb-8">
+        Three people, one shared fear: not knowing where the money went until it was already gone.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-sm">
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Anna, 28 &middot; Marketing Specialist</p><p class="text-ash">Lives paycheck to paycheck &mdash; needs clarity and simple savings goals.</p></div>
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Marek, 34 &middot; Freelancer</p><p class="text-ash">Irregular income &mdash; needs cashflow forecasting and a tax bucket.</p></div>
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Sara, 22 &middot; Student</p><p class="text-ash">Micro-budgets &mdash; wants a safe-to-spend number she can trust.</p></div>
+      </div>
+
+      <p class="font-mono text-[10px] sm:text-xs tracking-widest text-teal mb-3">PRODUCTION SCHEDULE</p>
+      <p class="text-sm sm:text-base text-ash leading-relaxed mb-8">
+        Wk 1&ndash;2 Research (12 interviews &middot; 2-week diary study &middot; 150-respondent survey)
+        &rarr; Wk 3 Information architecture &amp; low-fi flows
+        &rarr; Wk 4 Mid-fi prototype &amp; usability test (n=6)
+        &rarr; Wk 5 Visual system, design tokens &amp; handoff.
+      </p>
+
+      <div class="flex flex-wrap gap-2 sm:gap-3 mb-8 font-mono text-[10px] sm:text-xs tracking-widest tabular">
+        <span class="chip rounded-full px-3 py-1.5 border-teal/40">NORTH STAR: WEEKLY ACTIVE PLANNERS</span>
+        <span class="chip rounded-full px-3 py-1.5">DAY-1 ACTIVATION &ge;35%</span>
+        <span class="chip rounded-full px-3 py-1.5">WEEK-4 RETENTION &ge;25%</span>
+        <span class="chip rounded-full px-3 py-1.5">SAVINGS RATE +5%/3MO</span>
+        <span class="chip rounded-full px-3 py-1.5">NPS &ge;45</span>
+      </div>
+
+      <p class="border-l-2 border-teal pl-4 text-screen/90 italic text-sm sm:text-base">
+        Financial design is trust wearing an interface. Transparency about data &mdash; not more features &mdash;
+        was what got people to connect their first account.
+      </p>
+    </div>
+
+    <!-- CASE 02 — HABITNEST+ -->
+    <div id="case-habitnest" class="reveal glass-panel max-w-6xl mx-auto rounded-2xl border border-coral/25 bg-gradient-to-b from-coral/10 to-transparent p-6 sm:p-10 lg:p-14 mb-10">
+      <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
+        <p class="font-mono text-coral text-[10px] sm:text-xs tracking-[0.25em]">CASE FILE &mdash; 02 / HEALTH &amp; HABITS</p>
+        <p class="font-mono text-ash text-[10px] sm:text-xs tracking-[0.25em]">4-WEEK PRODUCTION</p>
+      </div>
+      <h3 class="font-display font-medium text-3xl sm:text-4xl mb-2">HabitNest+</h3>
+      <p class="text-coral text-sm sm:text-base mb-6">Fitness, food, and sleep &mdash; one small plan a day instead of one big overhaul.</p>
+      <p class="body-copy text-screen/90 text-base sm:text-lg leading-relaxed mb-8">
+        Habits don't break from a lack of willpower. They break from friction, and from streaks that
+        shame instead of invite.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-sm">
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Lana, 40 &middot; Busy Parent</p><p class="text-ash">Wants a clear daily plan, not homework.</p></div>
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Olek, 29 &middot; Beginner</p><p class="text-ash">Needs visible streaks to stay in it.</p></div>
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Ada, 33 &middot; Runner</p><p class="text-ash">Wants structured training and recovery data.</p></div>
+      </div>
+
+      <p class="font-mono text-[10px] sm:text-xs tracking-widest text-coral mb-3">PRODUCTION SCHEDULE</p>
+      <p class="text-sm sm:text-base text-ash leading-relaxed mb-8">
+        Wk 1 Research synthesis, personas, problem framing
+        &rarr; Wk 2 IA, flows, low-fi wireframes, copy v1
+        &rarr; Wk 3 Mid-fi prototype &amp; usability test (n=6)
+        &rarr; Wk 4 Visual design, micro-copy &amp; handoff.
+      </p>
+
+      <div class="flex flex-wrap gap-2 sm:gap-3 mb-8 font-mono text-[10px] sm:text-xs tracking-widest tabular">
+        <span class="chip rounded-full px-3 py-1.5 border-coral/40">NORTH STAR: WEEKLY ADHERENT USERS (4/7 DAYS)</span>
+        <span class="chip rounded-full px-3 py-1.5">ONBOARDING &ge;70%</span>
+        <span class="chip rounded-full px-3 py-1.5">8-WEEK RETENTION &ge;30%</span>
+        <span class="chip rounded-full px-3 py-1.5">DAILY STEPS +20%</span>
+        <span class="chip rounded-full px-3 py-1.5">SLEEP SCORE +10%</span>
+      </div>
+
+      <p class="border-l-2 border-coral pl-4 text-screen/90 italic text-sm sm:text-base">
+        &ldquo;Streak paused, not lost&rdquo; outperformed every progress bar we tested. Designing for the
+        moment someone falls off mattered more than designing for the moment they start.
+      </p>
+    </div>
+
+    <!-- CASE 03 — CITYSENSE -->
+    <div id="case-citysense" class="reveal glass-panel max-w-6xl mx-auto rounded-2xl border border-violet/25 bg-gradient-to-b from-violet/10 to-transparent p-6 sm:p-10 lg:p-14">
+      <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
+        <p class="font-mono text-violet text-[10px] sm:text-xs tracking-[0.25em]">CASE FILE &mdash; 03 / SMART CITY &amp; TRAVEL</p>
+        <p class="font-mono text-ash text-[10px] sm:text-xs tracking-[0.25em]">4-WEEK PRODUCTION</p>
+      </div>
+      <h3 class="font-display font-medium text-3xl sm:text-4xl mb-2">CitySense</h3>
+      <p class="text-violet text-sm sm:text-base mb-6">A map, an AR layer, and a sense of place &mdash; for travelers drowning in options.</p>
+      <p class="body-copy text-screen/90 text-base sm:text-lg leading-relaxed mb-8">
+        Travelers don't want more listings. They want the right five, and confidence the map still works
+        when the signal doesn't.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-sm">
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Irina, 26 &middot; Weekend Traveler</p><p class="text-ash">Wants photogenic, walkable finds.</p></div>
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Piotr, 37 &middot; Business Traveler</p><p class="text-ash">Needs late-night food and offline maps.</p></div>
+        <div class="chip rounded-lg p-4"><p class="text-screen font-medium mb-1">Nadia, 31 &middot; Planner</p><p class="text-ash">Wants a real itinerary with real time budgets.</p></div>
+      </div>
+
+      <p class="font-mono text-[10px] sm:text-xs tracking-widest text-violet mb-3">PRODUCTION SCHEDULE</p>
+      <p class="text-sm sm:text-base text-ash leading-relaxed mb-8">
+        Wk 1 Research, interest taxonomy, map pins
+        &rarr; Wk 2 IA, low-fi map &amp; AR wireframes
+        &rarr; Wk 3 Mid-fi prototype &amp; field test (6 users)
+        &rarr; Wk 4 Visual design, motion &amp; handoff (Figma + Lottie).
+      </p>
+
+      <div class="flex flex-wrap gap-2 sm:gap-3 mb-8 font-mono text-[10px] sm:text-xs tracking-widest tabular">
+        <span class="chip rounded-full px-3 py-1.5 border-violet/40">NORTH STAR: ITINERARY COMPLETION RATE</span>
+        <span class="chip rounded-full px-3 py-1.5">PLACE SAVE RATE &ge;40%</span>
+        <span class="chip rounded-full px-3 py-1.5">SHARE RATE &ge;15%</span>
+        <span class="chip rounded-full px-3 py-1.5">AR USAGE &ge;30% OF SESSIONS</span>
+      </div>
+
+      <p class="border-l-2 border-violet pl-4 text-screen/90 italic text-sm sm:text-base">
+        Context beat completeness. Mood- and weather-aware suggestions earned more trust than a longer,
+        &ldquo;more accurate&rdquo; list ever did.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= REEL 5 — METHOD ================= -->
+  <section id="method" class="min-h-screen flex items-center px-5 sm:px-10 lg:px-24 py-24">
+    <div class="max-w-3xl">
+      <p class="reveal font-mono text-ash text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-3">Int. The Cutting Room &mdash; Night</p>
+      <p class="reveal font-mono text-amber text-xs sm:text-sm tracking-[0.25em] mb-6">REEL 05 / THE METHOD</p>
+      <h2 class="reveal font-display font-medium text-3xl sm:text-4xl md:text-5xl leading-tight mb-10">
+        Same five acts, every production.
+      </h2>
+
+      <ol class="reveal space-y-6 mb-10">
+        <li class="flex gap-4 sm:gap-5">
+          <span class="font-mono text-amber text-sm sm:text-base w-6 shrink-0">01</span>
+          <p class="text-screen/90 text-base sm:text-lg"><span class="text-screen font-medium">Discovery &amp; Research</span> &mdash; interviews, diary studies, surveys, competitive scans.</p>
+        </li>
+        <li class="flex gap-4 sm:gap-5">
+          <span class="font-mono text-amber text-sm sm:text-base w-6 shrink-0">02</span>
+          <p class="text-screen/90 text-base sm:text-lg"><span class="text-screen font-medium">Information Architecture &amp; Flows</span> &mdash; the map before the screens.</p>
+        </li>
+        <li class="flex gap-4 sm:gap-5">
+          <span class="font-mono text-amber text-sm sm:text-base w-6 shrink-0">03</span>
+          <p class="text-screen/90 text-base sm:text-lg"><span class="text-screen font-medium">Prototype &amp; Usability Testing</span> &mdash; low-fi to mid-fi, tested with real users before a pixel is precious.</p>
+        </li>
+        <li class="flex gap-4 sm:gap-5">
+          <span class="font-mono text-amber text-sm sm:text-base w-6 shrink-0">04</span>
+          <p class="text-screen/90 text-base sm:text-lg"><span class="text-screen font-medium">Visual System &amp; Design Tokens</span> &mdash; the part that scales past screen one.</p>
+        </li>
+        <li class="flex gap-4 sm:gap-5">
+          <span class="font-mono text-amber text-sm sm:text-base w-6 shrink-0">05</span>
+          <p class="text-screen/90 text-base sm:text-lg"><span class="text-screen font-medium">Developer Handoff &amp; Validation</span> &mdash; specs, states, edge cases, and staying in the room for the build.</p>
+        </li>
+      </ol>
+
+      <p class="reveal body-copy text-ash text-base sm:text-lg leading-relaxed mb-10">
+        I don't leave when the file is exported. I stay for the QA pass, the edge case nobody scoped, and
+        the version two that real usage always demands.
+      </p>
+
+      <p class="reveal font-mono text-[11px] sm:text-xs tracking-widest text-ash-dim">
+        B.A., GRAPHIC DESIGN &mdash; OHIO DOMINICAN UNIVERSITY, COLUMBUS, OH
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= REEL 6 — CONTACT / END CREDITS ================= -->
+  <section id="contact" class="min-h-screen flex items-center px-5 sm:px-10 lg:px-24 py-24">
+    <div class="max-w-3xl w-full">
+      <p class="reveal font-mono text-ash text-[11px] sm:text-xs tracking-[0.2em] uppercase mb-3">Int./Ext. Wherever The Next Problem Is &mdash; Continuous</p>
+      <p class="reveal font-mono text-amber text-xs sm:text-sm tracking-[0.25em] mb-6">REEL 06 / END CREDITS</p>
+      <h2 class="reveal font-display font-medium text-3xl sm:text-4xl md:text-5xl leading-tight mb-5">
+        That's the reel. Roll the next one with me?
+      </h2>
+      <p class="reveal body-copy text-ash text-base sm:text-lg leading-relaxed mb-10">
+        If your team has a hard problem and a user who deserves better, I'd like to hear the brief.
+      </p>
+
+      <div class="reveal chip rounded-xl p-6 sm:p-8 mb-10 font-mono text-xs sm:text-sm tracking-widest">
+        <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-x-6 gap-y-3 text-ash">
+          <span>DESIGN &amp; RESEARCH</span><span class="text-screen">Drew Wilson</span>
+          <span>SYSTEMS &amp; TOKENS</span><span class="text-screen">Drew Wilson</span>
+          <span>FRONT-END LIAISON</span><span class="text-screen">Drew Wilson</span>
+          <span>LOCATION</span><span class="text-screen">Columbus, Ohio</span>
+        </div>
+      </div>
+
+      <div class="reveal flex flex-wrap items-center gap-4 mb-14">
+        <a href="mailto:wilson.cihs@gmail.com" class="rounded-full bg-amber text-panel font-mono text-xs sm:text-sm tracking-widest px-6 py-3 hover:bg-screen active:bg-screen transition-colors">EMAIL DREW</a>
+        <a href="tel:6147368065" class="rounded-full border border-ash/40 text-screen font-mono text-xs sm:text-sm tracking-widest px-6 py-3 hover:border-amber hover:text-amber active:border-amber active:text-amber transition-colors">CALL 614-736-8065</a>
+        <span class="font-mono text-xs sm:text-sm tracking-widest text-ash">wilson.cihs@gmail.com</span>
+      </div>
+
+      <p class="reveal font-mono text-[10px] sm:text-xs tracking-[0.3em] text-ash-dim text-center sm:text-left">
+        DIRECTED, DESIGNED &amp; BUILT BY DREW WILSON &mdash; &copy; 2026
+      </p>
+      <p class="reveal font-mono text-[10px] sm:text-xs tracking-[0.3em] text-ash-dim text-center sm:text-left mt-2">
+        FADE OUT.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isMobile = window.innerWidth < 640;
+
+  /* ---------------- THREE.JS: THE APERTURE ---------------- */
+  var canvas = document.getElementById('stage3d');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: !isMobile });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 0, 7.4);
+
+  function sizeRenderer(){
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  sizeRenderer();
+  window.addEventListener('resize', sizeRenderer);
+
+  var COLORS = {
+    amber: new THREE.Color('#d9a441'),
+    teal: new THREE.Color('#4fb6a6'),
+    coral: new THREE.Color('#e4735c'),
+    violet: new THREE.Color('#9c82e3')
+  };
+
+  var state = { open: 0.12, tilt: 0, ringOpacity: 0, gridOpacity: 0, color: COLORS.amber.clone() };
+
+  var irisGroup = new THREE.Group();
+  // shift toward the right on wide screens so text has room on the left
+  irisGroup.position.x = window.innerWidth > 1024 ? 2.1 : 0;
+  scene.add(irisGroup);
+
+  var BLADE_COUNT = 10;
+  var bladePivots = [];
+  for (var i = 0; i < BLADE_COUNT; i++) {
+    var pivot = new THREE.Object3D();
+    pivot.rotation.z = (i / BLADE_COUNT) * Math.PI * 2;
+    var bladeMat = new THREE.MeshBasicMaterial({ color: state.color.clone(), transparent: true, opacity: 0.85, side: THREE.DoubleSide });
+    var blade = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.24, 0.04), bladeMat);
+    blade.position.x = 0.6;
+    pivot.add(blade);
+    irisGroup.add(pivot);
+    bladePivots.push(pivot);
+  }
+
+  var coreMat = new THREE.MeshBasicMaterial({ color: state.color.clone(), wireframe: true, transparent: true, opacity: 0.9 });
+  var core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.55, 1), coreMat);
+  irisGroup.add(core);
+
+  var ringDefs = [COLORS.teal, COLORS.coral, COLORS.violet];
+  var ringSegs = isMobile ? 48 : 96;
+  var rings = ringDefs.map(function(c, idx){
+    var mat = new THREE.MeshBasicMaterial({ color: c.clone(), transparent: true, opacity: 0 });
+    var ring = new THREE.Mesh(new THREE.TorusGeometry(1.85 + idx * 0.24, 0.014, 8, ringSegs), mat);
+    ring.rotation.x = Math.PI / 2 + idx * 0.4;
+    ring.rotation.y = idx * 0.6;
+    irisGroup.add(ring);
+    return ring;
+  });
+
+  var gridGroup = new THREE.Group();
+  gridGroup.position.z = -0.4;
+  for (var gx = -1.5; gx <= 1.5; gx++) {
+    for (var gy = -1.5; gy <= 1.5; gy++) {
+      var cmat = new THREE.MeshBasicMaterial({ color: COLORS.amber.clone(), wireframe: true, transparent: true, opacity: 0 });
+      var cube = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.32, 0.32), cmat);
+      cube.position.set(gx * 0.6, gy * 0.6, 0);
+      gridGroup.add(cube);
+    }
+  }
+  irisGroup.add(gridGroup);
+
+  function applyIris(open){
+    bladePivots.forEach(function(p){
+      var blade = p.children[0];
+      var radius = THREE.MathUtils.lerp(0.12, 1.55, open);
+      blade.position.x = radius;
+      blade.rotation.z = THREE.MathUtils.lerp(1.15, 0.12, open);
+      blade.scale.y = THREE.MathUtils.lerp(1.7, 0.65, open);
+    });
+  }
+
+  function applyColor(c){
+    bladePivots.forEach(function(p){ p.children[0].material.color.copy(c); });
+    coreMat.color.copy(c);
+  }
+
+  /* ---------------- REEL TARGETS (eased toward each frame, no tween library needed) ---------------- */
+  var REEL_TARGETS = {
+    hero: { open: 0.12, color: COLORS.amber, ring: 0, grid: 0 },
+    about: { open: 0.42, color: COLORS.amber, ring: 0, grid: 0 },
+    toolkit: { open: 0.72, color: COLORS.amber, ring: 0, grid: 0 },
+    'case-flow': { open: 0.85, color: COLORS.teal, ring: 1, grid: 0 },
+    'case-habitnest': { open: 0.85, color: COLORS.coral, ring: 1, grid: 0 },
+    'case-citysense': { open: 0.85, color: COLORS.violet, ring: 1, grid: 0 },
+    method: { open: 0.5, color: COLORS.amber, ring: 0, grid: 1 },
+    contact: { open: 0.03, color: COLORS.amber, ring: 0, grid: 0 }
+  };
+  var target = REEL_TARGETS.hero;
+  var lerpSpeed = reduceMotion ? 1 : 0.06;
+
+  var rafId = null;
+  function loop(){
+    state.open += (target.open - state.open) * lerpSpeed;
+    state.ringOpacity += (target.ring - state.ringOpacity) * lerpSpeed;
+    state.gridOpacity += (target.grid - state.gridOpacity) * lerpSpeed;
+    state.color.r += (target.color.r - state.color.r) * lerpSpeed;
+    state.color.g += (target.color.g - state.color.g) * lerpSpeed;
+    state.color.b += (target.color.b - state.color.b) * lerpSpeed;
+
+    applyIris(state.open);
+    applyColor(state.color);
+    rings.forEach(function(r){ r.material.opacity = state.ringOpacity; });
+    gridGroup.children.forEach(function(cube){ cube.material.opacity = state.gridOpacity * 0.85; });
+    irisGroup.rotation.x = state.tilt;
+    if (!reduceMotion) {
+      irisGroup.rotation.y += 0.0022;
+      rings.forEach(function(r, idx){ r.rotation.z += 0.0016 * (idx + 1); });
+    }
+    renderer.render(scene, camera);
+    rafId = requestAnimationFrame(loop);
+  }
+  loop();
+
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = null;
+    } else if (!rafId) {
+      loop();
+    }
+  });
+
+  /* ---------------- ACTIVE REEL (IntersectionObserver, no scroll library needed) ---------------- */
+  var SLUGS = {
+    hero: 'FADE IN: INT. OPENING TITLES — CONTINUOUS',
+    about: 'INT. THE STUDIO — DAY',
+    toolkit: 'INT. THE TOOLKIT — CONTINUOUS',
+    'case-flow': 'INT. A BUDGETING APP — FINTECH',
+    'case-habitnest': 'EXT. THE MORNING ROUTINE — HEALTH',
+    'case-citysense': 'EXT. AN UNFAMILIAR CITY — TRAVEL',
+    method: 'INT. THE CUTTING ROOM — NIGHT',
+    contact: 'INT./EXT. WHEREVER YOU ARE — CONTINUOUS'
+  };
+  var REEL_NUMBER = { hero: 1, about: 2, toolkit: 3, 'case-flow': 4, 'case-habitnest': 4, 'case-citysense': 4, method: 5, contact: 6 };
+  var NAV_MAP = { hero: 'hero', about: 'about', toolkit: 'toolkit', 'case-flow': 'cases', 'case-habitnest': 'cases', 'case-citysense': 'cases', method: 'method', contact: 'contact' };
+
+  var sluglineEl = document.getElementById('slugline');
+  var reelcountEl = document.getElementById('reelcount');
+  var navLinks = document.querySelectorAll('[data-reel-link]');
+
+  function setActive(id){
+    sluglineEl.textContent = SLUGS[id];
+    reelcountEl.textContent = 'REEL ' + REEL_NUMBER[id] + '/6';
+    navLinks.forEach(function(a){
+      var isActive = a.getAttribute('data-reel-link') === NAV_MAP[id];
+      if (isActive) { a.classList.add('is-active'); } else { a.classList.remove('is-active'); }
+    });
+    target = REEL_TARGETS[id];
+  }
+
+  var reelObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) setActive(entry.target.id);
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+  Object.keys(SLUGS).forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) reelObserver.observe(el);
+  });
+
+  /* ---------------- SCROLL PROGRESS / TIMECODE / CHAPTER SCRUBBER ---------------- */
+  var RUNTIME_SECONDS = 8 * 60 + 42;
+  var timecodeEl = document.getElementById('timecode');
+  var fillEl = document.getElementById('progress-fill');
+  var segmentFillMap = {};
+  document.querySelectorAll('[data-fill]').forEach(function(el){ segmentFillMap[el.getAttribute('data-fill')] = el; });
+  var chapterBounds = [];
+
+  function measureChapters(){
+    var ids = ['hero', 'about', 'toolkit', 'cases', 'method', 'contact'];
+    chapterBounds = ids.map(function(id){
+      var el = document.getElementById(id);
+      return { id: id, start: el.offsetTop, end: el.offsetTop + el.offsetHeight };
+    });
+  }
+  measureChapters();
+  window.addEventListener('resize', measureChapters);
+
+  function updateProgress(){
+    var scrollTop = window.scrollY || document.documentElement.scrollTop;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(Math.max(scrollTop / max, 0), 1) : 0;
+    var secs = Math.floor(p * RUNTIME_SECONDS);
+    var mm = String(Math.floor(secs / 60)).padStart(2, '0');
+    var ss = String(secs % 60).padStart(2, '0');
+    timecodeEl.textContent = mm + ':' + ss;
+    fillEl.style.width = (p * 100) + '%';
+    state.tilt = (p - 0.5) * 0.3;
+
+    var playhead = scrollTop + window.innerHeight * 0.5;
+    chapterBounds.forEach(function(ch){
+      var fillEl2 = segmentFillMap[ch.id];
+      if (!fillEl2) return;
+      var span = ch.end - ch.start;
+      var chapterP = span > 0 ? (playhead - ch.start) / span : 0;
+      fillEl2.style.width = (Math.min(Math.max(chapterP, 0), 1) * 100) + '%';
+    });
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  /* ---------------- REVEAL ON SCROLL (IntersectionObserver + CSS transition) ---------------- */
+  document.body.classList.add('js-ready');
+  var revealObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(function(el){ revealObserver.observe(el); });
+})();
+</script>

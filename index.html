@@ -34,6 +34,7 @@
   p, .body-copy{max-width:62ch;}
 
   #stage3d{position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;}
+  #particles{position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;}
 
   .grain{
     position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
@@ -114,6 +115,7 @@
 </script>
 <script src="https://cdn.tailwindcss.com"></script>
 
+<canvas id="particles" aria-hidden="true"></canvas>
 <canvas id="stage3d" aria-hidden="true"></canvas>
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
@@ -631,6 +633,112 @@
     coreMat.color.copy(c);
   }
 
+  /* ---------------- AMBIENT PARTICLE DRIFT (2D canvas, painted behind the aperture) ---------------- */
+  var pCanvas = document.getElementById('particles');
+  var pCtx = pCanvas.getContext('2d');
+  var pWidth = 0, pHeight = 0;
+  var mouseX = -1000, mouseY = -1000;
+
+  function sizeParticles(){
+    pWidth = window.innerWidth;
+    pHeight = window.innerHeight;
+    var dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
+    pCanvas.width = pWidth * dpr;
+    pCanvas.height = pHeight * dpr;
+    pCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  sizeParticles();
+  window.addEventListener('resize', sizeParticles);
+
+  window.addEventListener('mousemove', function(e){ mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
+  window.addEventListener('touchmove', function(e){
+    if (e.touches && e.touches[0]) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; }
+  }, { passive: true });
+
+  var MARKS = ['0', '1', '·', '+', '•', '/'];
+  var pNodeCount = isMobile ? 30 : 55;
+  var pBeamCount = isMobile ? 7 : 14;
+  var LINK_DIST = 110;
+  var GLOW_DIST = 140;
+
+  var pNodes = Array.from({ length: pNodeCount }).map(function(){
+    return {
+      x: Math.random() * pWidth,
+      y: Math.random() * pHeight,
+      vy: Math.random() * 0.22 + 0.05,
+      mark: MARKS[Math.floor(Math.random() * MARKS.length)]
+    };
+  });
+  var pBeams = Array.from({ length: pBeamCount }).map(function(){
+    return {
+      x: Math.random() * pWidth,
+      y: Math.random() * pHeight,
+      length: Math.random() * 90 + 40,
+      speed: Math.random() * 2.2 + 1,
+      opacity: Math.random() * 0.3 + 0.18
+    };
+  });
+
+  function drawParticles(r, g, b){
+    pCtx.clearRect(0, 0, pWidth, pHeight);
+    var accent = 'rgba(' + r + ',' + g + ',' + b + ',';
+
+    pBeams.forEach(function(beam){
+      if (!reduceMotion) {
+        beam.y -= beam.speed;
+        if (beam.y + beam.length < 0) { beam.y = pHeight + 60; beam.x = Math.random() * pWidth; }
+      }
+      var grad = pCtx.createLinearGradient(beam.x, beam.y, beam.x, beam.y + beam.length);
+      grad.addColorStop(0, accent + beam.opacity + ')');
+      grad.addColorStop(1, 'transparent');
+      pCtx.strokeStyle = grad;
+      pCtx.lineWidth = 1.1;
+      pCtx.beginPath();
+      pCtx.moveTo(beam.x, beam.y);
+      pCtx.lineTo(beam.x, beam.y + beam.length);
+      pCtx.stroke();
+    });
+
+    pCtx.font = '11px "Courier Prime", monospace';
+    pCtx.textAlign = 'center';
+    pCtx.textBaseline = 'middle';
+    pCtx.lineWidth = 0.5;
+
+    for (var i = 0; i < pNodes.length; i++) {
+      for (var j = i + 1; j < pNodes.length; j++) {
+        var n1 = pNodes[i], n2 = pNodes[j];
+        var d = Math.hypot(n1.x - n2.x, n1.y - n2.y);
+        if (d < LINK_DIST) {
+          pCtx.strokeStyle = 'rgba(148,140,124,' + (0.1 * (1 - d / LINK_DIST)) + ')';
+          pCtx.beginPath();
+          pCtx.moveTo(n1.x, n1.y);
+          pCtx.lineTo(n2.x, n2.y);
+          pCtx.stroke();
+        }
+      }
+    }
+
+    pNodes.forEach(function(n){
+      if (!reduceMotion) {
+        n.y += n.vy;
+        if (n.y > pHeight + 16) { n.y = -16; n.x = Math.random() * pWidth; }
+      }
+      var dist = Math.hypot(mouseX - n.x, mouseY - n.y);
+      if (dist < GLOW_DIST) {
+        if (Math.random() > 0.94) n.mark = MARKS[Math.floor(Math.random() * MARKS.length)];
+        pCtx.strokeStyle = accent + (0.28 * (1 - dist / GLOW_DIST)) + ')';
+        pCtx.beginPath();
+        pCtx.moveTo(n.x, n.y);
+        pCtx.lineTo(mouseX, mouseY);
+        pCtx.stroke();
+        pCtx.fillStyle = accent + '0.85)';
+      } else {
+        pCtx.fillStyle = 'rgba(148,140,124,0.32)';
+      }
+      pCtx.fillText(n.mark, n.x, n.y);
+    });
+  }
+
   /* ---------------- REEL TARGETS (eased toward each frame, no tween library needed) ---------------- */
   var REEL_TARGETS = {
     hero: { open: 0.12, color: COLORS.amber, ring: 0, grid: 0 },
@@ -663,6 +771,7 @@
       irisGroup.rotation.y += 0.0022;
       rings.forEach(function(r, idx){ r.rotation.z += 0.0016 * (idx + 1); });
     }
+    drawParticles(Math.round(state.color.r * 255), Math.round(state.color.g * 255), Math.round(state.color.b * 255));
     renderer.render(scene, camera);
     rafId = requestAnimationFrame(loop);
   }

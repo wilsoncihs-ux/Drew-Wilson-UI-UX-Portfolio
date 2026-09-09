@@ -1,7 +1,7 @@
 <title>Drew Wilson</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
 
 <style>
   :root{
@@ -12,10 +12,10 @@
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   html.has-cursor, html.has-cursor a, html.has-cursor button{ cursor:none; }
-  body{ background:var(--ink); color:var(--bone); font-family:'Manrope', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  body{ background:var(--ink); color:var(--bone); font-family:'Inter', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
   section, footer{ scroll-margin-top:6rem; }
-  .font-display{ font-family:'Bricolage Grotesque', ui-sans-serif, sans-serif; letter-spacing:-0.02em; }
-  .font-mono{ font-family:'Space Mono', ui-monospace, monospace; }
+  .font-display{ font-family:'Inter', ui-sans-serif, sans-serif; letter-spacing:-0.02em; }
+  .font-mono{ font-family:'Inter', ui-sans-serif, sans-serif; font-variant-numeric:tabular-nums; }
 
   #cursor{ position:fixed; top:0; left:0; width:9px; height:9px; border-radius:50%; background:var(--signal); pointer-events:none; z-index:100; transform:translate(-50%,-50%); transition:width .3s var(--ease), height .3s var(--ease), background-color .3s var(--ease); mix-blend-mode:difference; display:none; }
   html.has-cursor #cursor{ display:block; }
@@ -89,6 +89,14 @@
   .row-item{ position:relative; overflow:hidden; }
   .row-item::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,92,57,.07), transparent 60%); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease); pointer-events:none; }
   .row-item:hover::before{ transform:scaleX(1); }
+  .icon-badge{ flex-shrink:0; width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; color:var(--signal); }
+  .no-scrollbar::-webkit-scrollbar{ display:none; }
+  .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+  .flow-chip{ border-radius:9999px; border:1px solid rgba(255,255,255,.15); padding:.5rem 1rem; font-family:'Inter',sans-serif; font-variant-numeric:tabular-nums; font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:var(--fog); }
+  .flow-chip.is-signal{ border-color:rgba(255,92,57,.5); color:var(--signal); }
+  .flow-step{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
+  .flow-step .flow-chip{ background:var(--surface); }
+
   .row-toggle{ position:relative; width:13px; height:13px; flex-shrink:0; color:var(--fog); }
   .row-item.is-open .row-toggle{ color:var(--signal); }
   .row-toggle::before, .row-toggle::after{ content:''; position:absolute; background:currentColor; transition:transform .3s var(--ease); }
@@ -117,9 +125,9 @@
     theme:{ extend:{
       colors:{ ink:'#0a0a09', surface:'#141311', bone:'#f3efe7', fog:'#8a8377', signal:'#ff5c39' },
       fontFamily:{
-        display:['"Bricolage Grotesque"','ui-sans-serif','sans-serif'],
-        sans:['Manrope','ui-sans-serif','system-ui','sans-serif'],
-        mono:['"Space Mono"','ui-monospace','monospace'],
+        display:['Inter','ui-sans-serif','sans-serif'],
+        sans:['Inter','ui-sans-serif','system-ui','sans-serif'],
+        mono:['Inter','ui-sans-serif','sans-serif'],
       }
     }}
   }
@@ -205,6 +213,264 @@
       </div>
 
       <div id="work-list" class="reveal"></div>
+    </div>
+  </section>
+
+  <!-- ============ CASE STUDY: FLOW ============ -->
+  <section id="case-flow" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/40 border-t border-white/10">
+    <div class="max-w-[1320px] mx-auto">
+
+      <div class="reveal mb-14">
+        <a href="#work" class="link-underline font-mono text-xs uppercase tracking-widest text-fog hover:text-signal transition-colors inline-block mb-8">&larr; Back to Selected Work</a>
+        <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal mb-5">[ Case Study &mdash; Fintech ]</p>
+        <h2 class="font-display font-bold tracking-tight text-4xl sm:text-6xl mb-4">Flow</h2>
+        <p class="text-fog text-lg sm:text-xl max-w-2xl">AI-assisted personal budgeting, for people the banking apps forgot.</p>
+      </div>
+
+      <!-- sub nav -->
+      <div class="reveal marquee-mask overflow-x-auto no-scrollbar mb-16 sm:mb-24 border-y border-white/10 py-4">
+        <div class="flex gap-8 font-mono text-xs uppercase tracking-widest text-fog w-max">
+          <a href="#flow-personas" class="hover:text-signal transition-colors">Personas</a>
+          <a href="#flow-objectives" class="hover:text-signal transition-colors">Objectives</a>
+          <a href="#flow-research" class="hover:text-signal transition-colors">Research</a>
+          <a href="#flow-scope" class="hover:text-signal transition-colors">Scope</a>
+          <a href="#flow-architecture" class="hover:text-signal transition-colors">Architecture</a>
+          <a href="#flow-flows" class="hover:text-signal transition-colors">User Flows</a>
+          <a href="#flow-writing" class="hover:text-signal transition-colors">UX Writing</a>
+          <a href="#flow-learned" class="hover:text-signal transition-colors">Reflection</a>
+        </div>
+      </div>
+
+      <!-- TL;DR / STAR -->
+      <div class="reveal rounded-2xl border border-signal/30 bg-signal/[0.04] p-6 sm:p-8 mb-20 sm:mb-28">
+        <p class="font-mono text-xs uppercase tracking-widest text-signal mb-5">TL;DR</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6">
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">5 wks</p><p class="text-fog text-xs mt-1">Solo, end-to-end</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">3</p><p class="text-fog text-xs mt-1">Personas researched</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">12</p><p class="text-fog text-xs mt-1">User interviews</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">&ge;45</p><p class="text-fog text-xs mt-1">Target NPS</p></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-bone/85 border-t border-white/10 pt-6">
+          <p><span class="text-signal font-semibold">Situation &mdash;</span> Budgeting apps show numbers; they don't build trust or explain the "why" behind advice.</p>
+          <p><span class="text-signal font-semibold">Task &mdash;</span> Design an AI-assisted budgeting system for users with irregular or tight incomes, shippable by a small team in 5 weeks.</p>
+          <p><span class="text-signal font-semibold">Action &mdash;</span> Ran discovery (interviews, diary study, survey), mapped 3 personas, scoped an MVP, and delivered a tested design system with tokens and dev-ready specs.</p>
+          <p><span class="text-signal font-semibold">Result &mdash;</span> A validated IA, a mid-fi prototype tested with real users (n=6), and a handoff-ready visual system targeting <strong class="text-bone">35%+ Day-1 activation</strong> and <strong class="text-bone">25%+ Week-4 retention</strong>.</p>
+        </div>
+      </div>
+
+      <!-- OVERVIEW -->
+      <div class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Overview</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Goal</p><p class="text-fog leading-relaxed">Help 20&ndash;40 y/o users automatically track spending, forecast cashflow, and make smarter money decisions with an AI assistant.</p></div>
+          </div>
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Primary Outcomes</p><p class="text-fog leading-relaxed">Activation, 12-week retention, and savings rate.</p></div>
+          </div>
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Platforms</p><p class="text-fog leading-relaxed">iOS / Android, with responsive web to follow.</p></div>
+          </div>
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Constraints</p><p class="text-fog leading-relaxed">Read-only banking via aggregator (Plaid-like); CSV import at MVP.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONAS -->
+      <div id="flow-personas" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Users &amp; Needs</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div class="rounded-2xl border border-white/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-white/5 border border-white/10 font-display font-bold text-sm">AN</span>
+              <div><p class="font-display font-semibold">Anna, 28</p><p class="text-fog text-xs">Marketing Specialist</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">Lives paycheck to paycheck.</p>
+            <p class="text-sm text-fog">Needs clarity on finances and simple savings goals.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-white/5 border border-white/10 font-display font-bold text-sm">MK</span>
+              <div><p class="font-display font-semibold">Marek, 34</p><p class="text-fog text-xs">Freelancer</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">Has irregular income streams.</p>
+            <p class="text-sm text-fog">Needs cashflow forecasting and a dedicated tax bucket.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-white/5 border border-white/10 font-display font-bold text-sm">SR</span>
+              <div><p class="font-display font-semibold">Sara, 22</p><p class="text-fog text-xs">Student</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">Manages micro-budgets.</p>
+            <p class="text-sm text-fog">Needs real-time spending alerts and a clear "safe-to-spend" indicator.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- OBJECTIVES -->
+      <div id="flow-objectives" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Business Objectives &amp; Success Metrics</p>
+        <div class="reveal rounded-2xl border border-white/10 p-6 sm:p-8">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-2">North Star</p>
+          <p class="font-display text-lg sm:text-xl mb-6">Weekly Active Planners &mdash; users who set or track at least one goal weekly.</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">KPIs (targets set during scoping)</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip">Day-1 Activation &ge; 35%</span>
+            <span class="flow-chip">Week-4 Retention &ge; 25%</span>
+            <span class="flow-chip">Savings Rate +5% / 3mo</span>
+            <span class="flow-chip">NPS &ge; 45</span>
+            <span class="flow-chip">AI Chat CSAT &ge; 4.5 / 5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESEARCH -->
+      <div id="flow-research" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Competitive &amp; Discovery Research</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+          <div class="rounded-2xl border border-white/10 p-6">
+            <p class="font-display font-semibold mb-1">User Interviews</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">12 participants</p>
+            <p class="text-fog text-sm leading-relaxed">Mix of individuals with regular and irregular income streams.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 p-6">
+            <p class="font-display font-semibold mb-1">Diary Study</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">2 weeks &middot; 8 participants</p>
+            <p class="text-fog text-sm leading-relaxed">Participants logged daily "money moments" as they happened.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 p-6">
+            <p class="font-display font-semibold mb-1">Survey</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">150 respondents</p>
+            <p class="text-fog text-sm leading-relaxed">Explored budgeting habits, pain points, and signals of trust.</p>
+          </div>
+        </div>
+        <div class="reveal rounded-2xl border border-white/10 p-6 sm:p-8">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-4">Key Hypotheses Validated</p>
+          <ul class="space-y-2.5 text-sm text-bone/85">
+            <li class="flex gap-3"><span class="text-signal">&mdash;</span>Users prefer automated categorization over manual entry.</li>
+            <li class="flex gap-3"><span class="text-signal">&mdash;</span>Users want short-term cash flow forecasting, not just history.</li>
+            <li class="flex gap-3"><span class="text-signal">&mdash;</span>Users find value in actionable micro-nudges instead of spreadsheets.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SCOPE -->
+      <div id="flow-scope" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Scope</p>
+        <div class="reveal mb-6">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">MVP Features</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip is-signal">Secure Onboarding</span>
+            <span class="flow-chip is-signal">Account Connect / Import</span>
+            <span class="flow-chip is-signal">Automatic Categorization</span>
+            <span class="flow-chip is-signal">Budgets by Category</span>
+            <span class="flow-chip is-signal">Alerts</span>
+            <span class="flow-chip is-signal">"Safe-to-Spend" View</span>
+            <span class="flow-chip is-signal">30-Day Forecast</span>
+            <span class="flow-chip is-signal">AI Chat ("What if&hellip;?")</span>
+            <span class="flow-chip is-signal">Goals Vault</span>
+            <span class="flow-chip is-signal">Export CSV</span>
+          </div>
+        </div>
+        <div class="reveal">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">Version 2 (Stretch)</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip">Bill Detection &amp; Negotiation</span>
+            <span class="flow-chip">Shared Budgets</span>
+            <span class="flow-chip">Credit Score Coach</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCHITECTURE -->
+      <div id="flow-architecture" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-3">Information Architecture</p>
+        <p class="reveal text-fog text-sm max-w-2xl mb-8">Flow is mobile-first, so navigation is a persistent bottom tab bar rather than a sidebar &mdash; the structural breakdown of the Home dashboard below reflects that.</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+          <div class="rounded-2xl border border-white/10 p-6">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-3">Global Navigation</p>
+            <p class="text-fog text-sm leading-relaxed">Bottom tab bar &mdash; Home, Budgets, Goals, Insights, Chat. Persistent across the app; active tab indicated by icon + label fill.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 p-6">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-3">Primary Content (Home)</p>
+            <p class="text-fog text-sm leading-relaxed">Balance header, Safe-to-Spend card, Upcoming Bills, Latest Transactions, Progress Toward Goals &mdash; stacked, scrollable, priority-ordered.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 p-6">
+            <p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-3">Contextual Layer</p>
+            <p class="text-fog text-sm leading-relaxed">No persistent sidebar on mobile &mdash; contextual actions (edit rules, filters) surface as sheets anchored to the element they act on.</p>
+          </div>
+        </div>
+        <div class="reveal grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Home</p><p class="text-fog text-[11px]">Balance &middot; Safe-to-spend &middot; Bills</p></div>
+          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Budgets</p><p class="text-fog text-[11px]">Categories &middot; Limits &middot; Progress</p></div>
+          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Goals</p><p class="text-fog text-[11px]">Emergency Fund &middot; Travel &middot; Payoff</p></div>
+          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Insights</p><p class="text-fog text-[11px]">Trends &middot; Merchants &middot; Anomalies</p></div>
+          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Chat</p><p class="text-fog text-[11px]">NL Q&amp;A &middot; Quick Prompts</p></div>
+        </div>
+      </div>
+
+      <!-- USER FLOWS -->
+      <div id="flow-flows" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Core User Flows</p>
+        <div data-stagger class="space-y-7">
+          <div>
+            <p class="font-display font-semibold mb-3">Onboarding &amp; Connect</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Email / Apple / Google</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. Consent</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">3. Connect Bank or CSV</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">4. First Categorization</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">5. Set Top 3 Goals</span>
+            </div>
+          </div>
+          <div>
+            <p class="font-display font-semibold mb-3">Create Budget</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Pick Categories</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. Auto-Suggest Limits</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">3. Confirm</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">4. Enable Alerts</span>
+            </div>
+          </div>
+          <div>
+            <p class="font-display font-semibold mb-3">Ask the AI</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Type / Voice Question</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. Model Returns Forecast + Explanation</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">3. 1-Tap Action (adjust budget, set goal, remind)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UX WRITING -->
+      <div id="flow-writing" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">UX Writing (Sample Copy)</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="rounded-2xl border border-white/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Value Prop</p><p class="font-display italic text-lg">&ldquo;See your money clearly. Spend with confidence.&rdquo;</p></div>
+          <div class="rounded-2xl border border-white/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Empty State</p><p class="font-display italic text-lg">&ldquo;Once you connect an account, we'll show your safe-to-spend and upcoming bills here.&rdquo;</p></div>
+          <div class="rounded-2xl border border-white/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Error</p><p class="font-display italic text-lg">&ldquo;We couldn't connect to your bank right now. Try again or import a CSV.&rdquo;</p></div>
+          <div class="rounded-2xl border border-white/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Privacy Note</p><p class="font-display italic text-lg">&ldquo;You're in control. Delete your data anytime in Settings.&rdquo;</p></div>
+        </div>
+      </div>
+
+      <!-- REFLECTION -->
+      <div id="flow-learned" class="reveal scroll-mt-32 rounded-2xl border border-signal/30 bg-signal/[0.04] p-6 sm:p-8">
+        <p class="font-mono text-xs uppercase tracking-widest text-signal mb-4">What I Learned</p>
+        <p class="font-display text-xl sm:text-2xl mb-6">Financial design is trust wearing an interface.</p>
+        <ul class="space-y-2.5 text-sm text-bone/85 mb-6">
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>Connecting bank data creates real anxiety; transparency and clear onboarding reduced friction.</li>
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>Automation had to stay explainable &mdash; people accepted AI advice only when they understood the "why."</li>
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>Small micro-nudges outperformed complex dashboards for daily engagement.</li>
+        </ul>
+        <p class="text-fog text-sm">Transparency about data &mdash; not more features &mdash; was what got people to connect their first account.</p>
+      </div>
+
     </div>
   </section>
 
@@ -444,7 +710,7 @@
 
   /* ---- selected work: numbered expandable list ---- */
   var WORK = [
-    { title: 'Flow', cat: 'Fintech', desc: "AI-assisted personal budgeting, for people the banking apps forgot. Research-led design system built around trust, not just charts.", meta: '2026 · Case File · Research, UX, Design System' },
+    { title: 'Flow', cat: 'Fintech', desc: "AI-assisted personal budgeting, for people the banking apps forgot. Research-led design system built around trust, not just charts.", meta: '2026 · Case File · Research, UX, Design System', link: '#case-flow' },
     { title: 'HabitNest+', cat: 'Health & Habits', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul. Behavioral design over raw feature count.', meta: '2026 · Case File · Mobile UX, Behavioral Design' },
     { title: 'CitySense', cat: 'Smart City & Travel', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options. Context-aware over exhaustive.', meta: '2026 · Case File · AR/Map UX, Interaction Design' }
   ];
@@ -464,7 +730,8 @@
           '</button>' +
           '<div class="row-content"><div>' +
             '<p class="text-fog leading-relaxed max-w-xl pb-4 pl-[2.6rem] sm:pl-[4.5rem]">' + item.desc + '</p>' +
-            '<p class="font-mono text-xs uppercase tracking-widest text-fog pb-8 pl-[2.6rem] sm:pl-[4.5rem]">' + item.meta + '</p>' +
+            '<p class="font-mono text-xs uppercase tracking-widest text-fog pb-4 pl-[2.6rem] sm:pl-[4.5rem]">' + item.meta + '</p>' +
+            (item.link ? '<a href="' + item.link + '" class="arrow-cta inline-flex items-center gap-2 text-signal text-sm font-semibold pl-[2.6rem] sm:pl-[4.5rem] pb-8">View Full Case Study <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>' : '<div class="pb-8"></div>') +
           '</div></div>' +
         '</div>'
       );

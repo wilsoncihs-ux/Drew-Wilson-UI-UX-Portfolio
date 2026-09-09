@@ -5,8 +5,8 @@
 
 <style>
   :root{
-    --ink:#f3efe7; --surface:#ece7dc; --bone:#0a0a09;
-    --fog:#6b6459; --line:rgba(10,10,9,.12); --signal:#ff5c39;
+    --ink:#f7f1e6; --surface:#efe6d8; --bone:#2b2118;
+    --fog:#7a6b58; --line:rgba(43,33,24,.14); --signal:#d97a3f;
     --ease:cubic-bezier(.16,1,.3,1);
   }
   *{box-sizing:border-box;}
@@ -31,9 +31,6 @@
 
   .watermark{ font-family:'Inter', sans-serif; font-weight:800; color:var(--bone); opacity:.03; line-height:.8; white-space:nowrap; pointer-events:none; user-select:none; }
 
-  #menu-overlay{ transform:translateY(-101%); transition:transform .7s var(--ease); }
-  #menu-overlay.is-open{ transform:translateY(0); }
-
   .row-item{ border-top:1px solid var(--line); }
   .row-item:last-child{ border-bottom:1px solid var(--line); }
   .row-content{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .5s var(--ease); }
@@ -50,27 +47,15 @@
   #scroll-progress{ position:fixed; top:0; left:0; height:2px; background:var(--signal); z-index:70; width:0%; }
 
   /* -------- left-edge section tracker (desktop) -------- */
-  #section-nav{ position:fixed; left:2rem; top:50%; transform:translateY(-50%); z-index:45; display:none; flex-direction:column; gap:26px; }
-  @media (min-width:1024px){ #section-nav{ display:flex; } }
+  #section-nav{ position:fixed; left:.75rem; top:50%; transform:translateY(-50%); z-index:45; display:flex; flex-direction:column; gap:18px; }
+  @media (min-width:1024px){ #section-nav{ left:2rem; gap:26px; } }
   #section-nav .dot-line-track{ position:absolute; left:2px; top:4px; bottom:4px; width:1px; background:var(--line); }
   #section-nav .dot-line-fill{ position:absolute; left:2px; top:4px; width:1px; background:var(--signal); height:0%; transition:height .3s var(--ease); }
-  #section-nav a{ position:relative; display:flex; align-items:center; padding:2px 0; }
+  #section-nav a{ position:relative; display:flex; align-items:center; padding:6px 0; }
   #section-nav .dot{ width:5px; height:5px; margin-left:0.5px; border-radius:50%; background:var(--fog); transition:background-color .3s var(--ease), transform .3s var(--ease); }
   #section-nav a.is-active .dot{ background:var(--signal); transform:scale(1.8); }
-  #section-nav .num-label{ position:absolute; left:18px; font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.12em; color:var(--fog); opacity:0; transform:translateX(-4px); transition:opacity .25s var(--ease), transform .25s var(--ease); white-space:nowrap; }
-  #section-nav a:hover .num-label, #section-nav a.is-active .num-label{ opacity:1; transform:translateX(0); color:var(--signal); }
-
-  /* -------- hamburger <-> close morph -------- */
-  .burger{ position:relative; width:15px; height:9px; display:inline-block; }
-  .burger span{ position:absolute; left:0; width:100%; height:1.5px; background:currentColor; transition:transform .35s var(--ease), top .35s var(--ease); }
-  .burger span:nth-child(1){ top:0; }
-  .burger span:nth-child(2){ top:100%; margin-top:-1.5px; }
-  #menu-toggle.is-open .burger span:nth-child(1){ top:50%; transform:translateY(-50%) rotate(45deg); }
-  #menu-toggle.is-open .burger span:nth-child(2){ top:50%; margin-top:0; transform:translateY(-50%) rotate(-45deg); }
-
-  /* -------- menu link stagger-in -------- */
-  #menu-overlay nav a{ opacity:0; transform:translateY(24px); transition:opacity .5s var(--ease), transform .5s var(--ease), color .25s var(--ease); }
-  #menu-overlay.is-open nav a{ opacity:1; transform:translateY(0); }
+  #section-nav .num-label{ position:absolute; left:18px; font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.12em; color:var(--fog); opacity:0; transform:translateX(-4px); transition:opacity .25s var(--ease), transform .25s var(--ease); white-space:nowrap; pointer-events:none; }
+  @media (min-width:1024px){ #section-nav a:hover .num-label, #section-nav a.is-active .num-label{ opacity:1; transform:translateX(0); color:var(--signal); } }
 
   /* -------- underline-draw links -------- */
   .link-underline{ position:relative; }
@@ -88,7 +73,7 @@
 
   /* -------- work-row hover sweep + expand icon -------- */
   .row-item{ position:relative; overflow:hidden; }
-  .row-item::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,92,57,.07), transparent 60%); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease); pointer-events:none; }
+  .row-item::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, color-mix(in srgb, var(--signal) 10%, transparent), transparent 60%); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease); pointer-events:none; }
   .row-item:hover::before{ transform:scaleX(1); }
   .icon-badge{ flex-shrink:0; width:44px; height:44px; border-radius:50%; border:1px solid color-mix(in srgb, var(--signal) 40%, transparent); display:flex; align-items:center; justify-content:center; color:var(--signal); }
   .no-scrollbar::-webkit-scrollbar{ display:none; }
@@ -143,10 +128,6 @@
   <div class="max-w-[1320px] w-full mx-auto flex items-center justify-between">
     <a href="#top" data-magnetic class="font-display font-bold text-lg text-bone">Drew Wilson<span class="text-signal">.</span></a>
     <p data-clock class="hidden sm:block font-mono text-xs tracking-widest text-fog">COLUMBUS, OH &mdash; 00:00</p>
-    <button type="button" id="menu-toggle" data-magnetic class="font-mono text-xs tracking-widest uppercase border border-bone/15 rounded-full pl-4 pr-5 py-2.5 h-11 flex items-center gap-2.5 hover:border-signal hover:text-signal transition-colors">
-      <span class="burger"><span></span><span></span></span>
-      <span id="menu-label">Menu</span>
-    </button>
   </div>
 </header>
 
@@ -160,21 +141,6 @@
   <a href="#about" data-section-link="about"><span class="dot"></span><span class="num-label">04 &mdash; Signal</span></a>
   <a href="#contact" data-section-link="contact"><span class="dot"></span><span class="num-label">05 &mdash; Contact</span></a>
 </nav>
-
-<!-- FULLSCREEN MENU -->
-<div id="menu-overlay" class="fixed inset-0 z-40 bg-ink flex flex-col justify-center px-5 sm:px-8 lg:px-12">
-  <nav class="max-w-[1320px] w-full mx-auto flex flex-col gap-2">
-    <a href="#work" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">Selected Work</a>
-    <a href="#practice" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">Practice</a>
-    <a href="#about" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">Signal</a>
-    <a href="#contact" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">Contact</a>
-  </nav>
-  <div class="max-w-[1320px] w-full mx-auto mt-14 flex flex-wrap gap-x-10 gap-y-2 font-mono text-xs tracking-widest text-fog uppercase">
-    <a href="mailto:wilson.cihs@gmail.com" class="link-underline hover:text-signal transition-colors">wilson.cihs@gmail.com</a>
-    <span>614-736-8065</span>
-    <span>Columbus, OH</span>
-  </div>
-</div>
 
 <main id="top">
 
@@ -239,7 +205,7 @@
   </section>
 
   <!-- ============ 02 SELECTED WORK ============ -->
-  <section id="work" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12">
+  <section id="work" class="py-14 sm:py-20 px-5 sm:px-8 lg:px-12">
     <div class="max-w-[1320px] mx-auto">
       <div class="reveal flex items-baseline justify-between mb-14 sm:mb-20">
         <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal">[ 02 &mdash; Selected Work ]</p>
@@ -251,7 +217,7 @@
   </section>
 
   <!-- ============ CASE STUDY: FLOW ============ -->
-  <section id="case-flow" style="--signal:#1f6f5c" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/40 border-t border-bone/22">
+  <section id="case-flow" style="--signal:#7a8f5c; background:color-mix(in srgb, var(--signal) 6%, var(--ink));" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
     <div class="max-w-[1320px] mx-auto">
 
       <div class="reveal mb-14">
@@ -509,7 +475,7 @@
   </section>
 
   <!-- ============ CASE STUDY: HABITNEST+ ============ -->
-  <section id="case-habitnest" style="--signal:#b25a34" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
+  <section id="case-habitnest" style="--signal:#c9683f; background:color-mix(in srgb, var(--signal) 7%, var(--ink));" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
     <div class="max-w-[1320px] mx-auto">
 
       <div class="reveal mb-14">
@@ -734,7 +700,7 @@
   </section>
 
   <!-- ============ CASE STUDY: CITYSENSE ============ -->
-  <section id="case-citysense" style="--signal:#6b579c" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/40 border-t border-bone/22">
+  <section id="case-citysense" style="--signal:#96637a; background:color-mix(in srgb, var(--signal) 7%, var(--ink));" class="py-28 sm:py-36 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
     <div class="max-w-[1320px] mx-auto">
 
       <div class="reveal mb-14">
@@ -947,10 +913,10 @@
   </section>
 
   <!-- ============ 03 PRACTICE ============ -->
-  <section id="practice" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/60 border-y border-bone/22">
+  <section id="practice" class="py-14 sm:py-20 px-5 sm:px-8 lg:px-12 bg-surface/60 border-y border-bone/22">
     <div class="max-w-[1320px] mx-auto">
-      <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8">[ 03 &mdash; Practice ]</p>
-      <h2 class="reveal font-display font-semibold text-3xl sm:text-5xl leading-tight max-w-3xl mb-16 sm:mb-20">
+      <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8 text-center">[ 03 &mdash; Practice ]</p>
+      <h2 class="reveal font-display font-semibold text-3xl sm:text-5xl leading-tight max-w-2xl mx-auto mb-14 sm:mb-16 text-center">
         What people see is the surface. What makes it work is the system underneath.
       </h2>
       <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 border-t border-bone/22 pt-10">
@@ -979,8 +945,8 @@
   </section>
 
   <!-- ============ 04 SIGNAL ============ -->
-  <section id="about" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12">
-    <div class="max-w-[1320px] mx-auto">
+  <section id="about" class="py-28 sm:py-40 px-5 sm:px-8 lg:px-12 flex items-center min-h-[70vh]">
+    <div class="max-w-[1320px] mx-auto w-full">
       <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8">[ 04 &mdash; Signal ]</p>
       <h2 class="reveal font-display font-semibold tracking-tight leading-[0.95] text-4xl sm:text-6xl md:text-7xl mb-10 max-w-4xl">
         Interfaces, systems, and the research that earns them.
@@ -999,7 +965,7 @@
   </section>
 
   <!-- ============ 05 CONTACT ============ -->
-  <footer id="contact" class="relative overflow-hidden py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
+  <footer id="contact" class="relative overflow-hidden py-24 sm:py-32 px-5 sm:px-8 lg:px-12 border-t border-bone/22 bg-surface/50">
     <p class="watermark absolute inset-x-0 bottom-0 flex items-end justify-center text-[16vw] translate-y-1/3 -z-0">Contact</p>
 
     <div class="relative max-w-[1320px] mx-auto">
@@ -1008,26 +974,22 @@
         Have a hard problem and a user who deserves better? Let's talk.
       </h2>
 
-      <form id="contact-form" class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 max-w-3xl mb-6">
+      <form id="contact-form" class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5 max-w-3xl mb-6">
         <label class="relative flex flex-col gap-2 group">
           <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Name</span>
-          <input required name="name" type="text" class="bg-transparent border-b border-bone/20 py-2 outline-none" />
-          <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
+          <input required name="name" type="text" placeholder="Jane Doe" class="rounded-xl border border-bone/25 bg-surface/70 px-4 py-3 outline-none transition-colors placeholder:text-fog/60 group-focus-within:border-signal group-focus-within:bg-ink" />
         </label>
         <label class="relative flex flex-col gap-2 group">
           <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Email</span>
-          <input required name="email" type="email" class="bg-transparent border-b border-bone/20 py-2 outline-none" />
-          <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
+          <input required name="email" type="email" placeholder="jane@company.com" class="rounded-xl border border-bone/25 bg-surface/70 px-4 py-3 outline-none transition-colors placeholder:text-fog/60 group-focus-within:border-signal group-focus-within:bg-ink" />
         </label>
         <label class="relative flex flex-col gap-2 group sm:col-span-2">
           <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Project / Context</span>
-          <input name="project" type="text" class="bg-transparent border-b border-bone/20 py-2 outline-none" />
-          <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
+          <input name="project" type="text" placeholder="e.g. Redesigning our onboarding flow" class="rounded-xl border border-bone/25 bg-surface/70 px-4 py-3 outline-none transition-colors placeholder:text-fog/60 group-focus-within:border-signal group-focus-within:bg-ink" />
         </label>
         <label class="relative flex flex-col gap-2 group sm:col-span-2">
           <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Message</span>
-          <textarea required name="message" rows="3" class="bg-transparent border-b border-bone/20 py-2 outline-none resize-none"></textarea>
-          <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
+          <textarea required name="message" rows="4" placeholder="Tell me about the problem you're solving..." class="rounded-xl border border-bone/25 bg-surface/70 px-4 py-3 outline-none transition-colors placeholder:text-fog/60 resize-none group-focus-within:border-signal group-focus-within:bg-ink"></textarea>
         </label>
         <div class="sm:col-span-2 flex items-center gap-5 mt-2">
           <button type="submit" data-magnetic class="arrow-cta inline-flex items-center gap-2 font-mono text-sm tracking-widest uppercase border border-signal text-signal rounded-full px-6 py-3 hover:bg-signal hover:text-bone transition-colors">
@@ -1107,19 +1069,6 @@
     }, 2200);
     wordEl.style.transition = 'opacity .25s ease';
   }
-
-  /* ---- fullscreen menu ---- */
-  var menuOverlay = document.getElementById('menu-overlay');
-  var menuToggle = document.getElementById('menu-toggle');
-  var menuLabel = document.getElementById('menu-label');
-  function closeMenu(){ menuOverlay.classList.remove('is-open'); menuToggle.classList.remove('is-open'); menuLabel.textContent = 'Menu'; document.body.style.overflow = ''; }
-  menuToggle.addEventListener('click', function(){
-    var open = menuOverlay.classList.toggle('is-open');
-    menuToggle.classList.toggle('is-open', open);
-    menuLabel.textContent = open ? 'Close' : 'Menu';
-    document.body.style.overflow = open ? 'hidden' : '';
-  });
-  document.querySelectorAll('[data-menu-link]').forEach(function(a){ a.addEventListener('click', closeMenu); });
 
   /* ---- reveal + stagger ---- */
   document.body.classList.add('js-ready');

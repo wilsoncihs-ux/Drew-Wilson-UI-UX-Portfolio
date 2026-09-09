@@ -5,8 +5,8 @@
 
 <style>
   :root{
-    --ink:#0a0a09; --surface:#141311; --bone:#f3efe7;
-    --fog:#8a8377; --line:rgba(243,239,231,.12); --signal:#ff5c39;
+    --ink:#f3efe7; --surface:#ece7dc; --bone:#0a0a09;
+    --fog:#6b6459; --line:rgba(10,10,9,.12); --signal:#ff5c39;
     --ease:cubic-bezier(.16,1,.3,1);
   }
   *{box-sizing:border-box;}
@@ -29,7 +29,7 @@
   .js-ready [data-stagger] > *{ opacity:0; transform:translateY(16px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
   .js-ready [data-stagger].is-visible > *{ opacity:1; transform:translateY(0); }
 
-  .watermark{ font-family:'Bricolage Grotesque', sans-serif; font-weight:700; color:var(--bone); opacity:.03; line-height:.8; white-space:nowrap; pointer-events:none; user-select:none; }
+  .watermark{ font-family:'Inter', sans-serif; font-weight:800; color:var(--bone); opacity:.03; line-height:.8; white-space:nowrap; pointer-events:none; user-select:none; }
 
   #menu-overlay{ transform:translateY(-101%); transition:transform .7s var(--ease); }
   #menu-overlay.is-open{ transform:translateY(0); }
@@ -57,7 +57,7 @@
   #section-nav a{ position:relative; display:flex; align-items:center; padding:2px 0; }
   #section-nav .dot{ width:5px; height:5px; margin-left:0.5px; border-radius:50%; background:var(--fog); transition:background-color .3s var(--ease), transform .3s var(--ease); }
   #section-nav a.is-active .dot{ background:var(--signal); transform:scale(1.8); }
-  #section-nav .num-label{ position:absolute; left:18px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.12em; color:var(--fog); opacity:0; transform:translateX(-4px); transition:opacity .25s var(--ease), transform .25s var(--ease); white-space:nowrap; }
+  #section-nav .num-label{ position:absolute; left:18px; font-family:'Inter',sans-serif; font-size:10px; letter-spacing:.12em; color:var(--fog); opacity:0; transform:translateX(-4px); transition:opacity .25s var(--ease), transform .25s var(--ease); white-space:nowrap; }
   #section-nav a:hover .num-label, #section-nav a.is-active .num-label{ opacity:1; transform:translateX(0); color:var(--signal); }
 
   /* -------- hamburger <-> close morph -------- */
@@ -89,10 +89,10 @@
   .row-item{ position:relative; overflow:hidden; }
   .row-item::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,92,57,.07), transparent 60%); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease); pointer-events:none; }
   .row-item:hover::before{ transform:scaleX(1); }
-  .icon-badge{ flex-shrink:0; width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center; color:var(--signal); }
+  .icon-badge{ flex-shrink:0; width:44px; height:44px; border-radius:50%; border:1px solid rgba(10,10,9,.15); display:flex; align-items:center; justify-content:center; color:var(--signal); }
   .no-scrollbar::-webkit-scrollbar{ display:none; }
   .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
-  .flow-chip{ border-radius:9999px; border:1px solid rgba(255,255,255,.15); padding:.5rem 1rem; font-family:'Inter',sans-serif; font-variant-numeric:tabular-nums; font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:var(--fog); }
+  .flow-chip{ border-radius:9999px; border:1px solid rgba(10,10,9,.15); padding:.5rem 1rem; font-family:'Inter',sans-serif; font-variant-numeric:tabular-nums; font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:var(--fog); }
   .flow-chip.is-signal{ border-color:rgba(255,92,57,.5); color:var(--signal); }
   .flow-step{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
   .flow-step .flow-chip{ background:var(--surface); }
@@ -110,7 +110,7 @@
   #scroll-cue .cue-arrow{ animation:cue-bounce 1.8s ease-in-out infinite; }
 
   a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{ outline:2px solid var(--signal); outline-offset:3px; }
-  ::selection{ background:var(--signal); color:var(--ink); }
+  ::selection{ background:var(--signal); color:var(--bone); }
 
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
@@ -142,7 +142,7 @@
   <div class="max-w-[1320px] w-full mx-auto flex items-center justify-between">
     <a href="#top" data-magnetic class="font-display font-bold text-lg text-bone">DW<span class="text-signal">.</span></a>
     <p data-clock class="hidden sm:block font-mono text-xs tracking-widest text-fog">COLUMBUS, OH &mdash; 00:00</p>
-    <button type="button" id="menu-toggle" data-magnetic class="font-mono text-xs tracking-widest uppercase border border-white/15 rounded-full pl-4 pr-5 py-2.5 h-11 flex items-center gap-2.5 hover:border-signal hover:text-signal transition-colors">
+    <button type="button" id="menu-toggle" data-magnetic class="font-mono text-xs tracking-widest uppercase border border-bone/15 rounded-full pl-4 pr-5 py-2.5 h-11 flex items-center gap-2.5 hover:border-signal hover:text-signal transition-colors">
       <span class="burger"><span></span><span></span></span>
       <span id="menu-label">Menu</span>
     </button>
@@ -217,7 +217,7 @@
   </section>
 
   <!-- ============ CASE STUDY: FLOW ============ -->
-  <section id="case-flow" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/40 border-t border-white/10">
+  <section id="case-flow" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/40 border-t border-bone/10">
     <div class="max-w-[1320px] mx-auto">
 
       <div class="reveal mb-14">
@@ -228,7 +228,7 @@
       </div>
 
       <!-- sub nav -->
-      <div class="reveal marquee-mask overflow-x-auto no-scrollbar mb-16 sm:mb-24 border-y border-white/10 py-4">
+      <div class="reveal marquee-mask overflow-x-auto no-scrollbar mb-16 sm:mb-24 border-y border-bone/10 py-4">
         <div class="flex gap-8 font-mono text-xs uppercase tracking-widest text-fog w-max">
           <a href="#flow-personas" class="hover:text-signal transition-colors">Personas</a>
           <a href="#flow-objectives" class="hover:text-signal transition-colors">Objectives</a>
@@ -250,7 +250,7 @@
           <div><p class="font-display font-bold text-2xl sm:text-3xl">12</p><p class="text-fog text-xs mt-1">User interviews</p></div>
           <div><p class="font-display font-bold text-2xl sm:text-3xl">&ge;45</p><p class="text-fog text-xs mt-1">Target NPS</p></div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-bone/85 border-t border-white/10 pt-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-bone/85 border-t border-bone/10 pt-6">
           <p><span class="text-signal font-semibold">Situation &mdash;</span> Budgeting apps show numbers; they don't build trust or explain the "why" behind advice.</p>
           <p><span class="text-signal font-semibold">Task &mdash;</span> Design an AI-assisted budgeting system for users with irregular or tight incomes, shippable by a small team in 5 weeks.</p>
           <p><span class="text-signal font-semibold">Action &mdash;</span> Ran discovery (interviews, diary study, survey), mapped 3 personas, scoped an MVP, and delivered a tested design system with tokens and dev-ready specs.</p>
@@ -285,25 +285,25 @@
       <div id="flow-personas" class="scroll-mt-32 mb-20 sm:mb-28">
         <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Users &amp; Needs</p>
         <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <div class="flex items-center gap-3 mb-4">
-              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-white/5 border border-white/10 font-display font-bold text-sm">AN</span>
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">AN</span>
               <div><p class="font-display font-semibold">Anna, 28</p><p class="text-fog text-xs">Marketing Specialist</p></div>
             </div>
             <p class="text-sm text-bone/80 mb-2">Lives paycheck to paycheck.</p>
             <p class="text-sm text-fog">Needs clarity on finances and simple savings goals.</p>
           </div>
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <div class="flex items-center gap-3 mb-4">
-              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-white/5 border border-white/10 font-display font-bold text-sm">MK</span>
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">MK</span>
               <div><p class="font-display font-semibold">Marek, 34</p><p class="text-fog text-xs">Freelancer</p></div>
             </div>
             <p class="text-sm text-bone/80 mb-2">Has irregular income streams.</p>
             <p class="text-sm text-fog">Needs cashflow forecasting and a dedicated tax bucket.</p>
           </div>
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <div class="flex items-center gap-3 mb-4">
-              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-white/5 border border-white/10 font-display font-bold text-sm">SR</span>
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">SR</span>
               <div><p class="font-display font-semibold">Sara, 22</p><p class="text-fog text-xs">Student</p></div>
             </div>
             <p class="text-sm text-bone/80 mb-2">Manages micro-budgets.</p>
@@ -315,7 +315,7 @@
       <!-- OBJECTIVES -->
       <div id="flow-objectives" class="scroll-mt-32 mb-20 sm:mb-28">
         <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Business Objectives &amp; Success Metrics</p>
-        <div class="reveal rounded-2xl border border-white/10 p-6 sm:p-8">
+        <div class="reveal rounded-2xl border border-bone/10 p-6 sm:p-8">
           <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-2">North Star</p>
           <p class="font-display text-lg sm:text-xl mb-6">Weekly Active Planners &mdash; users who set or track at least one goal weekly.</p>
           <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">KPIs (targets set during scoping)</p>
@@ -333,23 +333,23 @@
       <div id="flow-research" class="scroll-mt-32 mb-20 sm:mb-28">
         <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Competitive &amp; Discovery Research</p>
         <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <p class="font-display font-semibold mb-1">User Interviews</p>
             <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">12 participants</p>
             <p class="text-fog text-sm leading-relaxed">Mix of individuals with regular and irregular income streams.</p>
           </div>
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <p class="font-display font-semibold mb-1">Diary Study</p>
             <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">2 weeks &middot; 8 participants</p>
             <p class="text-fog text-sm leading-relaxed">Participants logged daily "money moments" as they happened.</p>
           </div>
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <p class="font-display font-semibold mb-1">Survey</p>
             <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">150 respondents</p>
             <p class="text-fog text-sm leading-relaxed">Explored budgeting habits, pain points, and signals of trust.</p>
           </div>
         </div>
-        <div class="reveal rounded-2xl border border-white/10 p-6 sm:p-8">
+        <div class="reveal rounded-2xl border border-bone/10 p-6 sm:p-8">
           <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-4">Key Hypotheses Validated</p>
           <ul class="space-y-2.5 text-sm text-bone/85">
             <li class="flex gap-3"><span class="text-signal">&mdash;</span>Users prefer automated categorization over manual entry.</li>
@@ -392,25 +392,25 @@
         <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-3">Information Architecture</p>
         <p class="reveal text-fog text-sm max-w-2xl mb-8">Flow is mobile-first, so navigation is a persistent bottom tab bar rather than a sidebar &mdash; the structural breakdown of the Home dashboard below reflects that.</p>
         <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-3">Global Navigation</p>
             <p class="text-fog text-sm leading-relaxed">Bottom tab bar &mdash; Home, Budgets, Goals, Insights, Chat. Persistent across the app; active tab indicated by icon + label fill.</p>
           </div>
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-3">Primary Content (Home)</p>
             <p class="text-fog text-sm leading-relaxed">Balance header, Safe-to-Spend card, Upcoming Bills, Latest Transactions, Progress Toward Goals &mdash; stacked, scrollable, priority-ordered.</p>
           </div>
-          <div class="rounded-2xl border border-white/10 p-6">
+          <div class="rounded-2xl border border-bone/10 p-6">
             <p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-3">Contextual Layer</p>
             <p class="text-fog text-sm leading-relaxed">No persistent sidebar on mobile &mdash; contextual actions (edit rules, filters) surface as sheets anchored to the element they act on.</p>
           </div>
         </div>
         <div class="reveal grid grid-cols-2 sm:grid-cols-5 gap-3">
-          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Home</p><p class="text-fog text-[11px]">Balance &middot; Safe-to-spend &middot; Bills</p></div>
-          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Budgets</p><p class="text-fog text-[11px]">Categories &middot; Limits &middot; Progress</p></div>
-          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Goals</p><p class="text-fog text-[11px]">Emergency Fund &middot; Travel &middot; Payoff</p></div>
-          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Insights</p><p class="text-fog text-[11px]">Trends &middot; Merchants &middot; Anomalies</p></div>
-          <div class="rounded-xl bg-surface border border-white/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Chat</p><p class="text-fog text-[11px]">NL Q&amp;A &middot; Quick Prompts</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Home</p><p class="text-fog text-[11px]">Balance &middot; Safe-to-spend &middot; Bills</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Budgets</p><p class="text-fog text-[11px]">Categories &middot; Limits &middot; Progress</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Goals</p><p class="text-fog text-[11px]">Emergency Fund &middot; Travel &middot; Payoff</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Insights</p><p class="text-fog text-[11px]">Trends &middot; Merchants &middot; Anomalies</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Chat</p><p class="text-fog text-[11px]">NL Q&amp;A &middot; Quick Prompts</p></div>
         </div>
       </div>
 
@@ -452,10 +452,10 @@
       <div id="flow-writing" class="scroll-mt-32 mb-20 sm:mb-28">
         <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">UX Writing (Sample Copy)</p>
         <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div class="rounded-2xl border border-white/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Value Prop</p><p class="font-display italic text-lg">&ldquo;See your money clearly. Spend with confidence.&rdquo;</p></div>
-          <div class="rounded-2xl border border-white/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Empty State</p><p class="font-display italic text-lg">&ldquo;Once you connect an account, we'll show your safe-to-spend and upcoming bills here.&rdquo;</p></div>
-          <div class="rounded-2xl border border-white/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Error</p><p class="font-display italic text-lg">&ldquo;We couldn't connect to your bank right now. Try again or import a CSV.&rdquo;</p></div>
-          <div class="rounded-2xl border border-white/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Privacy Note</p><p class="font-display italic text-lg">&ldquo;You're in control. Delete your data anytime in Settings.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Value Prop</p><p class="font-display italic text-lg">&ldquo;See your money clearly. Spend with confidence.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Empty State</p><p class="font-display italic text-lg">&ldquo;Once you connect an account, we'll show your safe-to-spend and upcoming bills here.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Error</p><p class="font-display italic text-lg">&ldquo;We couldn't connect to your bank right now. Try again or import a CSV.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Privacy Note</p><p class="font-display italic text-lg">&ldquo;You're in control. Delete your data anytime in Settings.&rdquo;</p></div>
         </div>
       </div>
 
@@ -474,14 +474,452 @@
     </div>
   </section>
 
+  <!-- ============ CASE STUDY: HABITNEST+ ============ -->
+  <section id="case-habitnest" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-bone/10">
+    <div class="max-w-[1320px] mx-auto">
+
+      <div class="reveal mb-14">
+        <a href="#work" class="link-underline font-mono text-xs uppercase tracking-widest text-fog hover:text-signal transition-colors inline-block mb-8">&larr; Back to Selected Work</a>
+        <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal mb-5">[ Case Study &mdash; Health &amp; Habits ]</p>
+        <h2 class="font-display font-bold tracking-tight text-4xl sm:text-6xl mb-4">HabitNest+</h2>
+        <p class="text-fog text-lg sm:text-xl max-w-2xl">Fitness, nutrition, and sleep &mdash; with personalization, for people who don't need one more spreadsheet.</p>
+      </div>
+
+      <div class="reveal marquee-mask overflow-x-auto no-scrollbar mb-16 sm:mb-24 border-y border-bone/10 py-4">
+        <div class="flex gap-8 font-mono text-xs uppercase tracking-widest text-fog w-max">
+          <a href="#hn-personas" class="hover:text-signal transition-colors">Personas</a>
+          <a href="#hn-objectives" class="hover:text-signal transition-colors">Objectives</a>
+          <a href="#hn-research" class="hover:text-signal transition-colors">Research</a>
+          <a href="#hn-scope" class="hover:text-signal transition-colors">Scope</a>
+          <a href="#hn-architecture" class="hover:text-signal transition-colors">Architecture</a>
+          <a href="#hn-flows" class="hover:text-signal transition-colors">User Flows</a>
+          <a href="#hn-writing" class="hover:text-signal transition-colors">UX Writing</a>
+          <a href="#hn-learned" class="hover:text-signal transition-colors">Reflection</a>
+        </div>
+      </div>
+
+      <div class="reveal rounded-2xl border border-signal/30 bg-signal/[0.04] p-6 sm:p-8 mb-20 sm:mb-28">
+        <p class="font-mono text-xs uppercase tracking-widest text-signal mb-5">TL;DR</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6">
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">4 wks</p><p class="text-fog text-xs mt-1">Solo, end-to-end</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">3</p><p class="text-fog text-xs mt-1">Personas researched</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">10</p><p class="text-fog text-xs mt-1">User interviews</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">&ge;70%</p><p class="text-fog text-xs mt-1">Target onboarding completion</p></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-bone/85 border-t border-bone/10 pt-6">
+          <p><span class="text-signal font-semibold">Situation &mdash;</span> Habit apps fail from friction and shame, not lack of features &mdash; most churn happens the first time someone misses a day.</p>
+          <p><span class="text-signal font-semibold">Task &mdash;</span> Design a habit-coaching system spanning fitness, food, and sleep that stays motivating after a bad week, not just a good one.</p>
+          <p><span class="text-signal font-semibold">Action &mdash;</span> Interviewed 10 users on adherence barriers and logging fatigue, tested 1-tap logging for speed, and designed failure states with deliberately kind copy.</p>
+          <p><span class="text-signal font-semibold">Result &mdash;</span> A tested mid-fi prototype (n=6) and handoff-ready visual system targeting <strong class="text-bone">70%+ onboarding completion</strong> and <strong class="text-bone">30%+ 8-week retention</strong>.</p>
+        </div>
+      </div>
+
+      <div class="mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Overview</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Goal</p><p class="text-fog leading-relaxed">Build sustainable health routines combining habit coaching, food logging, and wearable sync with social accountability.</p></div>
+          </div>
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Outcomes</p><p class="text-fog leading-relaxed">Increased weekly adherence; improved energy and sleep self-ratings.</p></div>
+          </div>
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Platforms</p><p class="text-fog leading-relaxed">iOS / Android, with Apple Health &amp; Google Fit sync.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="hn-personas" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Users &amp; Needs</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">LN</span>
+              <div><p class="font-display font-semibold">Lana, 40</p><p class="text-fog text-xs">Busy Parent</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">Wants a clear daily plan, simple meals.</p>
+            <p class="text-sm text-fog">Needs low-effort guidance &mdash; no decisions left to make.</p>
+          </div>
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">OL</span>
+              <div><p class="font-display font-semibold">Olek, 29</p><p class="text-fog text-xs">Beginner</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">New to structured fitness.</p>
+            <p class="text-sm text-fog">Needs motivation and visible streaks to stay engaged.</p>
+          </div>
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">AD</span>
+              <div><p class="font-display font-semibold">Ada, 33</p><p class="text-fog text-xs">Runner</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">Already trains regularly.</p>
+            <p class="text-sm text-fog">Seeks structured plans and recovery insights to improve performance.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="hn-objectives" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Business Objectives &amp; Success Metrics</p>
+        <div class="reveal rounded-2xl border border-bone/10 p-6 sm:p-8">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-2">North Star</p>
+          <p class="font-display text-lg sm:text-xl mb-6">Weekly Adherent Users &mdash; people who complete at least 4 of 7 planned days.</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">KPIs (targets set during scoping)</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip">Onboarding Completion &ge; 70%</span>
+            <span class="flow-chip">8-Week Retention &ge; 30%</span>
+            <span class="flow-chip">Avg. Daily Steps +20%</span>
+            <span class="flow-chip">Sleep Score +10%</span>
+            <span class="flow-chip">Streak Median &ge; 6 days</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="hn-research" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Competitive &amp; Discovery Research</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <p class="font-display font-semibold mb-1">User Interviews</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">10 participants</p>
+            <p class="text-fog text-sm leading-relaxed">Explored adherence barriers, logging fatigue, and the social impact of tracking.</p>
+          </div>
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <p class="font-display font-semibold mb-1">Usability Tests</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">Task-based</p>
+            <p class="text-fog text-sm leading-relaxed">Could participants log an entry in under 30 seconds and clearly understand their plan?</p>
+          </div>
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <p class="font-display font-semibold mb-1">Survey</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">200 respondents</p>
+            <p class="text-fog text-sm leading-relaxed">Measured meal-logging tolerance, notification frequency, and reward sensitivity.</p>
+          </div>
+        </div>
+        <div class="reveal rounded-2xl border border-bone/10 p-6 sm:p-8">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-4">Assumption Validated</p>
+          <p class="text-sm text-bone/85">1-tap logging and "good-enough" estimates sustain engagement better than precise gram counts for non-athletes &mdash; benchmarked against MyFitnessPal, Cronometer, Nike Training Club, Strong, and Fabulous.</p>
+        </div>
+      </div>
+
+      <div id="hn-scope" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Scope</p>
+        <div class="reveal mb-6">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">MVP Features</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip is-signal">Personal Goals &amp; Auto Plan</span>
+            <span class="flow-chip is-signal">Daily Plan (Workout + Habit + Meal)</span>
+            <span class="flow-chip is-signal">Micro-Circle Social (3&ndash;5 friends)</span>
+            <span class="flow-chip is-signal">Streaks, Badges &amp; Reminders</span>
+            <span class="flow-chip is-signal">1-Tap / Barcode / Photo Logging</span>
+            <span class="flow-chip is-signal">Apple Health &amp; Google Fit Sync</span>
+          </div>
+        </div>
+        <div class="reveal">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">Stretch</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip">Coach Chat</span>
+            <span class="flow-chip">Custom Training Programs</span>
+            <span class="flow-chip">Recipe Builder</span>
+            <span class="flow-chip">Garmin / Polar Integration</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="hn-architecture" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-3">Information Architecture</p>
+        <p class="reveal text-fog text-sm max-w-2xl mb-8">Mobile-first with a persistent bottom tab bar &mdash; six tabs, each scoped to one job.</p>
+        <div data-stagger class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Today</p><p class="text-fog text-[11px]">Checklist &middot; Streak &middot; Reminders</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Log</p><p class="text-fog text-[11px]">Food &middot; Water &middot; Weight &middot; Mood</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Train</p><p class="text-fog text-[11px]">Plans &middot; Timers</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Eat</p><p class="text-fog text-[11px]">Meal Ideas &middot; Grocery List</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Progress</p><p class="text-fog text-[11px]">Trends &middot; Achievements</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Social</p><p class="text-fog text-[11px]">Circle Feed &middot; Challenges</p></div>
+        </div>
+      </div>
+
+      <div id="hn-flows" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Core User Flows</p>
+        <div data-stagger class="space-y-7">
+          <div>
+            <p class="font-display font-semibold mb-3">Onboarding</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Goal</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. Level</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">3. Dietary Prefs</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">4. Time Windows</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">5. Enable Sync</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">6. Schedule Reminders</span>
+            </div>
+          </div>
+          <div>
+            <p class="font-display font-semibold mb-3">Daily Log</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Open Today</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. Tap Workout</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">3. Follow Timer / Video</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">4. Mark Done</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">5. Log Meal + Water &amp; Sleep</span>
+            </div>
+          </div>
+          <div>
+            <p class="font-display font-semibold mb-3">Create Circle</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Invite Contacts</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. Accept</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">3. Share Weekly Challenge</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="hn-writing" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">UX Writing (Sample Copy)</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Value Prop</p><p class="font-display italic text-lg">&ldquo;Small wins, every day.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Today, Empty</p><p class="font-display italic text-lg">&ldquo;Your plan appears here at 6:00 each morning.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Workout</p><p class="font-display italic text-lg">&ldquo;Short on time? Do the 7-minute reset.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Streak Loss</p><p class="font-display italic text-lg">&ldquo;Streak paused, not lost. Start again today.&rdquo;</p></div>
+        </div>
+      </div>
+
+      <div id="hn-learned" class="reveal scroll-mt-32 rounded-2xl border border-signal/30 bg-signal/[0.04] p-6 sm:p-8">
+        <p class="font-mono text-xs uppercase tracking-widest text-signal mb-4">What I Learned</p>
+        <p class="font-display text-xl sm:text-2xl mb-6">Designing for human psychology matters as much as designing for functionality.</p>
+        <ul class="space-y-2.5 text-sm text-bone/85 mb-6">
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>Users valued quick logging over accuracy &mdash; the less effort, the higher the adherence.</li>
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>Motivation is social: even a small private circle of friends made accountability powerful.</li>
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>Designing "failure states" (streak loss) with kind, encouraging copy improved user morale.</li>
+        </ul>
+        <p class="text-fog text-sm">The less a habit costs to log, the longer it survives contact with a bad week.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CASE STUDY: CITYSENSE ============ -->
+  <section id="case-citysense" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/40 border-t border-bone/10">
+    <div class="max-w-[1320px] mx-auto">
+
+      <div class="reveal mb-14">
+        <a href="#work" class="link-underline font-mono text-xs uppercase tracking-widest text-fog hover:text-signal transition-colors inline-block mb-8">&larr; Back to Selected Work</a>
+        <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal mb-5">[ Case Study &mdash; Smart City &amp; Travel ]</p>
+        <h2 class="font-display font-bold tracking-tight text-4xl sm:text-6xl mb-4">CitySense</h2>
+        <p class="text-fog text-lg sm:text-xl max-w-2xl">A map, an AR layer, and a sense of place for travelers drowning in options.</p>
+      </div>
+
+      <div class="reveal marquee-mask overflow-x-auto no-scrollbar mb-16 sm:mb-24 border-y border-bone/10 py-4">
+        <div class="flex gap-8 font-mono text-xs uppercase tracking-widest text-fog w-max">
+          <a href="#cs-personas" class="hover:text-signal transition-colors">Personas</a>
+          <a href="#cs-objectives" class="hover:text-signal transition-colors">Objectives</a>
+          <a href="#cs-research" class="hover:text-signal transition-colors">Research</a>
+          <a href="#cs-scope" class="hover:text-signal transition-colors">Scope</a>
+          <a href="#cs-architecture" class="hover:text-signal transition-colors">Architecture</a>
+          <a href="#cs-flows" class="hover:text-signal transition-colors">User Flows</a>
+          <a href="#cs-writing" class="hover:text-signal transition-colors">UX Writing</a>
+          <a href="#cs-learned" class="hover:text-signal transition-colors">Reflection</a>
+        </div>
+      </div>
+
+      <div class="reveal rounded-2xl border border-signal/30 bg-signal/[0.04] p-6 sm:p-8 mb-20 sm:mb-28">
+        <p class="font-mono text-xs uppercase tracking-widest text-signal mb-5">TL;DR</p>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6">
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">4 wks</p><p class="text-fog text-xs mt-1">Solo, end-to-end</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">3</p><p class="text-fog text-xs mt-1">Personas researched</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">6</p><p class="text-fog text-xs mt-1">Field-test users</p></div>
+          <div><p class="font-display font-bold text-2xl sm:text-3xl">&ge;40%</p><p class="text-fog text-xs mt-1">Target place-save rate</p></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm text-bone/85 border-t border-bone/10 pt-6">
+          <p><span class="text-signal font-semibold">Situation &mdash;</span> Travel apps drown users in listings instead of narrowing to what actually fits the moment.</p>
+          <p><span class="text-signal font-semibold">Task &mdash;</span> Design a map-first, AR-assisted discovery tool that builds sharable itineraries without demanding a full itinerary upfront.</p>
+          <p><span class="text-signal font-semibold">Action &mdash;</span> Shadowed travelers planning real trips, ran contextual inquiry at hotels/transit, and prototyped a mood- and weather-aware discovery feed tested with 6 field users.</p>
+          <p><span class="text-signal font-semibold">Result &mdash;</span> A validated IA and a mid-fi prototype targeting <strong class="text-bone">40%+ place-save rate</strong> and <strong class="text-bone">30%+ AR usage per session</strong>.</p>
+        </div>
+      </div>
+
+      <div class="mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Overview</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Goal</p><p class="text-fog leading-relaxed">Help travelers discover places that match interests, mood, and weather; build sharable mini-itineraries; light booking.</p></div>
+          </div>
+          <div class="flex gap-4">
+            <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg></span>
+            <div><p class="font-display font-semibold text-lg mb-1">Outcomes</p><p class="text-fog leading-relaxed">More saved places, itinerary completes, and merchant clicks.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="cs-personas" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Users &amp; Needs</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">IR</span>
+              <div><p class="font-display font-semibold">Irina, 26</p><p class="text-fog text-xs">Weekend Traveler</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">Trip-hops on short breaks.</p>
+            <p class="text-sm text-fog">Seeks photogenic spots, coffee places, and thrift stores.</p>
+          </div>
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">PT</span>
+              <div><p class="font-display font-semibold">Piotr, 37</p><p class="text-fog text-xs">Foodie on Business Trips</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">Books last-minute, works late.</p>
+            <p class="text-sm text-fog">Needs late-night dining options and reliable offline maps.</p>
+          </div>
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center h-11 w-11 rounded-full bg-bone/5 border border-bone/10 font-display font-bold text-sm">ND</span>
+              <div><p class="font-display font-semibold">Nadia, 31</p><p class="text-fog text-xs">Planner</p></div>
+            </div>
+            <p class="text-sm text-bone/80 mb-2">Plans trips weeks in advance.</p>
+            <p class="text-sm text-fog">Wants structured daily itineraries and tools for time budgeting.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="cs-objectives" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Business Objectives &amp; Success Metrics</p>
+        <div class="reveal rounded-2xl border border-bone/10 p-6 sm:p-8">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-2">North Star</p>
+          <p class="font-display text-lg sm:text-xl mb-6">Itinerary Completion Rate &mdash; at least one saved plan with five or more points of interest.</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">KPIs (targets set during scoping)</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip">Place Save Rate &ge; 40%</span>
+            <span class="flow-chip">Share Rate &ge; 15%</span>
+            <span class="flow-chip">AR Usage &ge; 30% of sessions</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="cs-research" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Competitive &amp; Discovery Research</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <p class="font-display font-semibold mb-1">Shadowing</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">6 participants</p>
+            <p class="text-fog text-sm leading-relaxed">Observed how people created and followed real city day plans.</p>
+          </div>
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <p class="font-display font-semibold mb-1">Contextual Inquiry</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">Field study</p>
+            <p class="text-fog text-sm leading-relaxed">Studied behaviors at hotel lobbies and key transit touchpoints.</p>
+          </div>
+          <div class="rounded-2xl border border-bone/10 p-6">
+            <p class="font-display font-semibold mb-1">Survey</p>
+            <p class="text-signal text-xs font-mono uppercase tracking-widest mb-3">200 respondents</p>
+            <p class="text-fog text-sm leading-relaxed">Explored planning horizons and filters like budget, kid-friendly, and accessibility.</p>
+          </div>
+        </div>
+        <div class="reveal rounded-2xl border border-bone/10 p-6 sm:p-8">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-4">Key Hypothesis</p>
+          <p class="text-sm text-bone/85">Mood- and weather-aware suggestions reduce planning time; a map-first UI increases engagement &mdash; benchmarked against Google Maps, TripAdvisor, Culture Trip, and GetYourGuide.</p>
+        </div>
+      </div>
+
+      <div id="cs-scope" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Scope</p>
+        <div class="reveal mb-6">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">MVP Features</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip is-signal">Map-First Discovery (Mood Chips)</span>
+            <span class="flow-chip is-signal">AR Peek</span>
+            <span class="flow-chip is-signal">Light Booking (Merchant Deep-Links)</span>
+            <span class="flow-chip is-signal">Offline Pack</span>
+            <span class="flow-chip is-signal">Itinerary Builder (Drag &amp; Drop)</span>
+          </div>
+        </div>
+        <div class="reveal">
+          <p class="font-mono text-[10px] uppercase tracking-widest text-fog mb-3">Stretch</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip">Collaborative Itineraries</span>
+            <span class="flow-chip">AI Chat ("Plan My Afternoon")</span>
+            <span class="flow-chip">Transit Tickets</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="cs-architecture" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-3">Information Architecture</p>
+        <p class="reveal text-fog text-sm max-w-2xl mb-8">Mobile-first with a persistent bottom tab bar &mdash; five tabs built around discovery, not a sidebar full of settings.</p>
+        <div data-stagger class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Discover</p><p class="text-fog text-[11px]">Personalized feed</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Map</p><p class="text-fog text-[11px]">Filters &middot; Weather</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">AR</p><p class="text-fog text-[11px]">Camera overlay of POIs</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Plan</p><p class="text-fog text-[11px]">Timeline &middot; Walking times</p></div>
+          <div class="rounded-xl bg-surface border border-bone/10 p-3 text-center"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-1">Saved</p><p class="text-fog text-[11px]">Lists &middot; Share/Export</p></div>
+        </div>
+      </div>
+
+      <div id="cs-flows" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">Core User Flows</p>
+        <div data-stagger class="space-y-7">
+          <div>
+            <p class="font-display font-semibold mb-3">Onboarding Interests</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Pick Interests + Budget + Walking Tolerance</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. Allow Location</span>
+            </div>
+          </div>
+          <div>
+            <p class="font-display font-semibold mb-3">Build Plan</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Discover</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. Save</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">3. Plan Timeline Auto-Fills</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">4. Adjust Order</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">5. Share</span>
+            </div>
+          </div>
+          <div>
+            <p class="font-display font-semibold mb-3">AR Quick Look</p>
+            <div class="flow-step">
+              <span class="flow-chip">1. Open AR</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">2. See Closest 5 Spots</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">3. Tap to Detail</span><span class="text-fog">&rarr;</span>
+              <span class="flow-chip">4. Add to Plan</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="cs-writing" class="scroll-mt-32 mb-20 sm:mb-28">
+        <p class="reveal font-mono text-xs uppercase tracking-widest text-fog mb-8">UX Writing (Sample Copy)</p>
+        <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Value Prop</p><p class="font-display italic text-lg">&ldquo;Find places that fit your vibe.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">POI Detail</p><p class="font-display italic text-lg">&ldquo;Open now &bull; 5-min walk &bull; Quiet in afternoons.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">AR Hint</p><p class="font-display italic text-lg">&ldquo;Point toward a street &mdash; CitySense labels what's ahead.&rdquo;</p></div>
+          <div class="rounded-2xl border border-bone/10 p-6"><p class="font-mono text-[10px] uppercase tracking-widest text-signal mb-2">Share Text</p><p class="font-display italic text-lg">&ldquo;I planned a day in Krak&oacute;w &mdash; follow my CitySense map.&rdquo;</p></div>
+        </div>
+      </div>
+
+      <div id="cs-learned" class="reveal scroll-mt-32 rounded-2xl border border-signal/30 bg-signal/[0.04] p-6 sm:p-8">
+        <p class="font-mono text-xs uppercase tracking-widest text-signal mb-4">What I Learned</p>
+        <p class="font-display text-xl sm:text-2xl mb-6">Context is everything in travel UX.</p>
+        <ul class="space-y-2.5 text-sm text-bone/85 mb-6">
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>Weather- and mood-based suggestions built more trust than static lists.</li>
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>AR was exciting but only valuable kept simple &mdash; a quick peek, not a long session.</li>
+          <li class="flex gap-3"><span class="text-signal">&mdash;</span>Offline access was critical; travelers needed confidence the app worked without signal.</li>
+        </ul>
+        <p class="text-fog text-sm">Travel products succeed when they adapt to the moment and reduce uncertainty for the user.</p>
+      </div>
+
+    </div>
+  </section>
+
   <!-- ============ 03 PRACTICE ============ -->
-  <section id="practice" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/60 border-y border-white/10">
+  <section id="practice" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/60 border-y border-bone/10">
     <div class="max-w-[1320px] mx-auto">
       <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8">[ 03 &mdash; Practice ]</p>
       <h2 class="reveal font-display font-semibold text-3xl sm:text-5xl leading-tight max-w-3xl mb-16 sm:mb-20">
         What people see is the surface. What makes it work is the system underneath.
       </h2>
-      <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 border-t border-white/10 pt-10">
+      <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 border-t border-bone/10 pt-10">
         <div>
           <p class="font-mono text-xs text-fog mb-2">[ 01 ]</p>
           <p class="font-display font-semibold text-xl mb-2">Research &amp; Strategy</p>
@@ -533,7 +971,7 @@
             comes after real users tell us the truth.
           </p>
         </div>
-        <div class="reveal flex divide-x divide-white/10">
+        <div class="reveal flex divide-x divide-bone/10">
           <div class="pr-10">
             <p class="font-display font-bold text-5xl mb-1">5+</p>
             <p class="text-fog text-sm">Years in UX/UI &amp; Product Design</p>
@@ -545,7 +983,7 @@
         </div>
       </div>
 
-      <div class="reveal marquee-mask overflow-hidden mt-16 sm:mt-20 border-y border-white/10 py-6">
+      <div class="reveal marquee-mask overflow-hidden mt-16 sm:mt-20 border-y border-bone/10 py-6">
         <div class="marquee-track flex w-max gap-10 font-mono text-sm uppercase tracking-widest text-fog">
           <div class="flex gap-10 shrink-0">
             <span>Figma</span><span>Adobe&nbsp;XD</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>CorelDRAW</span><span>HTML</span><span>CSS</span><span>Microsoft&nbsp;Office</span>
@@ -559,7 +997,7 @@
   </section>
 
   <!-- ============ 05 CONTACT ============ -->
-  <footer id="contact" class="relative overflow-hidden py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-white/10">
+  <footer id="contact" class="relative overflow-hidden py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-bone/10">
     <p class="watermark absolute inset-x-0 bottom-0 flex items-end justify-center text-[16vw] translate-y-1/3 -z-0">Contact</p>
 
     <div class="relative max-w-[1320px] mx-auto">
@@ -571,26 +1009,26 @@
       <form id="contact-form" class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 max-w-3xl mb-6">
         <label class="relative flex flex-col gap-2 group">
           <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Name</span>
-          <input required name="name" type="text" class="bg-transparent border-b border-white/20 py-2 outline-none" />
+          <input required name="name" type="text" class="bg-transparent border-b border-bone/20 py-2 outline-none" />
           <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
         </label>
         <label class="relative flex flex-col gap-2 group">
           <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Email</span>
-          <input required name="email" type="email" class="bg-transparent border-b border-white/20 py-2 outline-none" />
+          <input required name="email" type="email" class="bg-transparent border-b border-bone/20 py-2 outline-none" />
           <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
         </label>
         <label class="relative flex flex-col gap-2 group sm:col-span-2">
           <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Project / Context</span>
-          <input name="project" type="text" class="bg-transparent border-b border-white/20 py-2 outline-none" />
+          <input name="project" type="text" class="bg-transparent border-b border-bone/20 py-2 outline-none" />
           <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
         </label>
         <label class="relative flex flex-col gap-2 group sm:col-span-2">
           <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Message</span>
-          <textarea required name="message" rows="3" class="bg-transparent border-b border-white/20 py-2 outline-none resize-none"></textarea>
+          <textarea required name="message" rows="3" class="bg-transparent border-b border-bone/20 py-2 outline-none resize-none"></textarea>
           <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
         </label>
         <div class="sm:col-span-2 flex items-center gap-5 mt-2">
-          <button type="submit" data-magnetic class="arrow-cta inline-flex items-center gap-2 font-mono text-sm tracking-widest uppercase border border-signal text-signal rounded-full px-6 py-3 hover:bg-signal hover:text-ink transition-colors">
+          <button type="submit" data-magnetic class="arrow-cta inline-flex items-center gap-2 font-mono text-sm tracking-widest uppercase border border-signal text-signal rounded-full px-6 py-3 hover:bg-signal hover:text-bone transition-colors">
             [ Send ]
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
           </button>
@@ -599,7 +1037,7 @@
       </form>
       <p class="text-fog text-sm mb-16">Or write directly &mdash; <a href="mailto:wilson.cihs@gmail.com" class="link-underline text-bone hover:text-signal transition-colors">wilson.cihs@gmail.com</a></p>
 
-      <div class="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-white/10 font-mono text-xs uppercase tracking-widest text-fog">
+      <div class="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-bone/10 font-mono text-xs uppercase tracking-widest text-fog">
         <p>Drew Wilson &copy; 2026</p>
         <p data-clock>Columbus, OH &mdash; 00:00</p>
       </div>
@@ -711,8 +1149,8 @@
   /* ---- selected work: numbered expandable list ---- */
   var WORK = [
     { title: 'Flow', cat: 'Fintech', desc: "AI-assisted personal budgeting, for people the banking apps forgot. Research-led design system built around trust, not just charts.", meta: '2026 · Case File · Research, UX, Design System', link: '#case-flow' },
-    { title: 'HabitNest+', cat: 'Health & Habits', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul. Behavioral design over raw feature count.', meta: '2026 · Case File · Mobile UX, Behavioral Design' },
-    { title: 'CitySense', cat: 'Smart City & Travel', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options. Context-aware over exhaustive.', meta: '2026 · Case File · AR/Map UX, Interaction Design' }
+    { title: 'HabitNest+', cat: 'Health & Habits', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul. Behavioral design over raw feature count.', meta: '2026 · Case File · Mobile UX, Behavioral Design', link: '#case-habitnest' },
+    { title: 'CitySense', cat: 'Smart City & Travel', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options. Context-aware over exhaustive.', meta: '2026 · Case File · AR/Map UX, Interaction Design', link: '#case-citysense' }
   ];
   var workList = document.getElementById('work-list');
   var workCounter = document.getElementById('work-counter');

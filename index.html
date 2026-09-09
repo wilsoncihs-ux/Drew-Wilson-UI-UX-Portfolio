@@ -1,321 +1,266 @@
 <title>Drew Wilson</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Manrope:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" />
 
 <style>
   :root{
-    --bg:#0d1116;
-    --surface:#14181f;
-    --neon:#00df8f;
-    --neon-dark:#00b373;
-    --border:rgba(255,255,255,0.1);
+    --ink:#0a0a09; --surface:#141311; --bone:#f3efe7;
+    --fog:#8a8377; --line:rgba(243,239,231,.12); --signal:#ff5c39;
+    --ease:cubic-bezier(.16,1,.3,1);
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{ background:var(--bg); color:#fff; font-family:'Inter', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+  html.has-cursor, html.has-cursor a, html.has-cursor button{ cursor:none; }
+  body{ background:var(--ink); color:var(--bone); font-family:'Manrope', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
   section, footer{ scroll-margin-top:6rem; }
-  .font-display{ font-family:'Space Grotesk', ui-sans-serif, sans-serif; letter-spacing:-0.02em; }
-  .font-mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
-  .text-outline{ color:transparent; -webkit-text-stroke:2px var(--neon); }
+  .font-display{ font-family:'Bricolage Grotesque', ui-sans-serif, sans-serif; letter-spacing:-0.02em; }
+  .font-mono{ font-family:'Space Mono', ui-monospace, monospace; }
 
-  .grid-overlay{
-    background-image:
-      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-    background-size:40px 40px;
-  }
-  .watermark{ font-family:'Space Grotesk', sans-serif; font-weight:700; color:#fff; opacity:.025; line-height:.85; white-space:nowrap; pointer-events:none; user-select:none; }
+  #cursor{ position:fixed; top:0; left:0; width:9px; height:9px; border-radius:50%; background:var(--signal); pointer-events:none; z-index:100; transform:translate(-50%,-50%); transition:width .3s var(--ease), height .3s var(--ease), background-color .3s var(--ease); mix-blend-mode:difference; display:none; }
+  html.has-cursor #cursor{ display:block; }
+  #cursor.hovering{ width:52px; height:52px; background:var(--bone); }
 
-  .reveal, [data-stagger] > *{ opacity:1; transform:translateY(0); transition:opacity .7s ease, transform .7s ease; }
-  .js-ready .reveal{ opacity:0; transform:translateY(20px); }
+  [data-magnetic]{ transition:transform .3s var(--ease); display:inline-flex; }
+
+  .reveal{ opacity:1; transform:translateY(0); transition:opacity .8s var(--ease), transform .8s var(--ease); }
+  .js-ready .reveal{ opacity:0; transform:translateY(28px); }
   .js-ready .reveal.is-visible{ opacity:1; transform:translateY(0); }
-  .js-ready [data-stagger] > *{ opacity:0; transform:translateY(14px); }
+  .js-ready [data-stagger] > *{ opacity:0; transform:translateY(16px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
   .js-ready [data-stagger].is-visible > *{ opacity:1; transform:translateY(0); }
 
-  nav{ transition:background-color .2s ease, border-color .2s ease; border-bottom:1px solid transparent; }
-  nav.is-scrolled{ background-color:rgba(15,17,21,.8); backdrop-filter:blur(10px); border-bottom-color:var(--border); }
+  .watermark{ font-family:'Bricolage Grotesque', sans-serif; font-weight:700; color:var(--bone); opacity:.03; line-height:.8; white-space:nowrap; pointer-events:none; user-select:none; }
 
-  .chip{ transition:border-color .25s ease, color .25s ease, box-shadow .25s ease; }
-  .chip:hover{ border-color:var(--neon); color:var(--neon); box-shadow:0 0 15px rgba(0,223,143,.3); }
+  #menu-overlay{ transform:translateY(-101%); transition:transform .7s var(--ease); }
+  #menu-overlay.is-open{ transform:translateY(0); }
 
-  #id-badge{ touch-action:none; cursor:grab; will-change:transform; }
-  #id-badge.dragging{ cursor:grabbing; transition:none; }
-  #id-badge.snapping{ transition:transform .6s cubic-bezier(.34,1.56,.64,1); }
-  @keyframes floaty{ 0%,100%{ transform:translateY(0) rotate(-1deg);} 50%{ transform:translateY(-14px) rotate(1deg);} }
-  #id-badge.floaty{ animation:floaty 5s ease-in-out infinite; }
+  .row-item{ border-top:1px solid var(--line); }
+  .row-item:last-child{ border-bottom:1px solid var(--line); }
+  .row-content{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .5s var(--ease); }
+  .row-item.is-open .row-content{ grid-template-rows:1fr; }
+  .row-content > div{ overflow:hidden; min-height:0; }
+  .row-item.is-open .row-num{ color:var(--signal); }
+  .row-item.is-open .row-title{ color:var(--signal); }
 
-  .stack-wrap{ perspective:1400px; }
-  .stack-card{ transition:transform .6s cubic-bezier(.32,.72,0,1), opacity .6s cubic-bezier(.32,.72,0,1); transform-style:preserve-3d; }
+  .chip{ transition:border-color .25s var(--ease), color .25s var(--ease); }
+  .chip:hover{ border-color:var(--signal); color:var(--signal); }
 
-  .acc-content{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .4s ease; }
-  .acc-item.is-open .acc-content{ grid-template-rows:1fr; }
-  .acc-content > div{ overflow:hidden; min-height:0; }
-  .icon-plus{ position:relative; width:14px; height:14px; flex-shrink:0; }
-  .icon-plus::before,.icon-plus::after{ content:''; position:absolute; background:currentColor; }
-  .icon-plus::before{ left:0; top:50%; width:100%; height:1.5px; transform:translateY(-50%); }
-  .icon-plus::after{ top:0; left:50%; width:1.5px; height:100%; transform:translateX(-50%); transition:transform .3s ease; }
-  .is-open .icon-plus::after{ transform:translateX(-50%) scaleY(0); }
+  .marquee-mask{ -webkit-mask-image:linear-gradient(to right, transparent, black 8%, black 92%, transparent); mask-image:linear-gradient(to right, transparent, black 8%, black 92%, transparent); }
+  .marquee-track{ animation:marquee 26s linear infinite; }
+  @keyframes marquee{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
 
-  a:focus-visible, button:focus-visible{ outline:2px solid var(--neon); outline-offset:3px; }
-  ::selection{ background:var(--neon); color:#0d1116; }
+  .bracket-fade{ transition:opacity .4s var(--ease); }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{ outline:2px solid var(--signal); outline-offset:3px; }
+  ::selection{ background:var(--signal); color:var(--ink); }
 
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
     *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
     .js-ready .reveal, .js-ready [data-stagger] > *{ opacity:1; transform:none; }
-    #id-badge.floaty{ animation:none; }
   }
 </style>
 
 <script>
   tailwind.config = {
-    theme:{
-      extend:{
-        colors:{ bg:'#0d1116', surface:'#14181f', neon:'#00df8f' },
-        fontFamily:{
-          display:['"Space Grotesk"','ui-sans-serif','sans-serif'],
-          sans:['Inter','ui-sans-serif','system-ui','sans-serif'],
-          mono:['"IBM Plex Mono"','ui-monospace','monospace'],
-        }
+    theme:{ extend:{
+      colors:{ ink:'#0a0a09', surface:'#141311', bone:'#f3efe7', fog:'#8a8377', signal:'#ff5c39' },
+      fontFamily:{
+        display:['"Bricolage Grotesque"','ui-sans-serif','sans-serif'],
+        sans:['Manrope','ui-sans-serif','system-ui','sans-serif'],
+        mono:['"Space Mono"','ui-monospace','monospace'],
       }
-    }
+    }}
   }
 </script>
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- NAV -->
-<nav class="fixed inset-x-0 top-0 z-50 h-20 sm:h-24 flex items-center px-5 sm:px-8 lg:px-12">
-  <div class="max-w-[1280px] w-full mx-auto flex items-center justify-between">
-    <a href="#top" class="font-display font-bold text-lg sm:text-xl text-white">DREW WILSON<span class="text-[var(--neon)]">.</span></a>
-    <div class="hidden md:flex items-center gap-9 font-semibold text-sm uppercase tracking-wide text-gray-300">
-      <a href="#about" class="hover:text-[var(--neon)] transition-colors">About</a>
-      <a href="#work" class="hover:text-[var(--neon)] transition-colors">Work</a>
-      <a href="#process" class="hover:text-[var(--neon)] transition-colors">Process</a>
-      <a href="#contact" class="hover:text-[var(--neon)] transition-colors">Contact</a>
-    </div>
-    <a href="#contact" aria-label="Contact Drew" class="h-11 w-11 rounded-full border border-white/15 flex items-center justify-center hover:border-[var(--neon)] transition-colors">
-      <span class="h-2.5 w-2.5 rounded-full bg-[var(--neon)]"></span>
-    </a>
+<div id="cursor" aria-hidden="true"></div>
+
+<!-- HEADER -->
+<header class="fixed inset-x-0 top-0 z-50 h-20 flex items-center px-5 sm:px-8 lg:px-12">
+  <div class="max-w-[1320px] w-full mx-auto flex items-center justify-between">
+    <a href="#top" data-magnetic class="font-display font-bold text-lg text-bone">DW<span class="text-signal">.</span></a>
+    <p data-clock class="hidden sm:block font-mono text-xs tracking-widest text-fog">COLUMBUS, OH &mdash; 00:00</p>
+    <button type="button" id="menu-toggle" data-magnetic class="font-mono text-xs tracking-widest uppercase border border-white/15 rounded-full px-5 py-2.5 hover:border-signal hover:text-signal transition-colors">
+      <span id="menu-label">Menu</span>
+    </button>
   </div>
-</nav>
+</header>
+
+<!-- FULLSCREEN MENU -->
+<div id="menu-overlay" class="fixed inset-0 z-40 bg-ink flex flex-col justify-center px-5 sm:px-8 lg:px-12">
+  <nav class="max-w-[1320px] w-full mx-auto flex flex-col gap-2">
+    <a href="#work" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">Selected Work</a>
+    <a href="#practice" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">Practice</a>
+    <a href="#about" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">About</a>
+    <a href="#contact" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">Contact</a>
+  </nav>
+  <div class="max-w-[1320px] w-full mx-auto mt-14 flex flex-wrap gap-x-10 gap-y-2 font-mono text-xs tracking-widest text-fog uppercase">
+    <a href="mailto:wilson.cihs@gmail.com" class="hover:text-signal transition-colors">wilson.cihs@gmail.com</a>
+    <span>614-736-8065</span>
+    <span>Columbus, OH</span>
+  </div>
+</div>
 
 <main id="top">
 
-  <!-- ============ HERO ============ -->
-  <section class="relative min-h-screen flex items-center overflow-hidden px-5 sm:px-8 lg:px-12 pt-24 pb-16 grid-overlay">
-    <p class="watermark absolute inset-0 flex items-center justify-center text-[20vw] -z-0">DESIGN</p>
+  <!-- ============ 01 SIGNAL / HERO ============ -->
+  <section class="relative min-h-screen flex items-center overflow-hidden px-5 sm:px-8 lg:px-12 pt-28 pb-16">
+    <p id="hero-watermark" class="watermark absolute inset-0 flex items-center justify-center text-[24vw] -z-0">DW</p>
 
-    <div class="relative max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-10 items-center w-full">
-      <div>
-        <p class="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.25em] text-gray-400 mb-6">
-          <span class="h-1.5 w-1.5 rounded-full bg-[var(--neon)]"></span> UX/UI Designer
+    <div class="relative max-w-[1320px] mx-auto w-full">
+      <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8">[ 01 &mdash; Signal ]</p>
+      <h1 class="font-display font-semibold tracking-tight leading-[0.95] text-[12vw] sm:text-7xl md:text-8xl mb-10 max-w-5xl">
+        Interfaces, systems, and the research that earns them.
+      </h1>
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8">
+        <p class="text-fog leading-relaxed max-w-md text-base sm:text-lg">
+          An independent design practice shaping product thinking, interaction design, and
+          design systems into interfaces a team can actually ship.
         </p>
-        <h1 class="font-display font-bold tracking-tighter leading-[0.9] text-5xl sm:text-6xl md:text-7xl mb-6">
-          <span class="text-white">DIGITAL</span><br>
-          <span class="text-outline">EXPERIENCES</span><span class="text-[var(--neon)]">.</span>
-        </h1>
-        <p class="text-gray-400 leading-relaxed max-w-md mb-9 text-base sm:text-lg">
-          I'm Drew Wilson &mdash; a product designer who turns ambiguous requirements into interfaces
-          people trust, backed by research and systemized so a team can scale past screen one.
-        </p>
-        <div class="flex flex-wrap items-center gap-4">
-          <a href="#work" class="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold text-sm text-[#0d1116] transition-transform hover:scale-105" style="background:linear-gradient(to right,#00df8f,#00b373)">
-            View My Work
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
-          </a>
-          <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-6 py-3.5 font-semibold text-sm text-white hover:border-white/40 transition-colors">
-            <span class="h-2 w-2 rounded-full bg-[var(--neon)]"></span> Contact Me
-          </a>
-        </div>
-      </div>
-
-      <div class="relative flex justify-center lg:justify-end pt-10 lg:pt-0">
-        <div class="absolute -top-6 h-16 w-10 sm:w-12 rounded-t-lg bg-surface border border-white/10" aria-hidden="true">
-          <span class="absolute left-1/2 top-3 -translate-x-1/2 h-2.5 w-2.5 rounded-full bg-[#0d1116] border border-white/10"></span>
-        </div>
-        <div id="id-badge" class="floaty relative w-[260px] sm:w-[300px] rounded-[28px] bg-surface border border-white/10 p-5 sm:p-6 shadow-[0_30px_60px_rgba(0,0,0,.5)]">
-          <div class="rounded-2xl bg-white/[0.03] border border-white/10 aspect-[3/4] flex items-center justify-center relative overflow-hidden">
-            <span class="font-display font-bold text-6xl sm:text-7xl text-white/10">DW</span>
-            <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5 bg-gradient-to-t from-surface via-surface/90 to-transparent">
-              <p class="font-display font-semibold text-white text-base sm:text-lg leading-tight">Drew Wilson.</p>
-              <p class="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[var(--neon)] mt-1">Product &amp; UX/UI Designer</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ ABOUT ============ -->
-  <section id="about" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12">
-    <div class="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-16">
-      <div>
-        <h2 class="reveal font-display font-bold tracking-tight text-3xl sm:text-4xl mb-6">DESIGNING WITH PURPOSE.</h2>
-        <p class="reveal text-gray-400 leading-relaxed mb-4">
-          I trained as a graphic designer before UX had its own department. My work lives in the space
-          between research and code &mdash; discovery, flows, prototypes, and the design-system plumbing
-          that lets a team ship the fifth screen as fast as the first.
-        </p>
-        <p class="reveal text-gray-400 leading-relaxed mb-10">
-          I don't hand off and disappear. I stay for the build, the QA pass, and the version that comes
-          after real users tell us the truth &mdash; because strong UX is a system, not a single screen.
-        </p>
-        <div class="reveal flex divide-x divide-white/10">
-          <div class="pr-8">
-            <p class="font-display font-bold text-4xl text-white mb-1">5+</p>
-            <p class="text-gray-500 text-sm">Years in UX/UI &amp; Product Design</p>
-          </div>
-          <div class="pl-8">
-            <p class="font-display font-bold text-4xl text-white mb-1">3</p>
-            <p class="text-gray-500 text-sm">End-to-End Case Files Shipped</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="reveal rounded-3xl bg-white/[0.03] backdrop-blur-md border border-white/10 p-6 sm:p-8">
-        <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-5">My Toolkit</p>
-        <div data-stagger class="flex flex-wrap gap-2.5">
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">User Research</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Journey Mapping</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Information Architecture</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Wireframing &amp; Prototyping</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Design Systems</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Design Tokens</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Figma</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Adobe XD</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">HTML &amp; CSS</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Accessibility</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Developer Handoff</span>
-          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">AI-Assisted Workflows</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ RECENT WORKS ============ -->
-  <section id="work" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12 bg-surface/40">
-    <div class="max-w-[1280px] mx-auto">
-      <div class="reveal flex flex-wrap items-end justify-between gap-4 mb-14 sm:mb-20">
-        <h2 class="font-display font-bold tracking-tight text-3xl sm:text-4xl">RECENT WORKS</h2>
-        <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-gray-300 hover:border-[var(--neon)] hover:text-[var(--neon)] transition-colors">
-          Discuss a Project
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+        <a href="mailto:wilson.cihs@gmail.com" data-magnetic class="font-mono text-sm sm:text-base tracking-widest uppercase border-b border-bone/30 pb-1 hover:border-signal hover:text-signal transition-colors shrink-0">
+          [ Let's talk ]
         </a>
       </div>
+    </div>
+  </section>
 
-      <div class="reveal grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
-        <div class="lg:col-span-7">
-          <div class="stack-wrap relative h-[340px] sm:h-[450px] md:h-[480px]">
-            <div id="work-stack" class="absolute inset-0"></div>
-          </div>
-          <div id="work-dots" class="flex items-center gap-2 mt-6"></div>
+  <!-- ============ 02 SELECTED WORK ============ -->
+  <section id="work" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12">
+    <div class="max-w-[1320px] mx-auto">
+      <div class="reveal flex items-baseline justify-between mb-14 sm:mb-20">
+        <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal">[ 02 &mdash; Selected Work ]</p>
+        <p id="work-counter" class="font-mono text-xs tracking-widest text-fog">Active 01 / 03</p>
+      </div>
+
+      <div id="work-list" class="reveal"></div>
+    </div>
+  </section>
+
+  <!-- ============ 03 PRACTICE ============ -->
+  <section id="practice" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/60 border-y border-white/10">
+    <div class="max-w-[1320px] mx-auto">
+      <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8">[ 03 &mdash; Practice ]</p>
+      <h2 class="reveal font-display font-semibold text-3xl sm:text-5xl leading-tight max-w-3xl mb-16 sm:mb-20">
+        What people see is the surface. What makes it work is the system underneath.
+      </h2>
+      <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 border-t border-white/10 pt-10">
+        <div>
+          <p class="font-mono text-xs text-fog mb-2">[ 01 ]</p>
+          <p class="font-display font-semibold text-xl mb-2">Research &amp; Strategy</p>
+          <p class="text-fog text-sm leading-relaxed">Discovery, interviews, and journey mapping that find the real problem before proposing what's next.</p>
         </div>
-        <div class="lg:col-span-5">
-          <div id="work-detail"></div>
+        <div>
+          <p class="font-mono text-xs text-fog mb-2">[ 02 ]</p>
+          <p class="font-display font-semibold text-xl mb-2">Interaction Design</p>
+          <p class="text-fog text-sm leading-relaxed">Flows, wireframes, and prototypes tested with real users before a pixel becomes precious.</p>
+        </div>
+        <div>
+          <p class="font-mono text-xs text-fog mb-2">[ 03 ]</p>
+          <p class="font-display font-semibold text-xl mb-2">Design Systems</p>
+          <p class="text-fog text-sm leading-relaxed">Components and tokens that let a team ship the fifth screen as fast as the first.</p>
+        </div>
+        <div>
+          <p class="font-mono text-xs text-fog mb-2">[ 04 ]</p>
+          <p class="font-display font-semibold text-xl mb-2">Engineering Bridge</p>
+          <p class="text-fog text-sm leading-relaxed">Specs, states, and edge cases &mdash; staying in the room through the build, not just the handoff.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ PROCESS (accordion) ============ -->
-  <section id="process" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12">
-    <div class="max-w-4xl mx-auto">
-      <h2 class="reveal font-display font-bold tracking-tight text-3xl sm:text-4xl text-center mb-14 sm:mb-20">
-        MY DESIGN <span class="text-outline">PROCESS</span>
+  <!-- ============ 04 ABOUT ============ -->
+  <section id="about" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12">
+    <div class="max-w-[1320px] mx-auto">
+      <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-14 sm:mb-20">[ 04 &mdash; About ]</p>
+
+      <div class="reveal flex flex-wrap items-center gap-3 sm:gap-5 font-display font-semibold text-2xl sm:text-4xl mb-16 sm:mb-20">
+        <span>Idea</span>
+        <span class="text-fog">&rarr;</span>
+        <span id="word-cycle" class="font-mono text-base sm:text-xl uppercase tracking-widest text-signal border border-signal/40 rounded-full px-4 py-1.5">Research</span>
+        <span class="text-fog">&rarr;</span>
+        <span>Drew Wilson</span>
+        <span class="text-fog">&rarr;</span>
+        <span>Shipped Product</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-16">
+        <div>
+          <p class="reveal text-fog leading-relaxed mb-4 text-base sm:text-lg">
+            I trained as a graphic designer before UX had its own department. My work lives in the
+            space between research and code &mdash; discovery, flows, prototypes, and the design-system
+            plumbing that lets a team scale past screen one.
+          </p>
+          <p class="reveal text-fog leading-relaxed text-base sm:text-lg">
+            I don't hand off and disappear. I stay for the build, the QA pass, and the version that
+            comes after real users tell us the truth.
+          </p>
+        </div>
+        <div class="reveal flex divide-x divide-white/10">
+          <div class="pr-10">
+            <p class="font-display font-bold text-5xl mb-1">5+</p>
+            <p class="text-fog text-sm">Years in UX/UI &amp; Product Design</p>
+          </div>
+          <div class="pl-10">
+            <p class="font-display font-bold text-5xl mb-1">3</p>
+            <p class="text-fog text-sm">End-to-End Case Files Shipped</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal marquee-mask overflow-hidden mt-16 sm:mt-20 border-y border-white/10 py-6">
+        <div class="marquee-track flex w-max gap-10 font-mono text-sm uppercase tracking-widest text-fog">
+          <div class="flex gap-10 shrink-0">
+            <span>Figma</span><span>Adobe&nbsp;XD</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>CorelDRAW</span><span>HTML</span><span>CSS</span><span>Microsoft&nbsp;Office</span>
+          </div>
+          <div class="flex gap-10 shrink-0" aria-hidden="true">
+            <span>Figma</span><span>Adobe&nbsp;XD</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>CorelDRAW</span><span>HTML</span><span>CSS</span><span>Microsoft&nbsp;Office</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 CONTACT ============ -->
+  <footer id="contact" class="relative overflow-hidden py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-white/10">
+    <p class="watermark absolute inset-x-0 bottom-0 flex items-end justify-center text-[16vw] translate-y-1/3 -z-0">Contact</p>
+
+    <div class="relative max-w-[1320px] mx-auto">
+      <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8">[ 05 &mdash; Contact ]</p>
+      <h2 class="reveal font-display font-semibold text-3xl sm:text-5xl leading-tight max-w-2xl mb-14 sm:mb-20">
+        Have a hard problem and a user who deserves better? Let's talk.
       </h2>
 
-      <div data-stagger class="divide-y divide-white/10 border-y border-white/10">
-
-        <div class="acc-item is-open" data-acc-item>
-          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
-            <span class="font-mono text-sm text-gray-500 shrink-0">01</span>
-            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Discovery &amp; Research</span>
-            <span class="icon-plus text-gray-400"></span>
+      <form id="contact-form" class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 max-w-3xl mb-6">
+        <label class="flex flex-col gap-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-fog">Name</span>
+          <input required name="name" type="text" class="bg-transparent border-b border-white/20 focus:border-signal py-2 outline-none transition-colors" />
+        </label>
+        <label class="flex flex-col gap-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-fog">Email</span>
+          <input required name="email" type="email" class="bg-transparent border-b border-white/20 focus:border-signal py-2 outline-none transition-colors" />
+        </label>
+        <label class="flex flex-col gap-2 sm:col-span-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-fog">Project / Context</span>
+          <input name="project" type="text" class="bg-transparent border-b border-white/20 focus:border-signal py-2 outline-none transition-colors" />
+        </label>
+        <label class="flex flex-col gap-2 sm:col-span-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-fog">Message</span>
+          <textarea required name="message" rows="3" class="bg-transparent border-b border-white/20 focus:border-signal py-2 outline-none transition-colors resize-none"></textarea>
+        </label>
+        <div class="sm:col-span-2 flex items-center gap-5 mt-2">
+          <button type="submit" data-magnetic class="font-mono text-sm tracking-widest uppercase border border-signal text-signal rounded-full px-6 py-3 hover:bg-signal hover:text-ink transition-colors">
+            [ Send ]
           </button>
-          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">Interviews, diary studies, surveys, and competitive scans &mdash; understanding what's actually broken before proposing what's next.</p></div></div>
+          <p id="form-note" class="text-fog text-sm"></p>
         </div>
+      </form>
+      <p class="text-fog text-sm mb-16">Or write directly &mdash; <a href="mailto:wilson.cihs@gmail.com" class="text-bone underline decoration-white/30 hover:text-signal hover:decoration-signal transition-colors">wilson.cihs@gmail.com</a></p>
 
-        <div class="acc-item" data-acc-item>
-          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
-            <span class="font-mono text-sm text-gray-500 shrink-0">02</span>
-            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Information Architecture</span>
-            <span class="icon-plus text-gray-400"></span>
-          </button>
-          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">The map before the screens: flows, hierarchy, and the structure everything else has to agree with.</p></div></div>
-        </div>
-
-        <div class="acc-item" data-acc-item>
-          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
-            <span class="font-mono text-sm text-gray-500 shrink-0">03</span>
-            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Prototype &amp; Usability Testing</span>
-            <span class="icon-plus text-gray-400"></span>
-          </button>
-          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">Low-fi to mid-fi, tested with real users before a single pixel becomes precious.</p></div></div>
-        </div>
-
-        <div class="acc-item" data-acc-item>
-          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
-            <span class="font-mono text-sm text-gray-500 shrink-0">04</span>
-            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Visual System &amp; Design Tokens</span>
-            <span class="icon-plus text-gray-400"></span>
-          </button>
-          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">The part that scales past screen one &mdash; components, tokens, and rules a team can build on.</p></div></div>
-        </div>
-
-        <div class="acc-item" data-acc-item>
-          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
-            <span class="font-mono text-sm text-gray-500 shrink-0">05</span>
-            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Handoff &amp; Validation</span>
-            <span class="icon-plus text-gray-400"></span>
-          </button>
-          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">Specs, states, edge cases &mdash; and staying in the room through the build, not just the file export.</p></div></div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ FOOTER / CONTACT ============ -->
-  <footer id="contact" class="relative overflow-hidden pt-24 sm:pt-32 pb-10 px-5 sm:px-8 lg:px-12 border-t border-white/10">
-    <p class="watermark absolute inset-x-0 bottom-0 flex items-end justify-center text-[22vw] translate-y-1/4 -z-0">CONTACT</p>
-
-    <div class="relative max-w-[1280px] mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 pb-16">
-        <div>
-          <h2 class="reveal font-display font-bold tracking-tight text-3xl sm:text-4xl mb-5">HOW CAN I HELP?</h2>
-          <p class="reveal text-gray-400 leading-relaxed max-w-md mb-8">
-            If your team has a hard problem and a user who deserves better, I'd like to hear the brief &mdash;
-            Columbus, OH, and open to remote work.
-          </p>
-          <a href="mailto:wilson.cihs@gmail.com" class="reveal inline-flex items-center gap-2 rounded-full bg-white text-[#0d1116] px-6 py-3.5 font-semibold text-sm hover:bg-gray-200 transition-colors">
-            wilson.cihs@gmail.com
-          </a>
-        </div>
-
-        <div class="grid grid-cols-2 gap-8">
-          <div>
-            <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-4">Menu</p>
-            <ul class="space-y-3 text-sm text-gray-400">
-              <li><a href="#about" class="hover:text-white transition-colors">About</a></li>
-              <li><a href="#work" class="hover:text-white transition-colors">Work</a></li>
-              <li><a href="#process" class="hover:text-white transition-colors">Process</a></li>
-            </ul>
-          </div>
-          <div>
-            <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-4">Connect</p>
-            <ul class="space-y-3 text-sm text-gray-400">
-              <li><a href="mailto:wilson.cihs@gmail.com" class="hover:text-white transition-colors">Email</a></li>
-              <li><a href="tel:6147368065" class="hover:text-white transition-colors">614-736-8065</a></li>
-              <li class="text-gray-500">Columbus, OH</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-white/10 text-xs text-gray-400">
-        <p>&copy; 2026 Drew Wilson. All rights reserved.</p>
-        <p class="font-mono uppercase tracking-widest">Product Designer &middot; UX/UI Engineer</p>
+      <div class="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-white/10 font-mono text-xs uppercase tracking-widest text-fog">
+        <p>Drew Wilson &copy; 2026</p>
+        <p data-clock>Columbus, OH &mdash; 00:00</p>
       </div>
     </div>
   </footer>
@@ -326,121 +271,121 @@
 (function(){
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- nav scroll state ---- */
-  var nav = document.querySelector('nav');
-  window.addEventListener('scroll', function(){ nav.classList.toggle('is-scrolled', window.scrollY > 8); }, { passive: true });
-
-  /* ---- reveal + stagger on scroll ---- */
-  document.body.classList.add('js-ready');
-  var revealObserver = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
+  /* ---- custom cursor (pointer devices only) ---- */
+  if (window.matchMedia('(pointer:fine)').matches && !reduceMotion) {
+    document.documentElement.classList.add('has-cursor');
+    var cursor = document.getElementById('cursor');
+    var mx = innerWidth / 2, my = innerHeight / 2, cx = mx, cy = my;
+    window.addEventListener('mousemove', function(e){ mx = e.clientX; my = e.clientY; });
+    (function loop(){ cx += (mx - cx) * 0.18; cy += (my - cy) * 0.18; cursor.style.transform = 'translate(' + cx + 'px,' + cy + 'px) translate(-50%,-50%)'; requestAnimationFrame(loop); })();
+    document.querySelectorAll('a, button, input, textarea').forEach(function(el){
+      el.addEventListener('mouseenter', function(){ cursor.classList.add('hovering'); });
+      el.addEventListener('mouseleave', function(){ cursor.classList.remove('hovering'); });
     });
-  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
-  document.querySelectorAll('.reveal, [data-stagger]').forEach(function(el){ revealObserver.observe(el); });
+  }
 
-  document.querySelectorAll('[data-stagger]').forEach(function(container){
-    Array.prototype.forEach.call(container.children, function(child, i){
-      child.style.transitionDelay = (i * 70) + 'ms';
+  /* ---- magnetic buttons ---- */
+  document.querySelectorAll('[data-magnetic]').forEach(function(btn){
+    btn.addEventListener('mousemove', function(e){
+      var r = btn.getBoundingClientRect();
+      btn.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * 0.3) + 'px,' + ((e.clientY - r.top - r.height / 2) * 0.3) + 'px)';
     });
+    btn.addEventListener('mouseleave', function(){ btn.style.transform = ''; });
   });
 
-  /* ---- ID badge: floating + drag with elastic snap-back ---- */
-  var badge = document.getElementById('id-badge');
-  if (badge && !reduceMotion) {
-    var dragging = false, ox = 0, oy = 0;
-    badge.addEventListener('pointerdown', function(e){
-      dragging = true;
-      badge.classList.remove('floaty', 'snapping');
-      ox = e.clientX; oy = e.clientY;
-      badge.setPointerCapture(e.pointerId);
-    });
-    badge.addEventListener('pointermove', function(e){
-      if (!dragging) return;
-      var max = 40, elasticity = 0.35;
-      var dx = Math.max(-max, Math.min(max, (e.clientX - ox) * elasticity));
-      var dy = Math.max(-max, Math.min(max, (e.clientY - oy) * elasticity));
-      badge.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (dx * 0.06) + 'deg)';
-    });
-    function release(){
-      if (!dragging) return;
-      dragging = false;
-      badge.classList.add('snapping');
-      badge.style.transform = '';
-      setTimeout(function(){ badge.classList.remove('snapping'); badge.classList.add('floaty'); }, 600);
-    }
-    badge.addEventListener('pointerup', release);
-    badge.addEventListener('pointercancel', release);
+  /* ---- live clock ---- */
+  function updateClock(){
+    var d = new Date(), hh = String(d.getHours()).padStart(2, '0'), mm = String(d.getMinutes()).padStart(2, '0');
+    document.querySelectorAll('[data-clock]').forEach(function(el){ el.textContent = 'COLUMBUS, OH — ' + hh + ':' + mm; });
+  }
+  updateClock(); setInterval(updateClock, 15000);
+
+  /* ---- word cycle (about diagram) ---- */
+  var words = ['Research', 'Systems', 'Testing', 'Handoff'];
+  var wi = 0;
+  var wordEl = document.getElementById('word-cycle');
+  if (wordEl && !reduceMotion) {
+    setInterval(function(){
+      wordEl.style.opacity = '0';
+      setTimeout(function(){ wi = (wi + 1) % words.length; wordEl.textContent = words[wi]; wordEl.style.opacity = '1'; }, 250);
+    }, 2200);
+    wordEl.style.transition = 'opacity .25s ease';
   }
 
-  /* ---- Recent works: 3D stacked deck ---- */
+  /* ---- fullscreen menu ---- */
+  var menuOverlay = document.getElementById('menu-overlay');
+  var menuToggle = document.getElementById('menu-toggle');
+  var menuLabel = document.getElementById('menu-label');
+  function closeMenu(){ menuOverlay.classList.remove('is-open'); menuLabel.textContent = 'Menu'; document.body.style.overflow = ''; }
+  menuToggle.addEventListener('click', function(){
+    var open = menuOverlay.classList.toggle('is-open');
+    menuLabel.textContent = open ? 'Close' : 'Menu';
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  document.querySelectorAll('[data-menu-link]').forEach(function(a){ a.addEventListener('click', closeMenu); });
+
+  /* ---- reveal + stagger ---- */
+  document.body.classList.add('js-ready');
+  var revealObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){ if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); } });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+  document.querySelectorAll('.reveal, [data-stagger]').forEach(function(el){ revealObserver.observe(el); });
+  document.querySelectorAll('[data-stagger]').forEach(function(c){ Array.prototype.forEach.call(c.children, function(ch, i){ ch.style.transitionDelay = (i * 70) + 'ms'; }); });
+
+  /* ---- hero watermark parallax ---- */
+  var watermark = document.getElementById('hero-watermark');
+  if (watermark && !reduceMotion) {
+    window.addEventListener('scroll', function(){
+      watermark.style.transform = 'translateY(' + (window.scrollY * 0.15) + 'px)';
+    }, { passive: true });
+  }
+
+  /* ---- selected work: numbered expandable list ---- */
   var WORK = [
-    { cat: 'Fintech', title: 'Flow', desc: "AI-assisted personal budgeting, for people the banking apps forgot.", tags: ['UX Research', 'Design System', 'Fintech'], grad: 'linear-gradient(160deg,#123a33,#14181f)' },
-    { cat: 'Health & Habits', title: 'HabitNest+', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul.', tags: ['Habit Design', 'Mobile UX', 'Behavioral Design'], grad: 'linear-gradient(160deg,#3a2c12,#14181f)' },
-    { cat: 'Smart City & Travel', title: 'CitySense', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options.', tags: ['AR / Map UX', 'Travel', 'Interaction Design'], grad: 'linear-gradient(160deg,#2a1f3a,#14181f)' }
+    { title: 'Flow', cat: 'Fintech', desc: "AI-assisted personal budgeting, for people the banking apps forgot. Research-led design system built around trust, not just charts.", meta: '2026 · Case File · Research, UX, Design System' },
+    { title: 'HabitNest+', cat: 'Health & Habits', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul. Behavioral design over raw feature count.', meta: '2026 · Case File · Mobile UX, Behavioral Design' },
+    { title: 'CitySense', cat: 'Smart City & Travel', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options. Context-aware over exhaustive.', meta: '2026 · Case File · AR/Map UX, Interaction Design' }
   ];
-  var activeIdx = 0;
-  var stackEl = document.getElementById('work-stack');
-  var detailEl = document.getElementById('work-detail');
-  var dotsEl = document.getElementById('work-dots');
-  var ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
+  var workList = document.getElementById('work-list');
+  var workCounter = document.getElementById('work-counter');
+  var openIdx = 0;
 
-  function renderStack(){
-    stackEl.innerHTML = '';
-    WORK.forEach(function(item, i){
-      var diff = (i - activeIdx + WORK.length) % WORK.length;
-      var card = document.createElement('div');
-      card.className = 'stack-card absolute inset-0 rounded-3xl border border-white/10 flex items-end p-6 sm:p-8 cursor-pointer';
-      card.style.background = item.grad;
-      card.style.zIndex = String(WORK.length - diff);
-      card.style.transform = 'translateY(' + (diff * 35) + 'px) scale(' + (1 - diff * 0.05) + ') rotateX(' + (diff * 2) + 'deg)';
-      card.style.opacity = diff > 2 ? '0' : '1';
-      card.innerHTML = '<p class="font-mono text-xs uppercase tracking-widest text-white/60">' + item.cat + '</p>';
-      card.addEventListener('click', function(){ setActive(diff === 0 ? (activeIdx + 1) % WORK.length : i); });
-      stackEl.appendChild(card);
-    });
-  }
-
-  function renderDetail(){
-    var item = WORK[activeIdx];
-    if (detailEl.dataset.ready) {
-      detailEl.style.transition = 'opacity .35s ease, transform .35s ease';
-      detailEl.style.opacity = '0';
-      detailEl.style.transform = 'translateY(8px)';
-    }
-    setTimeout(function(){
-      detailEl.dataset.ready = '1';
-      detailEl.innerHTML =
-        '<p class="font-mono text-xs uppercase tracking-widest text-[var(--neon)] mb-3">' + item.cat + '</p>' +
-        '<h3 class="font-display font-bold text-3xl sm:text-4xl text-white mb-4">' + item.title + '</h3>' +
-        '<p class="text-gray-400 leading-relaxed mb-6 max-w-md">' + item.desc + '</p>' +
-        '<div class="flex flex-wrap gap-2 mb-8">' + item.tags.map(function(t){ return '<span class="rounded-full border border-white/10 px-3 py-1.5 text-xs font-mono uppercase tracking-widest text-gray-400">' + t + '</span>'; }).join('') + '</div>' +
-        '<a href="#contact" class="inline-flex items-center gap-2 text-white text-sm font-semibold hover:text-[var(--neon)] transition-colors">Discuss This Project ' + ARROW + '</a>';
-      requestAnimationFrame(function(){ detailEl.style.opacity = '1'; detailEl.style.transform = 'translateY(0)'; });
-    }, reduceMotion ? 0 : 200);
-  }
-
-  function renderDots(){
-    dotsEl.innerHTML = WORK.map(function(_, i){
-      return '<button type="button" aria-label="Show project ' + (i + 1) + '" class="h-1.5 rounded-full transition-all ' + (i === activeIdx ? 'w-6 bg-[var(--neon)]' : 'w-1.5 bg-white/20') + '" data-dot="' + i + '"></button>';
+  function renderWork(){
+    workList.innerHTML = WORK.map(function(item, i){
+      return (
+        '<div class="row-item' + (i === openIdx ? ' is-open' : '') + '" data-row="' + i + '">' +
+          '<button type="button" data-row-trigger class="w-full flex items-center gap-5 sm:gap-10 py-7 sm:py-9 text-left">' +
+            '<span class="row-num font-mono text-sm text-fog shrink-0">0' + (i + 1) + '</span>' +
+            '<span class="row-title font-display font-semibold text-2xl sm:text-4xl flex-1 transition-colors">' + item.title + '</span>' +
+            '<span class="hidden sm:block font-mono text-xs uppercase tracking-widest text-fog">' + item.cat + '</span>' +
+          '</button>' +
+          '<div class="row-content"><div>' +
+            '<p class="text-fog leading-relaxed max-w-xl pb-4 pl-[2.6rem] sm:pl-[4.5rem]">' + item.desc + '</p>' +
+            '<p class="font-mono text-xs uppercase tracking-widest text-fog pb-8 pl-[2.6rem] sm:pl-[4.5rem]">' + item.meta + '</p>' +
+          '</div></div>' +
+        '</div>'
+      );
     }).join('');
-    Array.prototype.forEach.call(dotsEl.querySelectorAll('[data-dot]'), function(btn){
-      btn.addEventListener('click', function(){ setActive(parseInt(btn.getAttribute('data-dot'), 10)); });
+    Array.prototype.forEach.call(workList.querySelectorAll('[data-row]'), function(row){
+      row.querySelector('[data-row-trigger]').addEventListener('click', function(){
+        openIdx = parseInt(row.getAttribute('data-row'), 10);
+        renderWork();
+      });
     });
+    workCounter.textContent = 'Active 0' + (openIdx + 1) + ' / 0' + WORK.length;
   }
+  renderWork();
 
-  function setActive(i){ activeIdx = i; renderStack(); renderDetail(); renderDots(); }
-  if (stackEl) setActive(0);
-
-  /* ---- Process accordion ---- */
-  var accItems = document.querySelectorAll('[data-acc-item]');
-  accItems.forEach(function(item){
-    var trigger = item.querySelector('[data-acc-trigger]');
-    trigger.addEventListener('click', function(){
-      var wasOpen = item.classList.contains('is-open');
-      accItems.forEach(function(i){ i.classList.remove('is-open'); });
-      if (!wasOpen) item.classList.add('is-open');
-    });
+  /* ---- contact form: mailto handoff (no backend, fully honest about it) ---- */
+  var form = document.getElementById('contact-form');
+  var note = document.getElementById('form-note');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var data = new FormData(form);
+    var subject = 'Project inquiry from ' + (data.get('name') || '');
+    var body = 'Project/context: ' + (data.get('project') || 'n/a') + '\n\n' + (data.get('message') || '') + '\n\nReply to: ' + (data.get('email') || '');
+    window.location.href = 'mailto:wilson.cihs@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    note.textContent = 'Opening your email client to send this…';
   });
 })();
 </script>

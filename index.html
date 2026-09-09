@@ -42,14 +42,64 @@
   .row-item.is-open .row-num{ color:var(--signal); }
   .row-item.is-open .row-title{ color:var(--signal); }
 
-  .chip{ transition:border-color .25s var(--ease), color .25s var(--ease); }
-  .chip:hover{ border-color:var(--signal); color:var(--signal); }
-
   .marquee-mask{ -webkit-mask-image:linear-gradient(to right, transparent, black 8%, black 92%, transparent); mask-image:linear-gradient(to right, transparent, black 8%, black 92%, transparent); }
   .marquee-track{ animation:marquee 26s linear infinite; }
   @keyframes marquee{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
 
-  .bracket-fade{ transition:opacity .4s var(--ease); }
+  /* -------- scroll progress -------- */
+  #scroll-progress{ position:fixed; top:0; left:0; height:2px; background:var(--signal); z-index:70; width:0%; }
+
+  /* -------- left-edge section tracker (desktop) -------- */
+  #section-nav{ position:fixed; left:2rem; top:50%; transform:translateY(-50%); z-index:45; display:none; flex-direction:column; gap:26px; }
+  @media (min-width:1024px){ #section-nav{ display:flex; } }
+  #section-nav .dot-line-track{ position:absolute; left:2px; top:4px; bottom:4px; width:1px; background:var(--line); }
+  #section-nav .dot-line-fill{ position:absolute; left:2px; top:4px; width:1px; background:var(--signal); height:0%; transition:height .3s var(--ease); }
+  #section-nav a{ position:relative; display:flex; align-items:center; padding:2px 0; }
+  #section-nav .dot{ width:5px; height:5px; margin-left:0.5px; border-radius:50%; background:var(--fog); transition:background-color .3s var(--ease), transform .3s var(--ease); }
+  #section-nav a.is-active .dot{ background:var(--signal); transform:scale(1.8); }
+  #section-nav .num-label{ position:absolute; left:18px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.12em; color:var(--fog); opacity:0; transform:translateX(-4px); transition:opacity .25s var(--ease), transform .25s var(--ease); white-space:nowrap; }
+  #section-nav a:hover .num-label, #section-nav a.is-active .num-label{ opacity:1; transform:translateX(0); color:var(--signal); }
+
+  /* -------- hamburger <-> close morph -------- */
+  .burger{ position:relative; width:15px; height:9px; display:inline-block; }
+  .burger span{ position:absolute; left:0; width:100%; height:1.5px; background:currentColor; transition:transform .35s var(--ease), top .35s var(--ease); }
+  .burger span:nth-child(1){ top:0; }
+  .burger span:nth-child(2){ top:100%; margin-top:-1.5px; }
+  #menu-toggle.is-open .burger span:nth-child(1){ top:50%; transform:translateY(-50%) rotate(45deg); }
+  #menu-toggle.is-open .burger span:nth-child(2){ top:50%; margin-top:0; transform:translateY(-50%) rotate(-45deg); }
+
+  /* -------- menu link stagger-in -------- */
+  #menu-overlay nav a{ opacity:0; transform:translateY(24px); transition:opacity .5s var(--ease), transform .5s var(--ease), color .25s var(--ease); }
+  #menu-overlay.is-open nav a{ opacity:1; transform:translateY(0); }
+
+  /* -------- underline-draw links -------- */
+  .link-underline{ position:relative; }
+  .link-underline::after{ content:''; position:absolute; left:0; bottom:-2px; width:100%; height:1px; background:currentColor; transform:scaleX(0); transform-origin:right; transition:transform .4s var(--ease); }
+  .link-underline:hover::after{ transform:scaleX(1); transform-origin:left; }
+
+  /* -------- arrow-slide CTAs -------- */
+  .arrow-cta svg{ transition:transform .3s var(--ease); }
+  .arrow-cta:hover svg{ transform:translate(3px,-3px); }
+
+  /* -------- tactile press feedback -------- */
+  button{ transition:transform .15s var(--ease), background-color .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease); }
+  button:active{ transform:scale(.96); }
+
+  /* -------- work-row hover sweep + expand icon -------- */
+  .row-item{ position:relative; overflow:hidden; }
+  .row-item::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(255,92,57,.07), transparent 60%); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease); pointer-events:none; }
+  .row-item:hover::before{ transform:scaleX(1); }
+  .row-toggle{ position:relative; width:13px; height:13px; flex-shrink:0; color:var(--fog); }
+  .row-item.is-open .row-toggle{ color:var(--signal); }
+  .row-toggle::before, .row-toggle::after{ content:''; position:absolute; background:currentColor; transition:transform .3s var(--ease); }
+  .row-toggle::before{ left:0; top:50%; width:100%; height:1.5px; transform:translateY(-50%); }
+  .row-toggle::after{ top:0; left:50%; width:1.5px; height:100%; transform:translateX(-50%); }
+  .row-item.is-open .row-toggle::after{ transform:translateX(-50%) scaleY(0); }
+
+  /* -------- hero scroll cue -------- */
+  #scroll-cue{ transition:opacity .4s ease; }
+  @keyframes cue-bounce{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(6px);} }
+  #scroll-cue .cue-arrow{ animation:cue-bounce 1.8s ease-in-out infinite; }
 
   a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{ outline:2px solid var(--signal); outline-offset:3px; }
   ::selection{ background:var(--signal); color:var(--ink); }
@@ -58,6 +108,7 @@
     html{ scroll-behavior:auto; }
     *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
     .js-ready .reveal, .js-ready [data-stagger] > *{ opacity:1; transform:none; }
+    #scroll-cue .cue-arrow{ animation:none; }
   }
 </style>
 
@@ -76,17 +127,30 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <div id="cursor" aria-hidden="true"></div>
+<div id="scroll-progress" aria-hidden="true"></div>
 
 <!-- HEADER -->
 <header class="fixed inset-x-0 top-0 z-50 h-20 flex items-center px-5 sm:px-8 lg:px-12">
   <div class="max-w-[1320px] w-full mx-auto flex items-center justify-between">
     <a href="#top" data-magnetic class="font-display font-bold text-lg text-bone">DW<span class="text-signal">.</span></a>
     <p data-clock class="hidden sm:block font-mono text-xs tracking-widest text-fog">COLUMBUS, OH &mdash; 00:00</p>
-    <button type="button" id="menu-toggle" data-magnetic class="font-mono text-xs tracking-widest uppercase border border-white/15 rounded-full px-5 py-2.5 hover:border-signal hover:text-signal transition-colors">
+    <button type="button" id="menu-toggle" data-magnetic class="font-mono text-xs tracking-widest uppercase border border-white/15 rounded-full pl-4 pr-5 py-2.5 h-11 flex items-center gap-2.5 hover:border-signal hover:text-signal transition-colors">
+      <span class="burger"><span></span><span></span></span>
       <span id="menu-label">Menu</span>
     </button>
   </div>
 </header>
+
+<!-- SECTION TRACKER (desktop) -->
+<nav id="section-nav" aria-label="Section navigation">
+  <div class="dot-line-track"></div>
+  <div class="dot-line-fill" id="section-nav-fill"></div>
+  <a href="#hero" data-section-link="hero" class="is-active"><span class="dot"></span><span class="num-label">01 &mdash; Signal</span></a>
+  <a href="#work" data-section-link="work"><span class="dot"></span><span class="num-label">02 &mdash; Work</span></a>
+  <a href="#practice" data-section-link="practice"><span class="dot"></span><span class="num-label">03 &mdash; Practice</span></a>
+  <a href="#about" data-section-link="about"><span class="dot"></span><span class="num-label">04 &mdash; About</span></a>
+  <a href="#contact" data-section-link="contact"><span class="dot"></span><span class="num-label">05 &mdash; Contact</span></a>
+</nav>
 
 <!-- FULLSCREEN MENU -->
 <div id="menu-overlay" class="fixed inset-0 z-40 bg-ink flex flex-col justify-center px-5 sm:px-8 lg:px-12">
@@ -97,7 +161,7 @@
     <a href="#contact" data-menu-link class="font-display font-semibold text-5xl sm:text-7xl text-bone hover:text-signal transition-colors py-2">Contact</a>
   </nav>
   <div class="max-w-[1320px] w-full mx-auto mt-14 flex flex-wrap gap-x-10 gap-y-2 font-mono text-xs tracking-widest text-fog uppercase">
-    <a href="mailto:wilson.cihs@gmail.com" class="hover:text-signal transition-colors">wilson.cihs@gmail.com</a>
+    <a href="mailto:wilson.cihs@gmail.com" class="link-underline hover:text-signal transition-colors">wilson.cihs@gmail.com</a>
     <span>614-736-8065</span>
     <span>Columbus, OH</span>
   </div>
@@ -106,7 +170,7 @@
 <main id="top">
 
   <!-- ============ 01 SIGNAL / HERO ============ -->
-  <section class="relative min-h-screen flex items-center overflow-hidden px-5 sm:px-8 lg:px-12 pt-28 pb-16">
+  <section id="hero" class="relative min-h-screen flex items-center overflow-hidden px-5 sm:px-8 lg:px-12 pt-28 pb-16">
     <p id="hero-watermark" class="watermark absolute inset-0 flex items-center justify-center text-[24vw] -z-0">DW</p>
 
     <div class="relative max-w-[1320px] mx-auto w-full">
@@ -119,10 +183,16 @@
           An independent design practice shaping product thinking, interaction design, and
           design systems into interfaces a team can actually ship.
         </p>
-        <a href="mailto:wilson.cihs@gmail.com" data-magnetic class="font-mono text-sm sm:text-base tracking-widest uppercase border-b border-bone/30 pb-1 hover:border-signal hover:text-signal transition-colors shrink-0">
+        <a href="mailto:wilson.cihs@gmail.com" data-magnetic class="arrow-cta inline-flex items-center gap-2 font-mono text-sm sm:text-base tracking-widest uppercase border-b border-bone/30 pb-1 hover:border-signal hover:text-signal transition-colors shrink-0">
           [ Let's talk ]
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
         </a>
       </div>
+    </div>
+
+    <div id="scroll-cue" class="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-fog">
+      <span class="font-mono text-[10px] tracking-widest uppercase">Scroll</span>
+      <svg class="cue-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </div>
   </section>
 
@@ -233,30 +303,35 @@
       </h2>
 
       <form id="contact-form" class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6 max-w-3xl mb-6">
-        <label class="flex flex-col gap-2">
-          <span class="font-mono text-xs uppercase tracking-widest text-fog">Name</span>
-          <input required name="name" type="text" class="bg-transparent border-b border-white/20 focus:border-signal py-2 outline-none transition-colors" />
+        <label class="relative flex flex-col gap-2 group">
+          <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Name</span>
+          <input required name="name" type="text" class="bg-transparent border-b border-white/20 py-2 outline-none" />
+          <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
         </label>
-        <label class="flex flex-col gap-2">
-          <span class="font-mono text-xs uppercase tracking-widest text-fog">Email</span>
-          <input required name="email" type="email" class="bg-transparent border-b border-white/20 focus:border-signal py-2 outline-none transition-colors" />
+        <label class="relative flex flex-col gap-2 group">
+          <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Email</span>
+          <input required name="email" type="email" class="bg-transparent border-b border-white/20 py-2 outline-none" />
+          <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
         </label>
-        <label class="flex flex-col gap-2 sm:col-span-2">
-          <span class="font-mono text-xs uppercase tracking-widest text-fog">Project / Context</span>
-          <input name="project" type="text" class="bg-transparent border-b border-white/20 focus:border-signal py-2 outline-none transition-colors" />
+        <label class="relative flex flex-col gap-2 group sm:col-span-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Project / Context</span>
+          <input name="project" type="text" class="bg-transparent border-b border-white/20 py-2 outline-none" />
+          <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
         </label>
-        <label class="flex flex-col gap-2 sm:col-span-2">
-          <span class="font-mono text-xs uppercase tracking-widest text-fog">Message</span>
-          <textarea required name="message" rows="3" class="bg-transparent border-b border-white/20 focus:border-signal py-2 outline-none transition-colors resize-none"></textarea>
+        <label class="relative flex flex-col gap-2 group sm:col-span-2">
+          <span class="font-mono text-xs uppercase tracking-widest text-fog transition-colors group-focus-within:text-signal">Message</span>
+          <textarea required name="message" rows="3" class="bg-transparent border-b border-white/20 py-2 outline-none resize-none"></textarea>
+          <span class="absolute left-0 bottom-0 h-[1.5px] w-full bg-signal scale-x-0 origin-left transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-focus-within:scale-x-100"></span>
         </label>
         <div class="sm:col-span-2 flex items-center gap-5 mt-2">
-          <button type="submit" data-magnetic class="font-mono text-sm tracking-widest uppercase border border-signal text-signal rounded-full px-6 py-3 hover:bg-signal hover:text-ink transition-colors">
+          <button type="submit" data-magnetic class="arrow-cta inline-flex items-center gap-2 font-mono text-sm tracking-widest uppercase border border-signal text-signal rounded-full px-6 py-3 hover:bg-signal hover:text-ink transition-colors">
             [ Send ]
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
           </button>
           <p id="form-note" class="text-fog text-sm"></p>
         </div>
       </form>
-      <p class="text-fog text-sm mb-16">Or write directly &mdash; <a href="mailto:wilson.cihs@gmail.com" class="text-bone underline decoration-white/30 hover:text-signal hover:decoration-signal transition-colors">wilson.cihs@gmail.com</a></p>
+      <p class="text-fog text-sm mb-16">Or write directly &mdash; <a href="mailto:wilson.cihs@gmail.com" class="link-underline text-bone hover:text-signal transition-colors">wilson.cihs@gmail.com</a></p>
 
       <div class="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-white/10 font-mono text-xs uppercase tracking-widest text-fog">
         <p>Drew Wilson &copy; 2026</p>
@@ -316,9 +391,10 @@
   var menuOverlay = document.getElementById('menu-overlay');
   var menuToggle = document.getElementById('menu-toggle');
   var menuLabel = document.getElementById('menu-label');
-  function closeMenu(){ menuOverlay.classList.remove('is-open'); menuLabel.textContent = 'Menu'; document.body.style.overflow = ''; }
+  function closeMenu(){ menuOverlay.classList.remove('is-open'); menuToggle.classList.remove('is-open'); menuLabel.textContent = 'Menu'; document.body.style.overflow = ''; }
   menuToggle.addEventListener('click', function(){
     var open = menuOverlay.classList.toggle('is-open');
+    menuToggle.classList.toggle('is-open', open);
     menuLabel.textContent = open ? 'Close' : 'Menu';
     document.body.style.overflow = open ? 'hidden' : '';
   });
@@ -332,13 +408,39 @@
   document.querySelectorAll('.reveal, [data-stagger]').forEach(function(el){ revealObserver.observe(el); });
   document.querySelectorAll('[data-stagger]').forEach(function(c){ Array.prototype.forEach.call(c.children, function(ch, i){ ch.style.transitionDelay = (i * 70) + 'ms'; }); });
 
-  /* ---- hero watermark parallax ---- */
+  /* ---- one scroll handler: progress bar, section tracker, watermark parallax, scroll cue ---- */
   var watermark = document.getElementById('hero-watermark');
-  if (watermark && !reduceMotion) {
-    window.addEventListener('scroll', function(){
-      watermark.style.transform = 'translateY(' + (window.scrollY * 0.15) + 'px)';
-    }, { passive: true });
+  var progressBar = document.getElementById('scroll-progress');
+  var scrollCue = document.getElementById('scroll-cue');
+  var sectionIds = ['hero', 'work', 'practice', 'about', 'contact'];
+  var sectionLinks = document.querySelectorAll('[data-section-link]');
+  var navFill = document.getElementById('section-nav-fill');
+  var navTrack = document.querySelector('#section-nav .dot-line-track');
+
+  function onScroll(){
+    var scrollTop = window.scrollY;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var progress = max > 0 ? Math.min(Math.max(scrollTop / max, 0), 1) : 0;
+    if (progressBar) progressBar.style.width = (progress * 100) + '%';
+
+    if (watermark && !reduceMotion) watermark.style.transform = 'translateY(' + (scrollTop * 0.15) + 'px)';
+    if (scrollCue) scrollCue.style.opacity = scrollTop > 80 ? '0' : '1';
+
+    if (sectionLinks.length) {
+      var current = sectionIds[0];
+      sectionIds.forEach(function(id){
+        var el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) current = id;
+      });
+      sectionLinks.forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('data-section-link') === current); });
+      if (navFill && navTrack) {
+        var idx = sectionIds.indexOf(current);
+        navFill.style.height = (idx / (sectionIds.length - 1) * navTrack.offsetHeight) + 'px';
+      }
+    }
   }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 
   /* ---- selected work: numbered expandable list ---- */
   var WORK = [
@@ -358,6 +460,7 @@
             '<span class="row-num font-mono text-sm text-fog shrink-0">0' + (i + 1) + '</span>' +
             '<span class="row-title font-display font-semibold text-2xl sm:text-4xl flex-1 transition-colors">' + item.title + '</span>' +
             '<span class="hidden sm:block font-mono text-xs uppercase tracking-widest text-fog">' + item.cat + '</span>' +
+            '<span class="row-toggle"></span>' +
           '</button>' +
           '<div class="row-content"><div>' +
             '<p class="text-fog leading-relaxed max-w-xl pb-4 pl-[2.6rem] sm:pl-[4.5rem]">' + item.desc + '</p>' +

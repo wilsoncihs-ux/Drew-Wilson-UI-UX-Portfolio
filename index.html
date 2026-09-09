@@ -1,78 +1,83 @@
 <title>Drew Wilson</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
 
 <style>
   :root{
-    --paper:#fbfaf7;
-    --panel:#f3f0ea;
-    --ink:#1b1a17;
-    --graphite:#8c8579;
-    --rule:#e6e1d8;
-    --rust:#b85c3e;
-    --rust-dark:#9c4a30;
-    --dark:#1c1b18;
-    --dark-2:#26241f;
-    --sage:#b7d9d2;
-    --peach:#f0c9b8;
-    --lavender:#d6cbea;
+    --bg:#0d1116;
+    --surface:#14181f;
+    --neon:#00df8f;
+    --neon-dark:#00b373;
+    --border:rgba(255,255,255,0.1);
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter', ui-sans-serif, system-ui, sans-serif;
-    -webkit-font-smoothing:antialiased;
+  body{ background:var(--bg); color:#fff; font-family:'Inter', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+  section, footer{ scroll-margin-top:6rem; }
+  .font-display{ font-family:'Space Grotesk', ui-sans-serif, sans-serif; letter-spacing:-0.02em; }
+  .font-mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+  .text-outline{ color:transparent; -webkit-text-stroke:2px var(--neon); }
+
+  .grid-overlay{
+    background-image:
+      linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+    background-size:40px 40px;
   }
-  section{scroll-margin-top:5rem;}
-  h1,h2,h3,.font-serif{font-family:'Newsreader', ui-serif, Georgia, serif; text-wrap:balance;}
-  .font-mono{font-family:'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;}
-  p,.measure{max-width:60ch;}
+  .watermark{ font-family:'Space Grotesk', sans-serif; font-weight:700; color:#fff; opacity:.025; line-height:.85; white-space:nowrap; pointer-events:none; user-select:none; }
 
-  .reveal{opacity:1; transform:translateY(0); transition:opacity .7s ease, transform .7s ease;}
-  .js-ready .reveal{opacity:0; transform:translateY(18px);}
-  .js-ready .reveal.is-visible{opacity:1; transform:translateY(0);}
+  .reveal, [data-stagger] > *{ opacity:1; transform:translateY(0); transition:opacity .7s ease, transform .7s ease; }
+  .js-ready .reveal{ opacity:0; transform:translateY(20px); }
+  .js-ready .reveal.is-visible{ opacity:1; transform:translateY(0); }
+  .js-ready [data-stagger] > *{ opacity:0; transform:translateY(14px); }
+  .js-ready [data-stagger].is-visible > *{ opacity:1; transform:translateY(0); }
 
-  nav{border-bottom:1px solid transparent; transition:box-shadow .2s ease, border-color .2s ease, background-color .2s ease;}
-  nav.is-scrolled{border-bottom-color:var(--rule); box-shadow:0 1px 0 rgba(27,26,23,.03); background-color:rgba(251,250,247,.9); backdrop-filter:blur(8px);}
+  nav{ transition:background-color .2s ease, border-color .2s ease; border-bottom:1px solid transparent; }
+  nav.is-scrolled{ background-color:rgba(15,17,21,.8); backdrop-filter:blur(10px); border-bottom-color:var(--border); }
 
-  .ticker-mask{ -webkit-mask-image:linear-gradient(to bottom, transparent, black 16%, black 84%, transparent); mask-image:linear-gradient(to bottom, transparent, black 16%, black 84%, transparent); }
-  .ticker-track{ animation:ticker-scroll 16s linear infinite; }
-  @keyframes ticker-scroll{ from{ transform:translateY(0); } to{ transform:translateY(-50%); } }
+  .chip{ transition:border-color .25s ease, color .25s ease, box-shadow .25s ease; }
+  .chip:hover{ border-color:var(--neon); color:var(--neon); box-shadow:0 0 15px rgba(0,223,143,.3); }
 
-  .marquee-mask{ -webkit-mask-image:linear-gradient(to right, transparent, black 8%, black 92%, transparent); mask-image:linear-gradient(to right, transparent, black 8%, black 92%, transparent); }
-  .marquee-track{ animation:marquee-scroll 28s linear infinite; }
-  @keyframes marquee-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  #id-badge{ touch-action:none; cursor:grab; will-change:transform; }
+  #id-badge.dragging{ cursor:grabbing; transition:none; }
+  #id-badge.snapping{ transition:transform .6s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes floaty{ 0%,100%{ transform:translateY(0) rotate(-1deg);} 50%{ transform:translateY(-14px) rotate(1deg);} }
+  #id-badge.floaty{ animation:floaty 5s ease-in-out infinite; }
 
-  .step-bar{ position:relative; }
-  .step-indicator{ position:absolute; left:0; top:0; width:2px; background:var(--ink); transition:transform .35s ease, height .35s ease; }
+  .stack-wrap{ perspective:1400px; }
+  .stack-card{ transition:transform .6s cubic-bezier(.32,.72,0,1), opacity .6s cubic-bezier(.32,.72,0,1); transform-style:preserve-3d; }
 
-  a:focus-visible, button:focus-visible{ outline:2px solid var(--rust); outline-offset:3px; }
-  ::selection{ background:var(--rust); color:#fff; }
+  .acc-content{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .4s ease; }
+  .acc-item.is-open .acc-content{ grid-template-rows:1fr; }
+  .acc-content > div{ overflow:hidden; min-height:0; }
+  .icon-plus{ position:relative; width:14px; height:14px; flex-shrink:0; }
+  .icon-plus::before,.icon-plus::after{ content:''; position:absolute; background:currentColor; }
+  .icon-plus::before{ left:0; top:50%; width:100%; height:1.5px; transform:translateY(-50%); }
+  .icon-plus::after{ top:0; left:50%; width:1.5px; height:100%; transform:translateX(-50%); transition:transform .3s ease; }
+  .is-open .icon-plus::after{ transform:translateX(-50%) scaleY(0); }
+
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--neon); outline-offset:3px; }
+  ::selection{ background:var(--neon); color:#0d1116; }
 
   @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
-    .js-ready .reveal{opacity:1; transform:none;}
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+    .js-ready .reveal, .js-ready [data-stagger] > *{ opacity:1; transform:none; }
+    #id-badge.floaty{ animation:none; }
   }
 </style>
 
 <script>
   tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          paper:'#fbfaf7', panel:'#f3f0ea', ink:'#1b1a17', graphite:'#8c8579',
-          rule:'#e6e1d8', rust:'#b85c3e', dark:'#1c1b18',
-          sage:'#b7d9d2', peach:'#f0c9b8', lavender:'#d6cbea'
-        },
-        fontFamily: {
-          serif: ['Newsreader', 'ui-serif', 'Georgia', 'serif'],
-          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-          mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-        },
+    theme:{
+      extend:{
+        colors:{ bg:'#0d1116', surface:'#14181f', neon:'#00df8f' },
+        fontFamily:{
+          display:['"Space Grotesk"','ui-sans-serif','sans-serif'],
+          sans:['Inter','ui-sans-serif','system-ui','sans-serif'],
+          mono:['"IBM Plex Mono"','ui-monospace','monospace'],
+        }
       }
     }
   }
@@ -80,453 +85,362 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 <!-- NAV -->
-<nav class="fixed inset-x-0 top-0 z-40 h-16 sm:h-20 flex items-center px-5 sm:px-8 lg:px-12">
-  <div class="max-w-[1240px] w-full mx-auto flex items-center justify-between">
-    <a href="#top" class="font-serif text-xl sm:text-2xl text-ink">Drew Wilson</a>
-    <div class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-widest text-graphite">
-      <a href="#about" class="hover:text-ink transition-colors">About</a>
-      <a href="#toolkit" class="hover:text-ink transition-colors">Toolkit</a>
-      <a href="#method" class="hover:text-ink transition-colors">Method</a>
-      <a href="#work" class="hover:text-ink transition-colors">Work</a>
+<nav class="fixed inset-x-0 top-0 z-50 h-20 sm:h-24 flex items-center px-5 sm:px-8 lg:px-12">
+  <div class="max-w-[1280px] w-full mx-auto flex items-center justify-between">
+    <a href="#top" class="font-display font-bold text-lg sm:text-xl text-white">DREW WILSON<span class="text-[var(--neon)]">.</span></a>
+    <div class="hidden md:flex items-center gap-9 font-semibold text-sm uppercase tracking-wide text-gray-300">
+      <a href="#about" class="hover:text-[var(--neon)] transition-colors">About</a>
+      <a href="#work" class="hover:text-[var(--neon)] transition-colors">Work</a>
+      <a href="#process" class="hover:text-[var(--neon)] transition-colors">Process</a>
+      <a href="#contact" class="hover:text-[var(--neon)] transition-colors">Contact</a>
     </div>
-    <a href="#contact" class="rounded-full bg-rust text-white text-xs sm:text-sm font-medium px-4 py-2 sm:px-5 sm:py-2.5 hover:bg-[var(--rust-dark)] transition-colors">Get in Touch</a>
+    <a href="#contact" aria-label="Contact Drew" class="h-11 w-11 rounded-full border border-white/15 flex items-center justify-center hover:border-[var(--neon)] transition-colors">
+      <span class="h-2.5 w-2.5 rounded-full bg-[var(--neon)]"></span>
+    </a>
   </div>
 </nav>
 
 <main id="top">
 
   <!-- ============ HERO ============ -->
-  <section class="pt-28 sm:pt-36 pb-16 sm:pb-24 px-5 sm:px-8 lg:px-12">
-    <div class="max-w-[1240px] mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-10 lg:gap-14 items-center">
+  <section class="relative min-h-screen flex items-center overflow-hidden px-5 sm:px-8 lg:px-12 pt-24 pb-16 grid-overlay">
+    <p class="watermark absolute inset-0 flex items-center justify-center text-[20vw] -z-0">DESIGN</p>
 
+    <div class="relative max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-10 items-center w-full">
       <div>
-        <p class="font-mono text-xs uppercase tracking-widest text-graphite mb-6">Product Designer &mdash; UX/UI Engineer</p>
-        <h1 class="font-serif font-normal text-[2.5rem] leading-[1.08] sm:text-6xl sm:leading-[1.05] text-ink mb-6">
-          Every interface,<br>one clear system<br>of thought.
+        <p class="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.25em] text-gray-400 mb-6">
+          <span class="h-1.5 w-1.5 rounded-full bg-[var(--neon)]"></span> UX/UI Designer
+        </p>
+        <h1 class="font-display font-bold tracking-tighter leading-[0.9] text-5xl sm:text-6xl md:text-7xl mb-6">
+          <span class="text-white">DIGITAL</span><br>
+          <span class="text-outline">EXPERIENCES</span><span class="text-[var(--neon)]">.</span>
         </h1>
-        <div class="flex gap-4 mb-8">
-          <span class="w-px shrink-0 bg-rule"></span>
-          <p class="measure text-graphite text-base sm:text-lg leading-relaxed">
-            I turn ambiguous requirements into research-backed, accessible interfaces &mdash; and stay
-            through build, QA, and the version that comes after real usage.
-          </p>
-        </div>
-        <div class="flex flex-wrap items-center gap-5">
-          <a href="#work" class="rounded-full bg-rust text-white text-sm font-medium px-6 py-3 hover:bg-[var(--rust-dark)] transition-colors">View My Work</a>
-          <a href="mailto:wilson.cihs@gmail.com" class="text-sm font-medium text-ink underline decoration-rule underline-offset-4 hover:decoration-ink transition-colors">Email Drew &rarr;</a>
-        </div>
-      </div>
-
-      <div class="relative rounded-[28px] bg-dark overflow-hidden aspect-[4/3] sm:aspect-[16/11]">
-        <div id="hero-blob" class="absolute inset-0 flex items-center justify-center opacity-90"></div>
-
-        <div class="absolute inset-x-0 top-6 sm:top-8 px-6 sm:px-8 flex items-center gap-3 font-mono text-[10px] sm:text-xs uppercase tracking-widest text-white/70">
-          <span class="flex items-center gap-1.5"><span class="h-5 w-5 rounded-full bg-white/10 border border-white/20"></span>Research</span>
-          <span class="text-white/30">&rarr;</span>
-          <span class="flex items-center gap-1.5"><span class="h-5 w-5 rounded-full bg-rust/60 border border-white/20"></span>Design System</span>
-          <span class="text-white/30">&rarr;</span>
-          <span class="hidden sm:flex items-center gap-1.5"><span class="h-5 w-5 rounded-full bg-white/10 border border-white/20"></span>Shipped Product</span>
-        </div>
-
-        <div class="ticker-mask absolute right-0 top-0 bottom-0 w-[58%] sm:w-1/2 h-full overflow-hidden py-8 pr-6 sm:pr-8">
-          <div class="ticker-track font-serif text-white/40 text-sm sm:text-base leading-[2.1]">
-            <div>
-              <p>User Research</p><p>Journey Mapping</p><p class="text-white font-medium">Design Systems</p><p>Interaction Design</p><p>Usability Testing</p><p>Design Tokens</p><p>Accessibility Audits</p><p>Developer Handoff</p>
-            </div>
-            <div aria-hidden="true">
-              <p>User Research</p><p>Journey Mapping</p><p class="text-white font-medium">Design Systems</p><p>Interaction Design</p><p>Usability Testing</p><p>Design Tokens</p><p>Accessibility Audits</p><p>Developer Handoff</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ============ TOOLKIT MARQUEE ============ -->
-  <section id="toolkit" class="py-10 sm:py-14 border-y border-rule px-5 sm:px-8 lg:px-12">
-    <div class="max-w-[1240px] mx-auto">
-      <p class="font-mono text-xs uppercase tracking-widest text-graphite text-center mb-6">Tools &amp; Platforms</p>
-      <div class="marquee-mask overflow-hidden">
-        <div class="marquee-track flex w-max gap-12 font-mono text-sm sm:text-base uppercase tracking-wide text-graphite/70">
-          <div class="flex gap-12 shrink-0">
-            <span>Figma</span><span>Adobe&nbsp;XD</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>CorelDRAW</span><span>HTML</span><span>CSS</span><span>Microsoft&nbsp;Office</span>
-          </div>
-          <div class="flex gap-12 shrink-0" aria-hidden="true">
-            <span>Figma</span><span>Adobe&nbsp;XD</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>CorelDRAW</span><span>HTML</span><span>CSS</span><span>Microsoft&nbsp;Office</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ ABOUT + STAT BAR ============ -->
-  <section id="about" class="py-16 sm:py-24 px-5 sm:px-8 lg:px-12">
-    <div class="max-w-[1240px] mx-auto">
-      <div class="max-w-3xl mb-14 sm:mb-20">
-        <p class="reveal font-serif text-2xl sm:text-3xl text-ink leading-snug mb-3">
-          I trained as a graphic designer before UX had its own department.
+        <p class="text-gray-400 leading-relaxed max-w-md mb-9 text-base sm:text-lg">
+          I'm Drew Wilson &mdash; a product designer who turns ambiguous requirements into interfaces
+          people trust, backed by research and systemized so a team can scale past screen one.
         </p>
-        <p class="reveal font-serif text-2xl sm:text-3xl text-graphite/80 leading-snug">
-          Five years later I still start the same way &mdash; not with a screen, but with a question
-          no one has answered yet.
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="#work" class="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold text-sm text-[#0d1116] transition-transform hover:scale-105" style="background:linear-gradient(to right,#00df8f,#00b373)">
+            View My Work
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+          <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-6 py-3.5 font-semibold text-sm text-white hover:border-white/40 transition-colors">
+            <span class="h-2 w-2 rounded-full bg-[var(--neon)]"></span> Contact Me
+          </a>
+        </div>
+      </div>
+
+      <div class="relative flex justify-center lg:justify-end pt-10 lg:pt-0">
+        <div class="absolute -top-6 h-16 w-10 sm:w-12 rounded-t-lg bg-surface border border-white/10" aria-hidden="true">
+          <span class="absolute left-1/2 top-3 -translate-x-1/2 h-2.5 w-2.5 rounded-full bg-[#0d1116] border border-white/10"></span>
+        </div>
+        <div id="id-badge" class="floaty relative w-[260px] sm:w-[300px] rounded-[28px] bg-surface border border-white/10 p-5 sm:p-6 shadow-[0_30px_60px_rgba(0,0,0,.5)]">
+          <div class="rounded-2xl bg-white/[0.03] border border-white/10 aspect-[3/4] flex items-center justify-center relative overflow-hidden">
+            <span class="font-display font-bold text-6xl sm:text-7xl text-white/10">DW</span>
+            <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5 bg-gradient-to-t from-surface via-surface/90 to-transparent">
+              <p class="font-display font-semibold text-white text-base sm:text-lg leading-tight">Drew Wilson.</p>
+              <p class="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[var(--neon)] mt-1">Product &amp; UX/UI Designer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12">
+    <div class="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-16">
+      <div>
+        <h2 class="reveal font-display font-bold tracking-tight text-3xl sm:text-4xl mb-6">DESIGNING WITH PURPOSE.</h2>
+        <p class="reveal text-gray-400 leading-relaxed mb-4">
+          I trained as a graphic designer before UX had its own department. My work lives in the space
+          between research and code &mdash; discovery, flows, prototypes, and the design-system plumbing
+          that lets a team ship the fifth screen as fast as the first.
         </p>
+        <p class="reveal text-gray-400 leading-relaxed mb-10">
+          I don't hand off and disappear. I stay for the build, the QA pass, and the version that comes
+          after real users tell us the truth &mdash; because strong UX is a system, not a single screen.
+        </p>
+        <div class="reveal flex divide-x divide-white/10">
+          <div class="pr-8">
+            <p class="font-display font-bold text-4xl text-white mb-1">5+</p>
+            <p class="text-gray-500 text-sm">Years in UX/UI &amp; Product Design</p>
+          </div>
+          <div class="pl-8">
+            <p class="font-display font-bold text-4xl text-white mb-1">3</p>
+            <p class="text-gray-500 text-sm">End-to-End Case Files Shipped</p>
+          </div>
+        </div>
       </div>
 
-      <div class="reveal grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 border-t border-rule pt-10">
-        <div>
-          <p class="font-serif text-4xl sm:text-5xl text-ink mb-2">5+</p>
-          <p class="text-graphite text-sm sm:text-base">Years in UX/UI &amp; product design</p>
-        </div>
-        <div>
-          <p class="font-serif text-4xl sm:text-5xl text-ink mb-2">3</p>
-          <p class="text-graphite text-sm sm:text-base">End-to-end case files, start to handoff</p>
-        </div>
-        <div>
-          <p class="font-serif text-4xl sm:text-5xl text-ink mb-2">100%</p>
-          <p class="text-graphite text-sm sm:text-base">Usability-tested before visual polish</p>
+      <div class="reveal rounded-3xl bg-white/[0.03] backdrop-blur-md border border-white/10 p-6 sm:p-8">
+        <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-5">My Toolkit</p>
+        <div data-stagger class="flex flex-wrap gap-2.5">
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">User Research</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Journey Mapping</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Information Architecture</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Wireframing &amp; Prototyping</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Design Systems</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Design Tokens</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Figma</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Adobe XD</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">HTML &amp; CSS</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Accessibility</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">Developer Handoff</span>
+          <span class="chip rounded-full border border-white/10 px-4 py-2 text-sm text-gray-300">AI-Assisted Workflows</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ REFLECTIONS (pull-quotes) ============ -->
-  <section class="py-16 sm:py-24 px-5 sm:px-8 lg:px-12 bg-panel">
-    <div class="max-w-[1240px] mx-auto">
-      <h2 class="reveal font-serif text-3xl sm:text-4xl text-ink mb-10 sm:mb-14 max-w-xl">What three projects taught me.</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-        <div class="reveal rounded-3xl p-7 sm:p-8" style="background:var(--sage)">
-          <p class="font-serif text-lg sm:text-xl text-ink leading-snug mb-6">&ldquo;Financial design is trust wearing an interface.&rdquo;</p>
-          <p class="font-mono text-xs uppercase tracking-widest text-ink/60">&mdash; Drew Wilson, on Flow</p>
+  <!-- ============ RECENT WORKS ============ -->
+  <section id="work" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12 bg-surface/40">
+    <div class="max-w-[1280px] mx-auto">
+      <div class="reveal flex flex-wrap items-end justify-between gap-4 mb-14 sm:mb-20">
+        <h2 class="font-display font-bold tracking-tight text-3xl sm:text-4xl">RECENT WORKS</h2>
+        <a href="#contact" class="inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-gray-300 hover:border-[var(--neon)] hover:text-[var(--neon)] transition-colors">
+          Discuss a Project
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+        </a>
+      </div>
+
+      <div class="reveal grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+        <div class="lg:col-span-7">
+          <div class="stack-wrap relative h-[340px] sm:h-[450px] md:h-[480px]">
+            <div id="work-stack" class="absolute inset-0"></div>
+          </div>
+          <div id="work-dots" class="flex items-center gap-2 mt-6"></div>
         </div>
-        <div class="reveal rounded-3xl p-7 sm:p-8" style="background:var(--peach)">
-          <p class="font-serif text-lg sm:text-xl text-ink leading-snug mb-6">&ldquo;Streak paused, not lost&rdquo; beat every progress bar we tested.</p>
-          <p class="font-mono text-xs uppercase tracking-widest text-ink/60">&mdash; Drew Wilson, on HabitNest+</p>
-        </div>
-        <div class="reveal rounded-3xl p-7 sm:p-8" style="background:var(--lavender)">
-          <p class="font-serif text-lg sm:text-xl text-ink leading-snug mb-6">Context beat completeness, every time it was tested.</p>
-          <p class="font-mono text-xs uppercase tracking-widest text-ink/60">&mdash; Drew Wilson, on CitySense</p>
+        <div class="lg:col-span-5">
+          <div id="work-detail"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ METHOD (numbered tabs) ============ -->
-  <section id="method" class="py-16 sm:py-24 px-5 sm:px-8 lg:px-12">
-    <div class="max-w-[1240px] mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-14 sm:mb-20">
-        <h2 class="reveal font-serif text-3xl sm:text-4xl text-ink mb-2">The same process, every time.</h2>
-        <p class="reveal font-serif text-xl sm:text-2xl text-graphite/70">From ambiguous ask to a shipped, tested interface.</p>
-      </div>
+  <!-- ============ PROCESS (accordion) ============ -->
+  <section id="process" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="reveal font-display font-bold tracking-tight text-3xl sm:text-4xl text-center mb-14 sm:mb-20">
+        MY DESIGN <span class="text-outline">PROCESS</span>
+      </h2>
 
-      <div class="grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-12 lg:gap-16 items-start">
+      <div data-stagger class="divide-y divide-white/10 border-y border-white/10">
+
+        <div class="acc-item is-open" data-acc-item>
+          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
+            <span class="font-mono text-sm text-gray-500 shrink-0">01</span>
+            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Discovery &amp; Research</span>
+            <span class="icon-plus text-gray-400"></span>
+          </button>
+          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">Interviews, diary studies, surveys, and competitive scans &mdash; understanding what's actually broken before proposing what's next.</p></div></div>
+        </div>
+
+        <div class="acc-item" data-acc-item>
+          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
+            <span class="font-mono text-sm text-gray-500 shrink-0">02</span>
+            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Information Architecture</span>
+            <span class="icon-plus text-gray-400"></span>
+          </button>
+          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">The map before the screens: flows, hierarchy, and the structure everything else has to agree with.</p></div></div>
+        </div>
+
+        <div class="acc-item" data-acc-item>
+          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
+            <span class="font-mono text-sm text-gray-500 shrink-0">03</span>
+            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Prototype &amp; Usability Testing</span>
+            <span class="icon-plus text-gray-400"></span>
+          </button>
+          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">Low-fi to mid-fi, tested with real users before a single pixel becomes precious.</p></div></div>
+        </div>
+
+        <div class="acc-item" data-acc-item>
+          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
+            <span class="font-mono text-sm text-gray-500 shrink-0">04</span>
+            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Visual System &amp; Design Tokens</span>
+            <span class="icon-plus text-gray-400"></span>
+          </button>
+          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">The part that scales past screen one &mdash; components, tokens, and rules a team can build on.</p></div></div>
+        </div>
+
+        <div class="acc-item" data-acc-item>
+          <button type="button" data-acc-trigger class="w-full flex items-center gap-5 sm:gap-8 py-6 text-left">
+            <span class="font-mono text-sm text-gray-500 shrink-0">05</span>
+            <span class="font-display font-semibold text-lg sm:text-2xl text-white flex-1">Handoff &amp; Validation</span>
+            <span class="icon-plus text-gray-400"></span>
+          </button>
+          <div class="acc-content"><div><p class="text-gray-400 leading-relaxed pb-6 pl-[3.1rem] sm:pl-16 max-w-xl">Specs, states, edge cases &mdash; and staying in the room through the build, not just the file export.</p></div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER / CONTACT ============ -->
+  <footer id="contact" class="relative overflow-hidden pt-24 sm:pt-32 pb-10 px-5 sm:px-8 lg:px-12 border-t border-white/10">
+    <p class="watermark absolute inset-x-0 bottom-0 flex items-end justify-center text-[22vw] translate-y-1/4 -z-0">CONTACT</p>
+
+    <div class="relative max-w-[1280px] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 pb-16">
         <div>
-          <div class="step-bar pl-5 border-l border-rule">
-            <div class="step-indicator" data-indicator></div>
-            <button type="button" data-step class="is-active block w-full text-left py-3 font-mono text-xs uppercase tracking-widest transition-colors text-ink">01&nbsp;&nbsp;Discovery &amp; Research</button>
-            <button type="button" data-step class="block w-full text-left py-3 font-mono text-xs uppercase tracking-widest transition-colors text-graphite">02&nbsp;&nbsp;Information Architecture</button>
-            <button type="button" data-step class="block w-full text-left py-3 font-mono text-xs uppercase tracking-widest transition-colors text-graphite">03&nbsp;&nbsp;Prototype &amp; Testing</button>
-            <button type="button" data-step class="block w-full text-left py-3 font-mono text-xs uppercase tracking-widest transition-colors text-graphite">04&nbsp;&nbsp;Visual System &amp; Tokens</button>
-            <button type="button" data-step class="block w-full text-left py-3 font-mono text-xs uppercase tracking-widest transition-colors text-graphite">05&nbsp;&nbsp;Handoff &amp; Validation</button>
-          </div>
-
-          <div class="mt-10">
-            <div data-step-panel>
-              <h3 class="font-serif text-2xl text-ink mb-3">Discovery &amp; Research</h3>
-              <p class="text-graphite leading-relaxed mb-6">Interviews, diary studies, surveys, and competitive scans &mdash; understanding what's actually broken before proposing what's next.</p>
-            </div>
-            <div data-step-panel hidden>
-              <h3 class="font-serif text-2xl text-ink mb-3">Information Architecture</h3>
-              <p class="text-graphite leading-relaxed mb-6">The map before the screens: flows, hierarchy, and the structure everything else has to agree with.</p>
-            </div>
-            <div data-step-panel hidden>
-              <h3 class="font-serif text-2xl text-ink mb-3">Prototype &amp; Testing</h3>
-              <p class="text-graphite leading-relaxed mb-6">Low-fi to mid-fi, tested with real users before a single pixel becomes precious.</p>
-            </div>
-            <div data-step-panel hidden>
-              <h3 class="font-serif text-2xl text-ink mb-3">Visual System &amp; Tokens</h3>
-              <p class="text-graphite leading-relaxed mb-6">The part that scales past screen one &mdash; components, tokens, and rules a team can build on.</p>
-            </div>
-            <div data-step-panel hidden>
-              <h3 class="font-serif text-2xl text-ink mb-3">Handoff &amp; Validation</h3>
-              <p class="text-graphite leading-relaxed mb-6">Specs, states, edge cases &mdash; and staying in the room through the build, not just the file export.</p>
-            </div>
-            <a href="#work" class="inline-block rounded-full bg-panel text-ink text-sm font-medium px-5 py-2.5 hover:bg-rule transition-colors">See the Case Files</a>
-          </div>
-        </div>
-
-        <div class="rounded-[28px] bg-panel aspect-square sm:aspect-[4/3] lg:aspect-square flex items-center justify-center overflow-hidden">
-          <div id="method-blob" class="w-full h-full"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ CASE FILES ============ -->
-  <section id="work" class="py-16 sm:py-24 px-5 sm:px-8 lg:px-12 bg-panel">
-    <div class="max-w-[1240px] mx-auto">
-      <h2 class="reveal font-serif text-3xl sm:text-4xl text-ink mb-3 max-w-xl">Three problems. Three shipped systems.</h2>
-      <p class="reveal text-graphite max-w-xl mb-14 sm:mb-20">Fintech, health, and smart-city case files &mdash; each run through the same five-step process, tuned to what its users actually needed.</p>
-
-      <div class="space-y-6 sm:space-y-8">
-
-        <!-- FLOW -->
-        <div class="reveal rounded-[28px] bg-white border border-rule p-7 sm:p-10 lg:p-14">
-          <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
-            <p class="font-mono text-xs uppercase tracking-widest" style="color:#5f8a80">Case File 01 &middot; Fintech</p>
-            <p class="font-mono text-xs uppercase tracking-widest text-graphite">5-Week Production</p>
-          </div>
-          <h3 class="font-serif text-3xl sm:text-4xl text-ink mb-2">Flow</h3>
-          <p class="text-graphite mb-6">AI-assisted personal budgeting, for people the banking apps forgot.</p>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div class="rounded-2xl p-4" style="background:var(--sage)"><p class="text-ink font-medium text-sm mb-1">Anna, 28 &middot; Marketing Specialist</p><p class="text-ink/70 text-sm">Lives paycheck to paycheck &mdash; needs clarity and simple savings goals.</p></div>
-            <div class="rounded-2xl p-4" style="background:var(--sage)"><p class="text-ink font-medium text-sm mb-1">Marek, 34 &middot; Freelancer</p><p class="text-ink/70 text-sm">Irregular income &mdash; needs cashflow forecasting and a tax bucket.</p></div>
-            <div class="rounded-2xl p-4" style="background:var(--sage)"><p class="text-ink font-medium text-sm mb-1">Sara, 22 &middot; Student</p><p class="text-ink/70 text-sm">Micro-budgets &mdash; wants a safe-to-spend number she can trust.</p></div>
-          </div>
-          <p class="text-sm text-graphite leading-relaxed mb-8">
-            Wk 1&ndash;2 Research (12 interviews &middot; 2-week diary study &middot; 150-respondent survey) &rarr;
-            Wk 3 IA &amp; low-fi flows &rarr; Wk 4 Mid-fi prototype &amp; usability test (n=6) &rarr;
-            Wk 5 Visual system, tokens &amp; handoff.
+          <h2 class="reveal font-display font-bold tracking-tight text-3xl sm:text-4xl mb-5">HOW CAN I HELP?</h2>
+          <p class="reveal text-gray-400 leading-relaxed max-w-md mb-8">
+            If your team has a hard problem and a user who deserves better, I'd like to hear the brief &mdash;
+            Columbus, OH, and open to remote work.
           </p>
-          <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs uppercase tracking-widest">
-            <span class="rounded-full px-3 py-1.5 border border-rule">North Star: Weekly Active Planners</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">Day-1 Activation &ge;35%</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">Week-4 Retention &ge;25%</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">Savings Rate +5%/3mo</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">NPS &ge;45</span>
-          </div>
-          <p class="font-serif text-lg text-ink border-l-2 pl-4" style="border-color:#5f8a80">Transparency about data &mdash; not more features &mdash; got people to connect their first account.</p>
+          <a href="mailto:wilson.cihs@gmail.com" class="reveal inline-flex items-center gap-2 rounded-full bg-white text-[#0d1116] px-6 py-3.5 font-semibold text-sm hover:bg-gray-200 transition-colors">
+            wilson.cihs@gmail.com
+          </a>
         </div>
 
-        <!-- HABITNEST+ -->
-        <div class="reveal rounded-[28px] bg-white border border-rule p-7 sm:p-10 lg:p-14">
-          <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
-            <p class="font-mono text-xs uppercase tracking-widest" style="color:#b8734a">Case File 02 &middot; Health &amp; Habits</p>
-            <p class="font-mono text-xs uppercase tracking-widest text-graphite">4-Week Production</p>
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-4">Menu</p>
+            <ul class="space-y-3 text-sm text-gray-400">
+              <li><a href="#about" class="hover:text-white transition-colors">About</a></li>
+              <li><a href="#work" class="hover:text-white transition-colors">Work</a></li>
+              <li><a href="#process" class="hover:text-white transition-colors">Process</a></li>
+            </ul>
           </div>
-          <h3 class="font-serif text-3xl sm:text-4xl text-ink mb-2">HabitNest+</h3>
-          <p class="text-graphite mb-6">Fitness, food, and sleep &mdash; one small plan a day instead of one big overhaul.</p>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div class="rounded-2xl p-4" style="background:var(--peach)"><p class="text-ink font-medium text-sm mb-1">Lana, 40 &middot; Busy Parent</p><p class="text-ink/70 text-sm">Wants a clear daily plan, not homework.</p></div>
-            <div class="rounded-2xl p-4" style="background:var(--peach)"><p class="text-ink font-medium text-sm mb-1">Olek, 29 &middot; Beginner</p><p class="text-ink/70 text-sm">Needs visible streaks to stay in it.</p></div>
-            <div class="rounded-2xl p-4" style="background:var(--peach)"><p class="text-ink font-medium text-sm mb-1">Ada, 33 &middot; Runner</p><p class="text-ink/70 text-sm">Wants structured training and recovery data.</p></div>
+          <div>
+            <p class="font-mono text-xs uppercase tracking-widest text-gray-500 mb-4">Connect</p>
+            <ul class="space-y-3 text-sm text-gray-400">
+              <li><a href="mailto:wilson.cihs@gmail.com" class="hover:text-white transition-colors">Email</a></li>
+              <li><a href="tel:6147368065" class="hover:text-white transition-colors">614-736-8065</a></li>
+              <li class="text-gray-500">Columbus, OH</li>
+            </ul>
           </div>
-          <p class="text-sm text-graphite leading-relaxed mb-8">
-            Wk 1 Research synthesis, personas, problem framing &rarr; Wk 2 IA, flows, low-fi wireframes, copy v1 &rarr;
-            Wk 3 Mid-fi prototype &amp; usability test (n=6) &rarr; Wk 4 Visual design, micro-copy &amp; handoff.
-          </p>
-          <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs uppercase tracking-widest">
-            <span class="rounded-full px-3 py-1.5 border border-rule">North Star: Weekly Adherent Users (4/7 days)</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">Onboarding &ge;70%</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">8-Week Retention &ge;30%</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">Daily Steps +20%</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">Sleep Score +10%</span>
-          </div>
-          <p class="font-serif text-lg text-ink border-l-2 pl-4" style="border-color:#b8734a">&ldquo;Streak paused, not lost&rdquo; outperformed every progress bar we tested.</p>
-        </div>
-
-        <!-- CITYSENSE -->
-        <div class="reveal rounded-[28px] bg-white border border-rule p-7 sm:p-10 lg:p-14">
-          <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
-            <p class="font-mono text-xs uppercase tracking-widest" style="color:#8a72b0">Case File 03 &middot; Smart City &amp; Travel</p>
-            <p class="font-mono text-xs uppercase tracking-widest text-graphite">4-Week Production</p>
-          </div>
-          <h3 class="font-serif text-3xl sm:text-4xl text-ink mb-2">CitySense</h3>
-          <p class="text-graphite mb-6">A map, an AR layer, and a sense of place &mdash; for travelers drowning in options.</p>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div class="rounded-2xl p-4" style="background:var(--lavender)"><p class="text-ink font-medium text-sm mb-1">Irina, 26 &middot; Weekend Traveler</p><p class="text-ink/70 text-sm">Wants photogenic, walkable finds.</p></div>
-            <div class="rounded-2xl p-4" style="background:var(--lavender)"><p class="text-ink font-medium text-sm mb-1">Piotr, 37 &middot; Business Traveler</p><p class="text-ink/70 text-sm">Needs late-night food and offline maps.</p></div>
-            <div class="rounded-2xl p-4" style="background:var(--lavender)"><p class="text-ink font-medium text-sm mb-1">Nadia, 31 &middot; Planner</p><p class="text-ink/70 text-sm">Wants a real itinerary with real time budgets.</p></div>
-          </div>
-          <p class="text-sm text-graphite leading-relaxed mb-8">
-            Wk 1 Research, interest taxonomy, map pins &rarr; Wk 2 IA, low-fi map &amp; AR wireframes &rarr;
-            Wk 3 Mid-fi prototype &amp; field test (6 users) &rarr; Wk 4 Visual design, motion &amp; handoff (Figma + Lottie).
-          </p>
-          <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs uppercase tracking-widest">
-            <span class="rounded-full px-3 py-1.5 border border-rule">North Star: Itinerary Completion Rate</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">Place Save Rate &ge;40%</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">Share Rate &ge;15%</span>
-            <span class="rounded-full px-3 py-1.5 border border-rule text-graphite">AR Usage &ge;30% of sessions</span>
-          </div>
-          <p class="font-serif text-lg text-ink border-l-2 pl-4" style="border-color:#8a72b0">Context beat completeness &mdash; mood- and weather-aware suggestions earned more trust than a longer list.</p>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ FINAL CTA ============ -->
-  <section class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-dark text-center">
-    <div class="max-w-2xl mx-auto">
-      <h2 class="reveal font-serif text-3xl sm:text-5xl text-white mb-5">Let's build the next case file.</h2>
-      <p class="reveal text-white/60 mb-9">If your team has a hard problem and a user who deserves better, I'd like to hear the brief.</p>
-      <div class="reveal flex flex-wrap items-center justify-center gap-4">
-        <a href="mailto:wilson.cihs@gmail.com" class="rounded-full bg-rust text-white text-sm font-medium px-6 py-3 hover:bg-[var(--rust-dark)] transition-colors">Email Drew</a>
-        <a href="tel:6147368065" class="rounded-full border border-white/25 text-white text-sm font-medium px-6 py-3 hover:border-white/60 transition-colors">Call 614-736-8065</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ FOOTER ============ -->
-  <footer id="contact" class="pt-16 sm:pt-20 pb-8 px-5 sm:px-8 lg:px-12 bg-dark text-white/70">
-    <div class="max-w-[1240px] mx-auto">
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-6 pb-12 border-b border-white/10">
-        <div class="col-span-2 sm:col-span-1">
-          <p class="font-serif text-xl text-white mb-2">Drew Wilson</p>
-          <p class="text-sm text-white/50">Product Designer &middot; UX/UI Engineer</p>
-          <p class="text-sm text-white/50 mt-1">Columbus, OH</p>
-        </div>
-        <div>
-          <p class="font-mono text-xs uppercase tracking-widest text-white/40 mb-4">Sections</p>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#about" class="hover:text-white transition-colors">About</a></li>
-            <li><a href="#toolkit" class="hover:text-white transition-colors">Toolkit</a></li>
-            <li><a href="#method" class="hover:text-white transition-colors">Method</a></li>
-            <li><a href="#work" class="hover:text-white transition-colors">Work</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="font-mono text-xs uppercase tracking-widest text-white/40 mb-4">Case Files</p>
-          <ul class="space-y-2 text-sm">
-            <li><a href="#work" class="hover:text-white transition-colors">Flow</a></li>
-            <li><a href="#work" class="hover:text-white transition-colors">HabitNest+</a></li>
-            <li><a href="#work" class="hover:text-white transition-colors">CitySense</a></li>
-          </ul>
-        </div>
-        <div>
-          <p class="font-mono text-xs uppercase tracking-widest text-white/40 mb-4">Connect</p>
-          <ul class="space-y-2 text-sm">
-            <li><a href="mailto:wilson.cihs@gmail.com" class="hover:text-white transition-colors">Email</a></li>
-            <li><a href="tel:6147368065" class="hover:text-white transition-colors">614-736-8065</a></li>
-          </ul>
         </div>
       </div>
-      <p class="pt-8 text-xs text-white/40 font-mono">&copy; 2026 Drew Wilson. All rights reserved.</p>
+
+      <div class="flex flex-wrap items-center justify-between gap-4 pt-8 border-t border-white/10 text-xs text-gray-400">
+        <p>&copy; 2026 Drew Wilson. All rights reserved.</p>
+        <p class="font-mono uppercase tracking-widest">Product Designer &middot; UX/UI Engineer</p>
+      </div>
     </div>
   </footer>
 
 </main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---- nav scroll state ---- */
   var nav = document.querySelector('nav');
-  window.addEventListener('scroll', function(){
-    nav.classList.toggle('is-scrolled', window.scrollY > 8);
-  }, { passive: true });
+  window.addEventListener('scroll', function(){ nav.classList.toggle('is-scrolled', window.scrollY > 8); }, { passive: true });
 
-  /* ---- reveal on scroll ---- */
+  /* ---- reveal + stagger on scroll ---- */
   document.body.classList.add('js-ready');
   var revealObserver = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
       if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
     });
   }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(function(el){ revealObserver.observe(el); });
+  document.querySelectorAll('.reveal, [data-stagger]').forEach(function(el){ revealObserver.observe(el); });
 
-  /* ---- soft organic blob (Three.js) ---- */
-  function createBlob(container, colorHex){
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 10);
-    camera.position.set(0, 0, 3.2);
-    var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    container.appendChild(renderer.domElement);
-
-    var geo = new THREE.IcosahedronGeometry(1, 5);
-    var pos = geo.attributes.position;
-    var base = pos.array.slice();
-    var mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.8, metalness: 0.05 });
-    var mesh = new THREE.Mesh(geo, mat);
-    scene.add(mesh);
-
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x33302a, 1.0));
-    var key = new THREE.DirectionalLight(0xffffff, 0.7);
-    key.position.set(2, 3, 4);
-    scene.add(key);
-
-    function resize(){
-      var w = container.clientWidth || 1, h = container.clientHeight || 1;
-      renderer.setSize(w, h);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    var clock = 0;
-    function animate(){
-      if (!reduceMotion) {
-        clock += 0.006;
-        mesh.rotation.y += 0.003;
-        mesh.rotation.x = Math.sin(clock * 0.5) * 0.15;
-        var p = pos.array;
-        for (var i = 0; i < p.length; i += 3) {
-          var nx = base[i], ny = base[i + 1], nz = base[i + 2];
-          var n = Math.sin(nx * 2 + clock) + Math.sin(ny * 2 + clock * 1.3) + Math.sin(nz * 2 + clock * 0.7);
-          var scale = 1 + n * 0.05;
-          p[i] = nx * scale; p[i + 1] = ny * scale; p[i + 2] = nz * scale;
-        }
-        pos.needsUpdate = true;
-        geo.computeVertexNormals();
-      }
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    return { setColor: function(hex){ mat.color.set(hex); } };
-  }
-
-  var heroBlobEl = document.getElementById('hero-blob');
-  if (heroBlobEl) createBlob(heroBlobEl, '#b85c3e');
-
-  var methodBlob = null;
-  var methodBlobEl = document.getElementById('method-blob');
-  if (methodBlobEl) methodBlob = createBlob(methodBlobEl, '#d6cbea');
-
-  /* ---- method step tabs ---- */
-  var steps = document.querySelectorAll('[data-step]');
-  var panels = document.querySelectorAll('[data-step-panel]');
-  var indicator = document.querySelector('[data-indicator]');
-  var stepColors = ['#d6cbea', '#f0c9b8', '#b7d9d2', '#f2d98c', '#aeb8e8'];
-  var activeIndex = 0;
-  var timer;
-
-  function positionIndicator(){
-    if (!indicator || !steps.length) return;
-    var active = steps[activeIndex];
-    indicator.style.transform = 'translateY(' + active.offsetTop + 'px)';
-    indicator.style.height = active.offsetHeight + 'px';
-  }
-
-  function setStep(i){
-    activeIndex = i;
-    steps.forEach(function(s, idx){
-      s.classList.toggle('is-active', idx === i);
-      s.classList.toggle('text-ink', idx === i);
-      s.classList.toggle('text-graphite', idx !== i);
+  document.querySelectorAll('[data-stagger]').forEach(function(container){
+    Array.prototype.forEach.call(container.children, function(child, i){
+      child.style.transitionDelay = (i * 70) + 'ms';
     });
-    panels.forEach(function(p, idx){ p.hidden = idx !== i; });
-    if (methodBlob) methodBlob.setColor(stepColors[i]);
-    positionIndicator();
-  }
-
-  steps.forEach(function(s, idx){
-    s.addEventListener('click', function(){ setStep(idx); resetTimer(); });
   });
 
-  function resetTimer(){
-    clearInterval(timer);
-    if (reduceMotion) return;
-    timer = setInterval(function(){ setStep((activeIndex + 1) % steps.length); }, 4500);
+  /* ---- ID badge: floating + drag with elastic snap-back ---- */
+  var badge = document.getElementById('id-badge');
+  if (badge && !reduceMotion) {
+    var dragging = false, ox = 0, oy = 0;
+    badge.addEventListener('pointerdown', function(e){
+      dragging = true;
+      badge.classList.remove('floaty', 'snapping');
+      ox = e.clientX; oy = e.clientY;
+      badge.setPointerCapture(e.pointerId);
+    });
+    badge.addEventListener('pointermove', function(e){
+      if (!dragging) return;
+      var max = 40, elasticity = 0.35;
+      var dx = Math.max(-max, Math.min(max, (e.clientX - ox) * elasticity));
+      var dy = Math.max(-max, Math.min(max, (e.clientY - oy) * elasticity));
+      badge.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + (dx * 0.06) + 'deg)';
+    });
+    function release(){
+      if (!dragging) return;
+      dragging = false;
+      badge.classList.add('snapping');
+      badge.style.transform = '';
+      setTimeout(function(){ badge.classList.remove('snapping'); badge.classList.add('floaty'); }, 600);
+    }
+    badge.addEventListener('pointerup', release);
+    badge.addEventListener('pointercancel', release);
   }
 
-  setStep(0);
-  resetTimer();
-  window.addEventListener('resize', positionIndicator);
+  /* ---- Recent works: 3D stacked deck ---- */
+  var WORK = [
+    { cat: 'Fintech', title: 'Flow', desc: "AI-assisted personal budgeting, for people the banking apps forgot.", tags: ['UX Research', 'Design System', 'Fintech'], grad: 'linear-gradient(160deg,#123a33,#14181f)' },
+    { cat: 'Health & Habits', title: 'HabitNest+', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul.', tags: ['Habit Design', 'Mobile UX', 'Behavioral Design'], grad: 'linear-gradient(160deg,#3a2c12,#14181f)' },
+    { cat: 'Smart City & Travel', title: 'CitySense', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options.', tags: ['AR / Map UX', 'Travel', 'Interaction Design'], grad: 'linear-gradient(160deg,#2a1f3a,#14181f)' }
+  ];
+  var activeIdx = 0;
+  var stackEl = document.getElementById('work-stack');
+  var detailEl = document.getElementById('work-detail');
+  var dotsEl = document.getElementById('work-dots');
+  var ARROW = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>';
+
+  function renderStack(){
+    stackEl.innerHTML = '';
+    WORK.forEach(function(item, i){
+      var diff = (i - activeIdx + WORK.length) % WORK.length;
+      var card = document.createElement('div');
+      card.className = 'stack-card absolute inset-0 rounded-3xl border border-white/10 flex items-end p-6 sm:p-8 cursor-pointer';
+      card.style.background = item.grad;
+      card.style.zIndex = String(WORK.length - diff);
+      card.style.transform = 'translateY(' + (diff * 35) + 'px) scale(' + (1 - diff * 0.05) + ') rotateX(' + (diff * 2) + 'deg)';
+      card.style.opacity = diff > 2 ? '0' : '1';
+      card.innerHTML = '<p class="font-mono text-xs uppercase tracking-widest text-white/60">' + item.cat + '</p>';
+      card.addEventListener('click', function(){ setActive(diff === 0 ? (activeIdx + 1) % WORK.length : i); });
+      stackEl.appendChild(card);
+    });
+  }
+
+  function renderDetail(){
+    var item = WORK[activeIdx];
+    if (detailEl.dataset.ready) {
+      detailEl.style.transition = 'opacity .35s ease, transform .35s ease';
+      detailEl.style.opacity = '0';
+      detailEl.style.transform = 'translateY(8px)';
+    }
+    setTimeout(function(){
+      detailEl.dataset.ready = '1';
+      detailEl.innerHTML =
+        '<p class="font-mono text-xs uppercase tracking-widest text-[var(--neon)] mb-3">' + item.cat + '</p>' +
+        '<h3 class="font-display font-bold text-3xl sm:text-4xl text-white mb-4">' + item.title + '</h3>' +
+        '<p class="text-gray-400 leading-relaxed mb-6 max-w-md">' + item.desc + '</p>' +
+        '<div class="flex flex-wrap gap-2 mb-8">' + item.tags.map(function(t){ return '<span class="rounded-full border border-white/10 px-3 py-1.5 text-xs font-mono uppercase tracking-widest text-gray-400">' + t + '</span>'; }).join('') + '</div>' +
+        '<a href="#contact" class="inline-flex items-center gap-2 text-white text-sm font-semibold hover:text-[var(--neon)] transition-colors">Discuss This Project ' + ARROW + '</a>';
+      requestAnimationFrame(function(){ detailEl.style.opacity = '1'; detailEl.style.transform = 'translateY(0)'; });
+    }, reduceMotion ? 0 : 200);
+  }
+
+  function renderDots(){
+    dotsEl.innerHTML = WORK.map(function(_, i){
+      return '<button type="button" aria-label="Show project ' + (i + 1) + '" class="h-1.5 rounded-full transition-all ' + (i === activeIdx ? 'w-6 bg-[var(--neon)]' : 'w-1.5 bg-white/20') + '" data-dot="' + i + '"></button>';
+    }).join('');
+    Array.prototype.forEach.call(dotsEl.querySelectorAll('[data-dot]'), function(btn){
+      btn.addEventListener('click', function(){ setActive(parseInt(btn.getAttribute('data-dot'), 10)); });
+    });
+  }
+
+  function setActive(i){ activeIdx = i; renderStack(); renderDetail(); renderDots(); }
+  if (stackEl) setActive(0);
+
+  /* ---- Process accordion ---- */
+  var accItems = document.querySelectorAll('[data-acc-item]');
+  accItems.forEach(function(item){
+    var trigger = item.querySelector('[data-acc-trigger]');
+    trigger.addEventListener('click', function(){
+      var wasOpen = item.classList.contains('is-open');
+      accItems.forEach(function(i){ i.classList.remove('is-open'); });
+      if (!wasOpen) item.classList.add('is-open');
+    });
+  });
 })();
 </script>

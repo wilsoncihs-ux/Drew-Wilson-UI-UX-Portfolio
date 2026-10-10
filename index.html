@@ -1,7 +1,7 @@
 <title>Drew Wilson</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
 
 <style>
   :root{
@@ -14,7 +14,7 @@
   html.has-cursor, html.has-cursor a, html.has-cursor button{ cursor:none; }
   body{ background:var(--ink); color:var(--bone); font-family:'Inter', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
   section, footer{ scroll-margin-top:6rem; }
-  .font-display{ font-family:'Inter', ui-sans-serif, sans-serif; letter-spacing:-0.02em; }
+  .font-display{ font-family:'Fraunces', ui-serif, Georgia, serif; letter-spacing:-0.01em; }
   .font-mono{ font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; font-variant-numeric:tabular-nums; letter-spacing:.02em; }
 
   #cursor{ position:fixed; top:0; left:0; width:9px; height:9px; border-radius:50%; background:var(--signal); pointer-events:none; z-index:100; transform:translate(-50%,-50%); transition:width .3s var(--ease), height .3s var(--ease), background-color .3s var(--ease); mix-blend-mode:difference; display:none; }
@@ -83,6 +83,9 @@
   .flow-step{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
   .flow-step .flow-chip{ background:var(--surface); }
 
+  #work-preview{ transition:opacity .35s var(--ease), transform .08s linear; transform:translate(-50%,-50%) scale(.6); mix-blend-mode:multiply; }
+  #work-preview.is-visible{ opacity:.9; transform:translate(-50%,-50%) scale(1); }
+
   .row-toggle{ position:relative; width:13px; height:13px; flex-shrink:0; color:var(--fog); }
   .row-item.is-open .row-toggle{ color:var(--signal); }
   .row-toggle::before, .row-toggle::after{ content:''; position:absolute; background:currentColor; transition:transform .3s var(--ease); }
@@ -111,7 +114,7 @@
     theme:{ extend:{
       colors:{ ink:'var(--ink)', surface:'var(--surface)', bone:'var(--bone)', fog:'var(--fog)', signal:'var(--signal)' },
       fontFamily:{
-        display:['Inter','ui-sans-serif','sans-serif'],
+        display:['Fraunces','ui-serif','Georgia','serif'],
         sans:['Inter','ui-sans-serif','system-ui','sans-serif'],
         mono:['"JetBrains Mono"','ui-monospace','SFMono-Regular','monospace'],
       }
@@ -138,8 +141,9 @@
   <a href="#hero" data-section-link="hero" class="is-active"><span class="dot"></span><span class="num-label">01 &mdash; About</span></a>
   <a href="#work" data-section-link="work"><span class="dot"></span><span class="num-label">02 &mdash; Work</span></a>
   <a href="#practice" data-section-link="practice"><span class="dot"></span><span class="num-label">03 &mdash; Practice</span></a>
-  <a href="#about" data-section-link="about"><span class="dot"></span><span class="num-label">04 &mdash; Signal</span></a>
-  <a href="#contact" data-section-link="contact"><span class="dot"></span><span class="num-label">05 &mdash; Contact</span></a>
+  <a href="#resume" data-section-link="resume"><span class="dot"></span><span class="num-label">04 &mdash; Resume</span></a>
+  <a href="#about" data-section-link="about"><span class="dot"></span><span class="num-label">05 &mdash; Signal</span></a>
+  <a href="#contact" data-section-link="contact"><span class="dot"></span><span class="num-label">06 &mdash; Contact</span></a>
 </nav>
 
 <main id="top">
@@ -150,7 +154,8 @@
 
     <div class="relative max-w-[1320px] mx-auto w-full">
       <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal mb-6">[ 01 &mdash; About ] Welcome to my UI/UX portfolio</p>
-      <p class="font-display font-medium text-2xl sm:text-3xl text-fog mb-8">Hi, I'm Drew Wilson.</p>
+      <h1 class="font-display italic font-medium leading-[0.95] text-[14vw] sm:text-8xl md:text-9xl mb-6">Drew Wilson</h1>
+      <p class="font-display font-medium text-xl sm:text-2xl text-fog mb-10 max-w-lg">Product &amp; UX/UI designer, shaping digital experiences from research to shipped interface.</p>
 
       <div class="flex flex-wrap items-center gap-3 sm:gap-5 font-display font-semibold text-2xl sm:text-4xl mb-10">
         <span>Idea</span>
@@ -212,8 +217,9 @@
         <p id="work-counter" class="font-mono text-xs tracking-widest text-fog">Active 01 / 03</p>
       </div>
 
-      <div id="work-list" class="reveal"></div>
+      <div id="work-list" class="reveal relative"></div>
     </div>
+    <div id="work-preview" aria-hidden="true" class="hidden lg:block fixed top-0 left-0 w-40 h-40 rounded-full pointer-events-none z-30 opacity-0"></div>
   </section>
 
   <!-- ============ CASE STUDY: FLOW ============ -->
@@ -944,10 +950,88 @@
     </div>
   </section>
 
-  <!-- ============ 04 SIGNAL ============ -->
+  <!-- ============ 04 RESUME ============ -->
+  <section id="resume" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/50 border-y border-bone/22">
+    <div class="max-w-[1320px] mx-auto">
+      <div class="reveal flex flex-wrap items-end justify-between gap-4 mb-14 sm:mb-20">
+        <div>
+          <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal mb-4">[ 04 &mdash; Resume ]</p>
+          <h2 class="font-display italic text-3xl sm:text-5xl">A quick look at the paper trail.</h2>
+        </div>
+        <a href="mailto:wilson.cihs@gmail.com?subject=Resume%20request" class="link-underline font-mono text-xs sm:text-sm tracking-widest uppercase text-bone hover:text-signal transition-colors shrink-0">Request full PDF &rarr;</a>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14">
+        <div data-stagger class="lg:col-span-2 space-y-10">
+          <div>
+            <p class="font-mono text-xs uppercase tracking-widest text-fog mb-5">Experience &mdash; Case Engagements</p>
+            <div class="space-y-6">
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 border-b border-bone/15 pb-5">
+                <div>
+                  <p class="font-display text-xl">Flow &mdash; AI-Assisted Budgeting</p>
+                  <p class="text-fog text-sm">Lead Product &amp; UX/UI Designer &middot; Fintech</p>
+                </div>
+                <p class="font-mono text-xs text-fog uppercase tracking-widest shrink-0">5-Week Engagement</p>
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 border-b border-bone/15 pb-5">
+                <div>
+                  <p class="font-display text-xl">HabitNest+ &mdash; Health &amp; Habits</p>
+                  <p class="text-fog text-sm">Lead Product &amp; UX/UI Designer &middot; Health Tech</p>
+                </div>
+                <p class="font-mono text-xs text-fog uppercase tracking-widest shrink-0">4-Week Engagement</p>
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                <div>
+                  <p class="font-display text-xl">CitySense &mdash; Smart City &amp; Travel</p>
+                  <p class="text-fog text-sm">Lead Product &amp; UX/UI Designer &middot; Travel</p>
+                </div>
+                <p class="font-mono text-xs text-fog uppercase tracking-widest shrink-0">4-Week Engagement</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <p class="font-mono text-xs uppercase tracking-widest text-fog mb-5">Education</p>
+            <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+              <div>
+                <p class="font-display text-xl">B.A., Graphic Design</p>
+                <p class="text-fog text-sm">Ohio Dominican University, Columbus, OH &middot; Visual Communication &amp; User-Centered Design</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <p class="font-mono text-xs uppercase tracking-widest text-fog mb-5">Core Skills</p>
+          <div class="flex flex-wrap gap-2.5 mb-8">
+            <span class="flow-chip">User Research</span>
+            <span class="flow-chip">Usability Testing</span>
+            <span class="flow-chip">Wireframing</span>
+            <span class="flow-chip">Prototyping</span>
+            <span class="flow-chip">Interaction Design</span>
+            <span class="flow-chip">Design Systems</span>
+            <span class="flow-chip">Information Architecture</span>
+            <span class="flow-chip">Journey Mapping</span>
+            <span class="flow-chip">Accessibility</span>
+          </div>
+          <p class="font-mono text-xs uppercase tracking-widest text-fog mb-5">Tools</p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="flow-chip">Figma</span>
+            <span class="flow-chip">Adobe XD</span>
+            <span class="flow-chip">Photoshop</span>
+            <span class="flow-chip">Illustrator</span>
+            <span class="flow-chip">InDesign</span>
+            <span class="flow-chip">HTML / CSS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 SIGNAL ============ -->
   <section id="about" class="py-28 sm:py-40 px-5 sm:px-8 lg:px-12 flex items-center min-h-[70vh]">
     <div class="max-w-[1320px] mx-auto w-full">
-      <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8">[ 04 &mdash; Signal ]</p>
+      <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8">[ 05 &mdash; Signal ]</p>
       <h2 class="reveal font-display font-semibold tracking-tight leading-[0.95] text-4xl sm:text-6xl md:text-7xl mb-10 max-w-4xl">
         Interfaces, systems, and the research that earns them.
       </h2>
@@ -964,7 +1048,7 @@
     </div>
   </section>
 
-  <!-- ============ 05 CONTACT ============ -->
+  <!-- ============ 06 CONTACT ============ -->
   <footer id="contact" class="relative overflow-hidden py-24 sm:py-32 px-5 sm:px-8 lg:px-12 border-t border-bone/22 bg-surface/50">
     <p class="watermark absolute inset-x-0 bottom-0 flex items-end justify-center text-[16vw] translate-y-1/3 -z-0">Contact</p>
 
@@ -1082,7 +1166,7 @@
   var watermark = document.getElementById('hero-watermark');
   var progressBar = document.getElementById('scroll-progress');
   var scrollCue = document.getElementById('scroll-cue');
-  var sectionIds = ['hero', 'work', 'practice', 'about', 'contact'];
+  var sectionIds = ['hero', 'work', 'practice', 'resume', 'about', 'contact'];
   var sectionLinks = document.querySelectorAll('[data-section-link]');
   var navFill = document.getElementById('section-nav-fill');
   var navTrack = document.querySelector('#section-nav .dot-line-track');
@@ -1114,9 +1198,9 @@
 
   /* ---- selected work: numbered expandable list ---- */
   var WORK = [
-    { title: 'Flow', cat: 'Fintech', desc: "AI-assisted personal budgeting, for people the banking apps forgot. Research-led design system built around trust, not just charts.", meta: '2026 · Case File · Research, UX, Design System', link: '#case-flow' },
-    { title: 'HabitNest+', cat: 'Health & Habits', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul. Behavioral design over raw feature count.', meta: '2026 · Case File · Mobile UX, Behavioral Design', link: '#case-habitnest' },
-    { title: 'CitySense', cat: 'Smart City & Travel', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options. Context-aware over exhaustive.', meta: '2026 · Case File · AR/Map UX, Interaction Design', link: '#case-citysense' }
+    { title: 'Flow', cat: 'Fintech', color: '#7a8f5c', desc: "AI-assisted personal budgeting, for people the banking apps forgot. Research-led design system built around trust, not just charts.", meta: '2026 · Case File · Research, UX, Design System', link: '#case-flow' },
+    { title: 'HabitNest+', cat: 'Health & Habits', color: '#c9683f', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul. Behavioral design over raw feature count.', meta: '2026 · Case File · Mobile UX, Behavioral Design', link: '#case-habitnest' },
+    { title: 'CitySense', cat: 'Smart City & Travel', color: '#96637a', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options. Context-aware over exhaustive.', meta: '2026 · Case File · AR/Map UX, Interaction Design', link: '#case-citysense' }
   ];
   var workList = document.getElementById('work-list');
   var workCounter = document.getElementById('work-counter');
@@ -1125,10 +1209,10 @@
   function renderWork(){
     workList.innerHTML = WORK.map(function(item, i){
       return (
-        '<div class="row-item' + (i === openIdx ? ' is-open' : '') + '" data-row="' + i + '">' +
+        '<div class="row-item' + (i === openIdx ? ' is-open' : '') + '" data-row="' + i + '" data-row-color="' + item.color + '">' +
           '<button type="button" data-row-trigger class="w-full flex items-center gap-5 sm:gap-10 py-7 sm:py-9 text-left">' +
             '<span class="row-num font-mono text-sm text-fog shrink-0">0' + (i + 1) + '</span>' +
-            '<span class="row-title font-display font-semibold text-2xl sm:text-4xl flex-1 transition-colors">' + item.title + '</span>' +
+            '<span class="row-title font-display italic font-semibold text-2xl sm:text-4xl flex-1 transition-colors">' + item.title + '</span>' +
             '<span class="hidden sm:block font-mono text-xs uppercase tracking-widest text-fog">' + item.cat + '</span>' +
             '<span class="row-toggle"></span>' +
           '</button>' +
@@ -1149,6 +1233,30 @@
     workCounter.textContent = 'Active 0' + (openIdx + 1) + ' / 0' + WORK.length;
   }
   renderWork();
+
+  /* ---- work-row hover preview (fluid, follows cursor) ---- */
+  if (window.matchMedia('(pointer:fine)').matches && !reduceMotion) {
+    var preview = document.getElementById('work-preview');
+    var pmx = 0, pmy = 0, pcx = 0, pcy = 0, previewActive = false;
+    window.addEventListener('mousemove', function(e){ pmx = e.clientX; pmy = e.clientY; });
+    (function loop(){
+      pcx += (pmx - pcx) * 0.16;
+      pcy += (pmy - pcy) * 0.16;
+      preview.style.transform = 'translate(' + pcx + 'px,' + pcy + 'px) translate(-50%,-50%)' + (previewActive ? ' scale(1)' : ' scale(.6)');
+      requestAnimationFrame(loop);
+    })();
+    workList.addEventListener('mouseover', function(e){
+      var row = e.target.closest('[data-row-color]');
+      if (!row) return;
+      previewActive = true;
+      preview.style.background = row.getAttribute('data-row-color');
+      preview.classList.add('is-visible');
+    });
+    workList.addEventListener('mouseleave', function(){
+      previewActive = false;
+      preview.classList.remove('is-visible');
+    });
+  }
 
   /* ---- contact form: mailto handoff (no backend, fully honest about it) ---- */
   var form = document.getElementById('contact-form');

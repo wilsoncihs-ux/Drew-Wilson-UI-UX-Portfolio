@@ -5,8 +5,9 @@
 
 <style>
   :root{
-    --ink:#f7f1e6; --surface:#efe6d8; --bone:#2b2118;
-    --fog:#7a6b58; --line:rgba(43,33,24,.14); --signal:#d97a3f;
+    --ink:#faf9f5; --surface:#f0eee6; --bone:#201d17;
+    --fog:#6b7280; --line:rgba(32,29,23,.12); --signal:#d97a3f;
+    --mark-blue:#3b82f6; --mark-red:#ef4444; --mark-yellow:#f5d547;
     --ease:cubic-bezier(.16,1,.3,1);
   }
   *{box-sizing:border-box;}
@@ -30,14 +31,6 @@
   .js-ready [data-stagger].is-visible > *{ opacity:1; transform:translateY(0); }
 
   .watermark{ font-family:'Inter', sans-serif; font-weight:800; color:var(--bone); opacity:.03; line-height:.8; white-space:nowrap; pointer-events:none; user-select:none; }
-
-  .row-item{ border-top:1px solid var(--line); }
-  .row-item:last-child{ border-bottom:1px solid var(--line); }
-  .row-content{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .5s var(--ease); }
-  .row-item.is-open .row-content{ grid-template-rows:1fr; }
-  .row-content > div{ overflow:hidden; min-height:0; }
-  .row-item.is-open .row-num{ color:var(--signal); }
-  .row-item.is-open .row-title{ color:var(--signal); }
 
   .marquee-mask{ -webkit-mask-image:linear-gradient(to right, transparent, black 8%, black 92%, transparent); mask-image:linear-gradient(to right, transparent, black 8%, black 92%, transparent); }
   .marquee-track{ animation:marquee 26s linear infinite; }
@@ -72,9 +65,21 @@
   button:active{ transform:scale(.96); }
 
   /* -------- work-row hover sweep + expand icon -------- */
-  .row-item{ position:relative; overflow:hidden; }
-  .row-item::before{ content:''; position:absolute; inset:0; background:linear-gradient(90deg, color-mix(in srgb, var(--signal) 10%, transparent), transparent 60%); transform:scaleX(0); transform-origin:left; transition:transform .5s var(--ease); pointer-events:none; }
-  .row-item:hover::before{ transform:scaleX(1); }
+  /* -------- hand-marked annotations -------- */
+  .mark-underline{ position:relative; display:inline-block; }
+  .mark-underline::after{ content:''; position:absolute; left:-2px; right:-2px; bottom:-2px; height:3px; background:var(--mark-blue); border-radius:3px; transform:rotate(-.6deg); }
+  .mark-circle{ position:relative; display:inline-block; padding:0 .35em; }
+  .mark-circle svg{ position:absolute; inset:-10px -8px; width:calc(100% + 16px); height:calc(100% + 20px); z-index:-1; overflow:visible; }
+  .mark-highlight{ background:linear-gradient(104deg, transparent 0%, transparent 3%, var(--mark-yellow) 3%, var(--mark-yellow) 97%, transparent 97%); padding:.05em .1em; }
+
+  /* -------- colorful skill pills -------- */
+  .pill{ display:inline-flex; align-items:center; border-radius:9999px; padding:.5rem 1.1rem; font-weight:700; font-size:.8rem; letter-spacing:.01em; }
+  .pill-blue{ background:#4f8ef7; color:#fff; }
+  .pill-mint{ background:#8fe3c9; color:#0f3d31; }
+  .pill-coral{ background:#f28b82; color:#4a1410; }
+  .pill-yellow{ background:#f5d547; color:#3d2e00; }
+  .pill-navy{ background:#1e2d4a; color:#fff; }
+
   .icon-badge{ flex-shrink:0; width:44px; height:44px; border-radius:50%; border:1px solid color-mix(in srgb, var(--signal) 40%, transparent); display:flex; align-items:center; justify-content:center; color:var(--signal); }
   .no-scrollbar::-webkit-scrollbar{ display:none; }
   .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
@@ -83,15 +88,7 @@
   .flow-step{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
   .flow-step .flow-chip{ background:var(--surface); }
 
-  #work-preview{ transition:opacity .35s var(--ease), transform .08s linear; transform:translate(-50%,-50%) scale(.6); mix-blend-mode:multiply; }
-  #work-preview.is-visible{ opacity:.9; transform:translate(-50%,-50%) scale(1); }
-
-  .row-toggle{ position:relative; width:13px; height:13px; flex-shrink:0; color:var(--fog); }
-  .row-item.is-open .row-toggle{ color:var(--signal); }
-  .row-toggle::before, .row-toggle::after{ content:''; position:absolute; background:currentColor; transition:transform .3s var(--ease); }
-  .row-toggle::before{ left:0; top:50%; width:100%; height:1.5px; transform:translateY(-50%); }
-  .row-toggle::after{ top:0; left:50%; width:1.5px; height:100%; transform:translateX(-50%); }
-  .row-item.is-open .row-toggle::after{ transform:translateX(-50%) scaleY(0); }
+  .work-card:hover .work-card-cover{ transform:scale(1.03); }
 
   /* -------- hero scroll cue -------- */
   #scroll-cue{ transition:opacity .4s ease; }
@@ -129,8 +126,14 @@
 <!-- HEADER -->
 <header class="fixed inset-x-0 top-0 z-50 h-20 flex items-center px-5 sm:px-8 lg:px-12">
   <div class="max-w-[1320px] w-full mx-auto flex items-center justify-between">
-    <a href="#top" data-magnetic class="font-display font-bold text-lg text-bone">Drew Wilson<span class="text-signal">.</span></a>
-    <p data-clock class="hidden sm:block font-mono text-xs tracking-widest text-fog">COLUMBUS, OH &mdash; 00:00</p>
+    <a href="#top" data-magnetic class="font-display font-bold text-base text-bone sm:hidden">DW<span class="text-signal">.</span></a>
+    <nav class="hidden sm:flex items-center gap-1 ml-auto font-display font-semibold text-sm">
+      <a href="#work" class="rounded-full bg-bone text-ink px-5 py-2.5 hover:opacity-90 transition-opacity">Work</a>
+      <a href="#practice" class="px-4 py-2.5 text-bone/70 hover:text-bone transition-colors">Practice</a>
+      <a href="#resume" class="px-4 py-2.5 text-bone/70 hover:text-bone transition-colors">Resume</a>
+      <span class="px-2 text-bone/30">/</span>
+      <a href="mailto:wilson.cihs@gmail.com" class="px-2 py-2.5 text-bone/70 hover:text-bone transition-colors">email</a>
+    </nav>
   </div>
 </header>
 
@@ -153,45 +156,36 @@
     <p id="hero-watermark" class="watermark absolute inset-0 flex items-center justify-center text-[24vw] -z-0">DW</p>
 
     <div class="relative max-w-[1320px] mx-auto w-full">
-      <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal mb-6">[ 01 &mdash; About ] Welcome to my UI/UX portfolio</p>
-      <h1 class="font-display italic font-medium leading-[0.95] text-[14vw] sm:text-8xl md:text-9xl mb-6">Drew Wilson</h1>
-      <p class="font-display font-medium text-xl sm:text-2xl text-fog mb-10 max-w-lg">Product &amp; UX/UI designer, shaping digital experiences from research to shipped interface.</p>
-
-      <div class="flex flex-wrap items-center gap-3 sm:gap-5 font-display font-semibold text-2xl sm:text-4xl mb-10">
-        <span>Idea</span>
-        <span class="text-fog">&rarr;</span>
-        <span id="word-cycle" class="font-mono text-base sm:text-xl uppercase tracking-widest text-signal border border-signal/40 rounded-full px-4 py-1.5">Research</span>
-        <span class="text-fog">&rarr;</span>
-        <span>Drew Wilson</span>
-        <span class="text-fog">&rarr;</span>
-        <span>Shipped Product</span>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 mb-10">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-start">
         <div>
-          <p class="text-fog leading-relaxed mb-4 text-base sm:text-lg">
-            I trained as a graphic designer before UX had its own department. My work lives in the
-            space between research and code &mdash; discovery, flows, prototypes, and the design-system
-            plumbing that lets a team scale past screen one.
+          <p class="flex items-center gap-2 font-display font-semibold text-sm text-fog mb-6">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span data-clock>COLUMBUS, OH &middot; 00:00</span>
           </p>
-          <p class="text-fog leading-relaxed text-base sm:text-lg">
-            I don't hand off and disappear. I stay for the build, the QA pass, and the version that
-            comes after real users tell us the truth.
+          <h1 class="font-display font-extrabold leading-[0.95] text-5xl sm:text-7xl md:text-8xl mb-6">
+            Hello!<br />I'm Drew Wilson.
+          </h1>
+          <p class="text-fog leading-relaxed text-lg sm:text-xl max-w-2xl mb-8">
+            A UX/UI designer who bridges research and front-end code to build
+            <span class="mark-underline">interfaces people trust</span>, grounded in
+            <span class="mark-circle">real usability testing</span><svg viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true" style="color:var(--mark-red)"><path d="M8,25 C8,10 25,3 50,4 C78,5 94,12 92,26 C90,42 68,47 48,46 C25,45 8,40 8,25 Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>, not just <span class="mark-highlight">good taste</span>.
           </p>
+          <div class="flex flex-wrap gap-2.5">
+            <span class="pill pill-blue">Product Design</span>
+            <span class="pill pill-mint">Design Systems</span>
+            <span class="pill pill-coral">Front-End (HTML/CSS)</span>
+            <span class="pill pill-yellow">Figma</span>
+            <span class="pill pill-navy">UX Research</span>
+          </div>
         </div>
-        <div class="flex divide-x divide-bone/10">
-          <div class="pr-10">
-            <p class="font-display font-bold text-5xl mb-1">5+</p>
-            <p class="text-fog text-sm">Years in UX/UI &amp; Product Design</p>
-          </div>
-          <div class="pl-10">
-            <p class="font-display font-bold text-5xl mb-1">3</p>
-            <p class="text-fog text-sm">End-to-End Case Files Shipped</p>
-          </div>
+
+        <div class="lg:text-right lg:pt-2 shrink-0">
+          <p class="text-fog text-sm sm:text-base mb-1">Open to new projects &amp; roles.</p>
+          <p class="text-fog text-sm sm:text-base">B.A. Graphic Design, Ohio Dominican University.</p>
         </div>
       </div>
 
-      <div class="marquee-mask overflow-hidden border-y border-bone/22 py-6">
+      <div class="marquee-mask overflow-hidden border-y border-bone/22 py-6 mt-14 sm:mt-20">
         <div class="marquee-track flex w-max gap-10 font-mono text-sm uppercase tracking-widest text-fog">
           <div class="flex gap-10 shrink-0">
             <span>Figma</span><span>Adobe&nbsp;XD</span><span>Photoshop</span><span>Illustrator</span><span>InDesign</span><span>CorelDRAW</span><span>HTML</span><span>CSS</span><span>Microsoft&nbsp;Office</span>
@@ -212,18 +206,17 @@
   <!-- ============ 02 SELECTED WORK ============ -->
   <section id="work" class="py-14 sm:py-20 px-5 sm:px-8 lg:px-12">
     <div class="max-w-[1320px] mx-auto">
-      <div class="reveal flex items-baseline justify-between mb-14 sm:mb-20">
-        <p class="font-mono text-xs tracking-[0.25em] uppercase text-signal">[ 02 &mdash; Selected Work ]</p>
-        <p id="work-counter" class="font-mono text-xs tracking-widest text-fog">Active 01 / 03</p>
+      <div class="reveal flex flex-wrap items-end justify-between gap-4 mb-10 pb-8 border-b border-bone/20">
+        <p class="font-display font-semibold text-sm text-fog">SELECTED WORK</p>
+        <h2 class="font-display font-extrabold text-4xl sm:text-5xl">A few things I've shaped.</h2>
       </div>
 
-      <div id="work-list" class="reveal relative"></div>
+      <div id="work-list" class="reveal grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-16"></div>
     </div>
-    <div id="work-preview" aria-hidden="true" class="hidden lg:block fixed top-0 left-0 w-40 h-40 rounded-full pointer-events-none z-30 opacity-0"></div>
   </section>
 
   <!-- ============ CASE STUDY: FLOW ============ -->
-  <section id="case-flow" style="--signal:#7a8f5c; background:color-mix(in srgb, var(--signal) 6%, var(--ink));" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
+  <section id="case-flow" style="--signal:#7a8f5c" class="py-24 sm:py-32 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
     <div class="max-w-[1320px] mx-auto">
 
       <div class="reveal mb-14">
@@ -481,7 +474,7 @@
   </section>
 
   <!-- ============ CASE STUDY: HABITNEST+ ============ -->
-  <section id="case-habitnest" style="--signal:#c9683f; background:color-mix(in srgb, var(--signal) 7%, var(--ink));" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
+  <section id="case-habitnest" style="--signal:#c9683f" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
     <div class="max-w-[1320px] mx-auto">
 
       <div class="reveal mb-14">
@@ -706,7 +699,7 @@
   </section>
 
   <!-- ============ CASE STUDY: CITYSENSE ============ -->
-  <section id="case-citysense" style="--signal:#96637a; background:color-mix(in srgb, var(--signal) 7%, var(--ink));" class="py-28 sm:py-36 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
+  <section id="case-citysense" style="--signal:#96637a" class="py-28 sm:py-36 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
     <div class="max-w-[1320px] mx-auto">
 
       <div class="reveal mb-14">
@@ -919,7 +912,7 @@
   </section>
 
   <!-- ============ 03 PRACTICE ============ -->
-  <section id="practice" class="py-14 sm:py-20 px-5 sm:px-8 lg:px-12 bg-surface/60 border-y border-bone/22">
+  <section id="practice" class="py-14 sm:py-20 px-5 sm:px-8 lg:px-12 border-y border-bone/22">
     <div class="max-w-[1320px] mx-auto">
       <p class="reveal font-mono text-xs tracking-[0.25em] uppercase text-signal mb-8 text-center">[ 03 &mdash; Practice ]</p>
       <h2 class="reveal font-display font-semibold text-3xl sm:text-5xl leading-tight max-w-2xl mx-auto mb-14 sm:mb-16 text-center">
@@ -951,7 +944,7 @@
   </section>
 
   <!-- ============ 04 RESUME ============ -->
-  <section id="resume" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 bg-surface/50 border-y border-bone/22">
+  <section id="resume" class="py-20 sm:py-28 px-5 sm:px-8 lg:px-12 border-y border-bone/22">
     <div class="max-w-[1320px] mx-auto">
       <div class="reveal flex flex-wrap items-end justify-between gap-4 mb-14 sm:mb-20">
         <div>
@@ -1049,7 +1042,7 @@
   </section>
 
   <!-- ============ 06 CONTACT ============ -->
-  <footer id="contact" class="relative overflow-hidden py-24 sm:py-32 px-5 sm:px-8 lg:px-12 border-t border-bone/22 bg-surface/50">
+  <footer id="contact" class="relative overflow-hidden py-24 sm:py-32 px-5 sm:px-8 lg:px-12 border-t border-bone/22">
     <p class="watermark absolute inset-x-0 bottom-0 flex items-end justify-center text-[16vw] translate-y-1/3 -z-0">Contact</p>
 
     <div class="relative max-w-[1320px] mx-auto">
@@ -1137,22 +1130,14 @@
 
   /* ---- live clock ---- */
   function updateClock(){
-    var d = new Date(), hh = String(d.getHours()).padStart(2, '0'), mm = String(d.getMinutes()).padStart(2, '0');
-    document.querySelectorAll('[data-clock]').forEach(function(el){ el.textContent = 'COLUMBUS, OH — ' + hh + ':' + mm; });
+    var d = new Date();
+    var h24 = d.getHours();
+    var ampm = h24 >= 12 ? 'PM' : 'AM';
+    var h12 = h24 % 12; if (h12 === 0) h12 = 12;
+    var mm = String(d.getMinutes()).padStart(2, '0');
+    document.querySelectorAll('[data-clock]').forEach(function(el){ el.textContent = 'COLUMBUS, OH · ' + h12 + ':' + mm + ' ' + ampm; });
   }
   updateClock(); setInterval(updateClock, 15000);
-
-  /* ---- word cycle (about diagram) ---- */
-  var words = ['Research', 'Systems', 'Testing', 'Handoff'];
-  var wi = 0;
-  var wordEl = document.getElementById('word-cycle');
-  if (wordEl && !reduceMotion) {
-    setInterval(function(){
-      wordEl.style.opacity = '0';
-      setTimeout(function(){ wi = (wi + 1) % words.length; wordEl.textContent = words[wi]; wordEl.style.opacity = '1'; }, 250);
-    }, 2200);
-    wordEl.style.transition = 'opacity .25s ease';
-  }
 
   /* ---- reveal + stagger ---- */
   document.body.classList.add('js-ready');
@@ -1196,67 +1181,28 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  /* ---- selected work: numbered expandable list ---- */
+  /* ---- selected work: image-forward card grid ---- */
   var WORK = [
-    { title: 'Flow', cat: 'Fintech', color: '#7a8f5c', desc: "AI-assisted personal budgeting, for people the banking apps forgot. Research-led design system built around trust, not just charts.", meta: '2026 · Case File · Research, UX, Design System', link: '#case-flow' },
-    { title: 'HabitNest+', cat: 'Health & Habits', color: '#c9683f', desc: 'Fitness, food, and sleep — one small plan a day instead of one big overhaul. Behavioral design over raw feature count.', meta: '2026 · Case File · Mobile UX, Behavioral Design', link: '#case-habitnest' },
-    { title: 'CitySense', cat: 'Smart City & Travel', color: '#96637a', desc: 'A map, an AR layer, and a sense of place for travelers drowning in options. Context-aware over exhaustive.', meta: '2026 · Case File · AR/Map UX, Interaction Design', link: '#case-citysense' }
+    { title: 'Flow', role: 'Fintech App, lead designer', color: '#7a8f5c', tags: ['UX Research', 'Design System', 'Fintech'], link: '#case-flow' },
+    { title: 'HabitNest+', role: 'Health &amp; Habits App, lead designer', color: '#c9683f', tags: ['Mobile UX', 'Behavioral Design'], link: '#case-habitnest' },
+    { title: 'CitySense', role: 'Smart City &amp; Travel App, lead designer', color: '#96637a', tags: ['AR / Map UX', 'Interaction Design'], link: '#case-citysense' }
   ];
   var workList = document.getElementById('work-list');
-  var workCounter = document.getElementById('work-counter');
-  var openIdx = 0;
 
   function renderWork(){
-    workList.innerHTML = WORK.map(function(item, i){
+    workList.innerHTML = WORK.map(function(item){
       return (
-        '<div class="row-item' + (i === openIdx ? ' is-open' : '') + '" data-row="' + i + '" data-row-color="' + item.color + '">' +
-          '<button type="button" data-row-trigger class="w-full flex items-center gap-5 sm:gap-10 py-7 sm:py-9 text-left">' +
-            '<span class="row-num font-mono text-sm text-fog shrink-0">0' + (i + 1) + '</span>' +
-            '<span class="row-title font-display italic font-semibold text-2xl sm:text-4xl flex-1 transition-colors">' + item.title + '</span>' +
-            '<span class="hidden sm:block font-mono text-xs uppercase tracking-widest text-fog">' + item.cat + '</span>' +
-            '<span class="row-toggle"></span>' +
-          '</button>' +
-          '<div class="row-content"><div>' +
-            '<p class="text-fog leading-relaxed max-w-xl pb-4 pl-[2.6rem] sm:pl-[4.5rem]">' + item.desc + '</p>' +
-            '<p class="font-mono text-xs uppercase tracking-widest text-fog pb-4 pl-[2.6rem] sm:pl-[4.5rem]">' + item.meta + '</p>' +
-            (item.link ? '<a href="' + item.link + '" class="arrow-cta inline-flex items-center gap-2 text-signal text-sm font-semibold pl-[2.6rem] sm:pl-[4.5rem] pb-8">View Full Case Study <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>' : '<div class="pb-8"></div>') +
-          '</div></div>' +
-        '</div>'
+        '<a href="' + item.link + '" class="work-card group block">' +
+          '<div class="work-card-cover rounded-2xl aspect-[4/3] mb-5 flex items-center justify-center overflow-hidden transition-transform duration-500" style="background:linear-gradient(155deg,' + item.color + ',color-mix(in srgb,' + item.color + ' 55%, var(--ink)))">' +
+            '<span class="font-display italic font-semibold text-3xl sm:text-4xl text-white/95">' + item.title + '</span>' +
+          '</div>' +
+          '<p class="font-display font-semibold text-lg mb-2"><span>' + item.title + '</span><span class="text-fog font-normal">, ' + item.role + '</span></p>' +
+          '<div class="flex flex-wrap gap-2">' + item.tags.map(function(t){ return '<span class="rounded-full bg-surface px-3 py-1.5 text-xs font-display font-medium text-bone/80">' + t + '</span>'; }).join('') + '</div>' +
+        '</a>'
       );
     }).join('');
-    Array.prototype.forEach.call(workList.querySelectorAll('[data-row]'), function(row){
-      row.querySelector('[data-row-trigger]').addEventListener('click', function(){
-        openIdx = parseInt(row.getAttribute('data-row'), 10);
-        renderWork();
-      });
-    });
-    workCounter.textContent = 'Active 0' + (openIdx + 1) + ' / 0' + WORK.length;
   }
   renderWork();
-
-  /* ---- work-row hover preview (fluid, follows cursor) ---- */
-  if (window.matchMedia('(pointer:fine)').matches && !reduceMotion) {
-    var preview = document.getElementById('work-preview');
-    var pmx = 0, pmy = 0, pcx = 0, pcy = 0, previewActive = false;
-    window.addEventListener('mousemove', function(e){ pmx = e.clientX; pmy = e.clientY; });
-    (function loop(){
-      pcx += (pmx - pcx) * 0.16;
-      pcy += (pmy - pcy) * 0.16;
-      preview.style.transform = 'translate(' + pcx + 'px,' + pcy + 'px) translate(-50%,-50%)' + (previewActive ? ' scale(1)' : ' scale(.6)');
-      requestAnimationFrame(loop);
-    })();
-    workList.addEventListener('mouseover', function(e){
-      var row = e.target.closest('[data-row-color]');
-      if (!row) return;
-      previewActive = true;
-      preview.style.background = row.getAttribute('data-row-color');
-      preview.classList.add('is-visible');
-    });
-    workList.addEventListener('mouseleave', function(){
-      previewActive = false;
-      preview.classList.remove('is-visible');
-    });
-  }
 
   /* ---- contact form: mailto handoff (no backend, fully honest about it) ---- */
   var form = document.getElementById('contact-form');

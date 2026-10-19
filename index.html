@@ -12,7 +12,15 @@
   @media (min-width:768px){ :root{ --gutter:28px; --bar:64px; } }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html,body{ height:100%; }
-  body{ background:var(--black); color:var(--paper); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow:hidden; }
+  body{ background:var(--black); color:var(--paper); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  html.locked, html.locked body{ overflow:hidden; }
+  #scroller{ width:1px; }
+  .prog{ position:absolute; left:0; right:0; bottom:0; height:2px; background:rgba(245,239,226,.15); }
+  .prog i{ position:absolute; inset:0; background:var(--paper); transform-origin:left; transform:scaleX(0); }
+  .unlock{ margin-top:1.4rem; color:var(--dim); opacity:0; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .play .unlock{ animation:fade .9s 1.5s var(--ease) forwards; }
+  .unlock .line{ width:1px; height:34px; background:linear-gradient(var(--paper),transparent); transform-origin:top; animation:pull 1.6s var(--ease) infinite; }
+  @keyframes pull{ 0%{ transform:scaleY(0);} 60%{ transform:scaleY(1);} 100%{ transform:scaleY(1); opacity:0; } }
   button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
   a{ color:inherit; text-decoration:none; }
   .cond{ font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; }
@@ -208,6 +216,7 @@
     <span class="main"><span class="serif" style="font-size:9px">Admit one</span><b>ENTER</b></span>
     <span class="stub"><span class="serif" style="font-size:9px">No.</span><b class="cond" style="font-size:22px;font-weight:700">001</b></span>
   </button>
+  <div class="unlock serif" aria-hidden="true"><span>Or scroll to unlock</span><span class="line"></span></div>
 </section>
 
 <!-- ===================== HOME ===================== -->
@@ -229,8 +238,10 @@
 
   <footer class="bar bottom">
     <div class="quick" id="quick" aria-label="Quick navigate case studies"></div>
-    <span class="hint serif">Drag &middot; Scroll &middot; Arrow keys</span>
+    <span class="hint serif">Scroll &middot; Drag &middot; Arrow keys</span>
+    <div class="prog" aria-hidden="true"><i id="progFill"></i></div>
   </footer>
+  <div id="scroller" aria-hidden="true"></div>
 </div>
 
 <div id="spot" hidden></div>
@@ -366,64 +377,91 @@
     if (!reduce) setInterval(function(){ k = (k + 1) % tiles.length; grain.style.backgroundImage = tiles[k]; grain.style.transform = 'translate(' + (Math.random()*8-4) + '%,' + (Math.random()*8-4) + '%)'; }, 90);
   })();
 
-  /* ---------- carousel: drag, wheel, keys, quick-nav ---------- */
+  /* ---------- scroll architecture: native vertical scroll drives a pinned horizontal reel ----------
+     The page gets one viewport of scroll length per reel (#scroller). Everything visual is fixed;
+     scroll progress maps linearly to the track's x position, eased each frame for a smooth scrub. */
   var stage = document.getElementById('stage');
-  var index = 0, pos = 0, target = 0, step = 0;
-  function measure(){ var gap = parseFloat(getComputedStyle(track).columnGap) || 16; step = frames[0].offsetWidth + gap; target = pos = -index * step; }
-  function goTo(i){
-    index = Math.max(0, Math.min(CASES.length - 1, i));
-    target = -index * step;
+  var scroller = document.getElementById('scroller');
+  var progFill = document.getElementById('progFill');
+  var root = document.documentElement;
+  var index = -1, pos = 0, step = 0, perFrame = 0, entered = false;
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  root.classList.add('locked');
+
+  function measure(){
+    var gap = parseFloat(getComputedStyle(track).columnGap) || 16;
+    step = frames[0].offsetWidth + gap;
+    perFrame = innerHeight;
+    scroller.style.height = (innerHeight + (CASES.length - 1) * perFrame) + 'px';
+  }
+  function progress(){ var max = (CASES.length - 1) * perFrame; return max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0; }
+  function setActive(i){
+    if (i === index) return;
+    index = i;
     frames.forEach(function(f, j){ f.classList.toggle('is-active', j === index); f.setAttribute('aria-hidden', j === index ? 'false' : 'true'); });
     Array.prototype.forEach.call(quick.children, function(b, j){ b.classList.toggle('on', j === index); });
     counter.textContent = String(index + 1).padStart(2, '0') + ' / ' + String(CASES.length).padStart(2, '0');
-    var activeQuick = quick.children[index]; if (activeQuick) activeQuick.scrollIntoView({ inline:'nearest', block:'nearest' });
+    var q = quick.children[index]; if (q) q.scrollIntoView({ inline:'nearest', block:'nearest' });
+  }
+  function goTo(i){
+    i = Math.max(0, Math.min(CASES.length - 1, i));
+    window.scrollTo({ top:i * perFrame, behavior:reduce ? 'auto' : 'smooth' });
+    setActive(i);
   }
   function loop(){
-    pos += (target - pos) * (reduce ? 1 : 0.11);
+    var p = progress(), target = -p * (CASES.length - 1) * step;
+    pos += (target - pos) * (reduce ? 1 : 0.1);
     track.style.transform = 'translate3d(' + pos + 'px,0,0)';
     frames.forEach(function(f, j){
       var d = Math.min(1, Math.abs(pos + j * step) / step);
       f.style.transform = 'scale(' + (1 - d * 0.08) + ')';
       f.style.filter = 'brightness(' + (1 - d * 0.45) + ')';
     });
+    progFill.style.transform = 'scaleX(' + p + ')';
+    setActive(Math.round(p * (CASES.length - 1)));
     requestAnimationFrame(loop);
   }
 
-  var dragging = false, startX = 0, startTarget = 0, lastX = 0, lastT = 0, vel = 0, moved = 0;
+  /* gentle snap: once scrolling settles, ease onto the nearest reel */
+  var snapT = 0, dragging = false;
+  window.addEventListener('scroll', function(){
+    clearTimeout(snapT);
+    if (!entered || dragging || openSheet || !coach.hidden) return;
+    snapT = setTimeout(function(){
+      var n = Math.round(scrollY / perFrame);
+      if (Math.abs(scrollY - n * perFrame) > 2) goTo(n);
+    }, 180);
+  }, { passive:true });
+
+  /* hold and drag: horizontal drag scrubs the same scroll position */
+  var startX = 0, startScroll = 0, lastX = 0, lastT = 0, vel = 0, moved = 0;
   stage.addEventListener('pointerdown', function(e){
-    if (e.target.closest('button')) return;
-    dragging = true; moved = 0; startX = lastX = e.clientX; lastT = performance.now(); startTarget = target; vel = 0;
+    if (e.target.closest('button') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    dragging = true; moved = 0; startX = lastX = e.clientX; lastT = performance.now(); startScroll = scrollY; vel = 0;
     stage.classList.add('dragging'); stage.setPointerCapture(e.pointerId);
   });
   stage.addEventListener('pointermove', function(e){
     if (!dragging) return;
     var now = performance.now(); vel = (e.clientX - lastX) / Math.max(1, now - lastT); lastX = e.clientX; lastT = now;
     moved = e.clientX - startX;
-    target = startTarget + moved;
+    window.scrollTo(0, startScroll - moved * (perFrame / step));
   });
   function release(){
     if (!dragging) return; dragging = false; stage.classList.remove('dragging');
-    var projected = target + vel * 220;
-    goTo(Math.round(-projected / step));
+    if (Math.abs(moved) < 8) return;
+    var projected = scrollY - vel * 220 * (perFrame / step);
+    goTo(Math.round(projected / perFrame));
   }
   stage.addEventListener('pointerup', release);
   stage.addEventListener('pointercancel', release);
-
-  var acc = 0, locked = false;
-  stage.addEventListener('wheel', function(e){
-    e.preventDefault();
-    if (locked) return;
-    acc += Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    if (Math.abs(acc) > 40){ goTo(index + (acc > 0 ? 1 : -1)); acc = 0; locked = true; setTimeout(function(){ locked = false; }, 700); }
-  }, { passive:false });
 
   quick.addEventListener('click', function(e){ var b = e.target.closest('[data-go]'); if (b) goTo(+b.getAttribute('data-go')); });
   track.addEventListener('click', function(e){ var b = e.target.closest('[data-explore]'); if (b) openCase(+b.getAttribute('data-explore')); });
 
   /* ---------- overlays ---------- */
   var openSheet = null, lastFocus = null;
-  function show(sheet){ lastFocus = document.activeElement; if (openSheet) openSheet.classList.remove('open'); openSheet = sheet; sheet.classList.add('open'); sheet.scrollTop = 0; setTimeout(function(){ sheet.querySelector('[data-close]').focus(); }, 50); }
-  function hide(){ if (!openSheet) return; openSheet.classList.remove('open'); openSheet = null; setNav('work'); if (lastFocus) lastFocus.focus(); }
+  function show(sheet){ lastFocus = document.activeElement; if (openSheet) openSheet.classList.remove('open'); openSheet = sheet; root.classList.add('locked'); sheet.classList.add('open'); sheet.scrollTop = 0; setTimeout(function(){ sheet.querySelector('[data-close]').focus(); }, 50); }
+  function hide(){ if (!openSheet) return; openSheet.classList.remove('open'); openSheet = null; if (entered && coach.hidden) root.classList.remove('locked'); setNav('work'); if (lastFocus) lastFocus.focus(); }
   document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', hide); });
 
   function list(items){ return '<ul>' + items.map(function(x){ return '<li>— ' + x + '</li>'; }).join('') + '</ul>'; }
@@ -472,8 +510,8 @@
   /* ---------- onboarding: guided tour ---------- */
   var spot = document.getElementById('spot'), coach = document.getElementById('coach');
   var STEPS = [
-    { sel:function(){ return frames[index]; }, text:'Hold and drag a reel to move between case studies.' },
-    { sel:function(){ return frames[index]; }, text:'Prefer scrolling? Your mouse wheel or trackpad advances one reel at a time.' },
+    { sel:function(){ return frames[index]; }, text:'Scroll to roll the film — the reel moves sideways as you scroll down.' },
+    { sel:function(){ return frames[index]; }, text:'Or hold and drag a reel left and right to scrub through the case studies.' },
     { sel:function(){ return document.getElementById('quick'); }, text:'Use this list to jump straight to any case study.' },
     { sel:function(){ return nav; }, text:'Work, About (with my resume), and Contact live up here.' },
     { sel:function(){ return frames[index].querySelector('.explore'); }, text:'Click Explore to open the full case file: research, users, process, and what I learned.' }
@@ -493,12 +531,16 @@
     var left = big ? (vw - cw) / 2 : Math.min(vw - cw - 16, Math.max(16, r.left + r.width / 2 - cw / 2));
     coach.style.top = top + 'px'; coach.style.left = left + 'px';
   }
-  function startTour(){ stepI = 0; spot.hidden = false; coach.hidden = false; placeTour(); document.getElementById('coachNext').focus(); }
-  function endTour(){ spot.hidden = true; coach.hidden = true; store.set('dw-tour-seen', '1'); }
+  function startTour(){ stepI = 0; root.classList.add('locked'); spot.hidden = false; coach.hidden = false; placeTour(); document.getElementById('coachNext').focus(); }
+  function endTour(){ spot.hidden = true; coach.hidden = true; store.set('dw-tour-seen', '1'); if (entered && !openSheet) root.classList.remove('locked'); }
   document.getElementById('coachNext').addEventListener('click', function(){ if (stepI === STEPS.length - 1) endTour(); else { stepI++; placeTour(); } });
   document.getElementById('coachBack').addEventListener('click', function(){ if (stepI > 0){ stepI--; placeTour(); } });
   document.getElementById('coachClose').addEventListener('click', endTour);
-  window.addEventListener('resize', function(){ measure(); if (!coach.hidden) placeTour(); });
+  window.addEventListener('resize', function(){
+    measure();
+    if (entered){ window.scrollTo(0, Math.max(0, index) * perFrame); pos = -Math.max(0, index) * step; }
+    if (!coach.hidden) placeTour();
+  });
 
   /* ---------- onboarding: loader -> enter -> home ---------- */
   var loader = document.getElementById('loader'), enter = document.getElementById('enter'), home = document.getElementById('home');
@@ -513,12 +555,22 @@
   })();
   document.getElementById('skipLoader').addEventListener('click', toEnter);
 
-  document.getElementById('enterBtn').addEventListener('click', function(){
+  var enterBtn = document.getElementById('enterBtn');
+  enterBtn.addEventListener('click', function(){
+    if (entered) return;
+    entered = true;
     this.classList.add('torn');
     enter.classList.add('leaving');
-    home.hidden = false; measure(); goTo(0); loop();
+    home.hidden = false; root.classList.remove('locked'); measure(); window.scrollTo(0, 0); setActive(0); loop();
     frames.forEach(function(f, j){ f.animate([{ opacity:0, transform:'translateY(40px) scale(.94)' }, { opacity:1 }], { duration:reduce ? 1 : 1100, delay:reduce ? 0 : 300 + j * 80, easing:'cubic-bezier(.16,1,.3,1)', fill:'backwards' }); });
     setTimeout(function(){ enter.hidden = true; if (!store.get('dw-tour-seen')) startTour(); }, reduce ? 50 : 1300);
   });
+
+  /* "scroll to unlock": a downward scroll or swipe on the gate enters, same as clicking the ticket */
+  var touchY = null;
+  function gateOpen(){ return !enter.hidden && enter.classList.contains('play') && !entered; }
+  window.addEventListener('wheel', function(e){ if (gateOpen() && e.deltaY > 12) enterBtn.click(); }, { passive:true });
+  window.addEventListener('touchstart', function(e){ touchY = e.touches[0].clientY; }, { passive:true });
+  window.addEventListener('touchmove', function(e){ if (gateOpen() && touchY !== null && touchY - e.touches[0].clientY > 40){ touchY = null; enterBtn.click(); } }, { passive:true });
 })();
 </script>
